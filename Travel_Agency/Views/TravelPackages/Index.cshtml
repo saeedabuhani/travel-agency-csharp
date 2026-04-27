@@ -1,0 +1,717 @@
+﻿@model List<Travel_Agency.ViewModels.TravelPackageCardViewModel>
+@using Travel_Agency.ViewModels
+
+@{
+    ViewData["Title"] = "Travel Packages";
+    var totalCount = ViewBag.TotalCount ?? Model.Count;
+    var isAdmin = User.IsInRole("Admin");
+}
+
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;500;600;700;800&family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+
+<style>
+    /* ============================================
+       🌍 HERO HEADER WITH TRAVEL IMAGE
+       ============================================ */
+    .packages-hero {
+        position: relative;
+        min-height: 400px;
+        background: url('https://images.unsplash.com/photo-1469854523086-cc02fe5d8800?ixlib=rb-4.0.3&auto=format&fit=crop&w=1920&q=80') center/cover no-repeat;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        text-align: center;
+        margin-bottom: 0;
+    }
+
+    .packages-hero::before {
+        content: '';
+        position: absolute;
+        top: 0;
+        left: 0;
+        right: 0;
+        bottom: 0;
+        background: linear-gradient(180deg, rgba(10, 25, 47, 0.7) 0%, rgba(20, 40, 80, 0.85) 100%);
+        z-index: 1;
+    }
+
+    .packages-hero-content {
+        position: relative;
+        z-index: 2;
+        padding: 60px 20px;
+    }
+
+    .packages-title {
+        font-family: 'Playfair Display', serif;
+        font-size: 4rem;
+        font-weight: 700;
+        color: #fff;
+        margin-bottom: 15px;
+        text-shadow: 2px 2px 20px rgba(0, 0, 0, 0.3);
+        animation: fadeInDown 1s ease;
+    }
+
+    @@keyframes fadeInDown {
+        from { opacity: 0; transform: translateY(-30px); }
+        to { opacity: 1; transform: translateY(0); }
+    }
+
+    .packages-subtitle {
+        font-family: 'Poppins', sans-serif;
+        font-size: 1.3rem;
+        color: rgba(255, 255, 255, 0.9);
+        letter-spacing: 2px;
+        margin-bottom: 30px;
+    }
+
+    .trip-counter {
+        display: inline-block;
+        padding: 15px 40px;
+        background: rgba(255, 140, 0, 0.9);
+        border-radius: 50px;
+        font-family: 'Poppins', sans-serif;
+        font-size: 1.1rem;
+        font-weight: 600;
+        color: #fff;
+        box-shadow: 0 10px 30px rgba(255, 140, 0, 0.4);
+        animation: pulse 2s ease-in-out infinite;
+    }
+
+    @@keyframes pulse {
+        0%, 100% { transform: scale(1); }
+        50% { transform: scale(1.05); }
+    }
+
+    /* ============================================
+       🔍 FILTER PANEL
+       ============================================ */
+    .filter-section {
+        background: linear-gradient(180deg, rgba(20, 40, 80, 0.95) 0%, rgba(15, 30, 60, 0.98) 100%);
+        padding: 50px 20px;
+        margin-top: -1px;
+    }
+
+    .filter-panel {
+        background: rgba(255, 255, 255, 0.03);
+        backdrop-filter: blur(20px);
+        border: 1px solid rgba(255, 255, 255, 0.1);
+        border-radius: 25px;
+        padding: 40px;
+        max-width: 1200px;
+        margin: 0 auto;
+        box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
+    }
+
+    .filter-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+        gap: 25px;
+        margin-bottom: 30px;
+    }
+
+    .filter-group label {
+        display: block;
+        font-family: 'Poppins', sans-serif;
+        color: #ff8c00;
+        font-weight: 600;
+        font-size: 0.85rem;
+        text-transform: uppercase;
+        letter-spacing: 1px;
+        margin-bottom: 10px;
+    }
+
+    .filter-input, .filter-select {
+        width: 100%;
+        padding: 14px 20px;
+        background: rgba(255, 255, 255, 0.05);
+        border: 1px solid rgba(255, 255, 255, 0.15);
+        border-radius: 12px;
+        color: #fff;
+        font-family: 'Poppins', sans-serif;
+        font-size: 14px;
+        transition: all 0.3s ease;
+    }
+
+    .filter-input::placeholder {
+        color: rgba(255, 255, 255, 0.4);
+    }
+
+    .filter-input:focus, .filter-select:focus {
+        outline: none;
+        border-color: #ff8c00;
+        background: rgba(255, 140, 0, 0.1);
+        box-shadow: 0 0 20px rgba(255, 140, 0, 0.2);
+    }
+
+    .filter-select option {
+        background: #1a2f59;
+        color: #fff;
+    }
+
+    .discount-checkbox {
+        display: flex;
+        align-items: center;
+        gap: 12px;
+        color: rgba(255, 255, 255, 0.8);
+        font-family: 'Poppins', sans-serif;
+        cursor: pointer;
+        margin-bottom: 25px;
+    }
+
+    .discount-checkbox input {
+        width: 22px;
+        height: 22px;
+        cursor: pointer;
+        accent-color: #ff8c00;
+    }
+
+    .filter-buttons {
+        display: flex;
+        gap: 20px;
+        justify-content: center;
+        flex-wrap: wrap;
+    }
+
+    .btn-filter {
+        padding: 15px 45px;
+        font-family: 'Poppins', sans-serif;
+        font-size: 15px;
+        font-weight: 600;
+        text-transform: uppercase;
+        letter-spacing: 2px;
+        border: none;
+        border-radius: 30px;
+        cursor: pointer;
+        transition: all 0.4s ease;
+        text-decoration: none;
+        display: inline-flex;
+        align-items: center;
+        gap: 10px;
+    }
+
+    .btn-search {
+        background: linear-gradient(135deg, #ff8c00 0%, #ff6b00 100%);
+        color: #fff;
+        box-shadow: 0 10px 30px rgba(255, 140, 0, 0.4);
+    }
+
+    .btn-search:hover {
+        transform: translateY(-3px);
+        box-shadow: 0 15px 40px rgba(255, 140, 0, 0.5);
+        color: #fff;
+    }
+
+    .btn-reset {
+        background: rgba(255, 255, 255, 0.1);
+        color: #fff;
+        border: 2px solid rgba(255, 255, 255, 0.3);
+    }
+
+    .btn-reset:hover {
+        background: rgba(255, 255, 255, 0.2);
+        border-color: #fff;
+        transform: translateY(-3px);
+        color: #fff;
+    }
+
+    /* ============================================
+       🎴 PACKAGES GRID
+       ============================================ */
+    .packages-section {
+        background: linear-gradient(180deg, rgba(15, 30, 60, 0.98) 0%, #0a1628 100%);
+        padding: 60px 20px 100px;
+        min-height: 500px;
+    }
+
+    .packages-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fill, minmax(350px, 1fr));
+        gap: 35px;
+        max-width: 1400px;
+        margin: 0 auto;
+    }
+
+    .package-card {
+        background: rgba(255, 255, 255, 0.03);
+        backdrop-filter: blur(10px);
+        border: 1px solid rgba(255, 255, 255, 0.08);
+        border-radius: 24px;
+        overflow: hidden;
+        transition: all 0.5s ease;
+        box-shadow: 0 10px 40px rgba(0, 0, 0, 0.2);
+    }
+
+    .package-card:hover {
+        transform: translateY(-15px);
+        border-color: rgba(255, 140, 0, 0.5);
+        box-shadow: 0 25px 60px rgba(0, 0, 0, 0.4), 0 0 40px rgba(255, 140, 0, 0.15);
+    }
+
+    .card-image-container {
+        position: relative;
+        height: 220px;
+        overflow: hidden;
+    }
+
+    .card-image {
+        width: 100%;
+        height: 100%;
+        object-fit: cover;
+        transition: transform 0.6s ease;
+    }
+
+    .package-card:hover .card-image {
+        transform: scale(1.1);
+    }
+
+    .card-price-badge {
+        position: absolute;
+        top: 20px;
+        right: 20px;
+        padding: 12px 22px;
+        background: linear-gradient(135deg, #1e3c72 0%, #2a5298 100%);
+        border-radius: 25px;
+        font-family: 'Poppins', sans-serif;
+        font-size: 1.3rem;
+        font-weight: 700;
+        color: #fff;
+        box-shadow: 0 8px 25px rgba(0, 0, 0, 0.3);
+        z-index: 10;
+    }
+
+    .card-discount-badge {
+        position: absolute;
+        top: 20px;
+        left: 20px;
+        padding: 8px 18px;
+        background: linear-gradient(135deg, #ff6b6b 0%, #ee5a5a 100%);
+        border-radius: 20px;
+        font-family: 'Poppins', sans-serif;
+        font-weight: 600;
+        font-size: 0.85rem;
+        color: #fff;
+        box-shadow: 0 5px 15px rgba(255, 107, 107, 0.4);
+        z-index: 10;
+    }
+
+    .card-body {
+        padding: 28px;
+    }
+
+    .card-destination {
+        font-family: 'Playfair Display', serif;
+        font-size: 1.7rem;
+        font-weight: 700;
+        color: #ff8c00;
+        margin-bottom: 15px;
+    }
+
+    .card-info {
+        display: flex;
+        gap: 12px;
+        flex-wrap: wrap;
+        margin-bottom: 18px;
+    }
+
+    .card-badge {
+        padding: 6px 14px;
+        border-radius: 15px;
+        font-family: 'Poppins', sans-serif;
+        font-size: 0.8rem;
+        font-weight: 600;
+    }
+
+    .badge-country {
+        background: rgba(139, 92, 246, 0.15);
+        color: #a78bfa;
+        border: 1px solid rgba(139, 92, 246, 0.3);
+    }
+
+    .badge-rooms {
+        background: rgba(52, 211, 153, 0.15);
+        color: #6ee7b7;
+        border: 1px solid rgba(52, 211, 153, 0.3);
+    }
+
+    .card-description {
+        color: rgba(255, 255, 255, 0.7);
+        font-family: 'Poppins', sans-serif;
+        font-size: 0.9rem;
+        line-height: 1.6;
+        margin-bottom: 22px;
+        display: -webkit-box;
+        -webkit-line-clamp: 2;
+        -webkit-box-orient: vertical;
+        overflow: hidden;
+    }
+
+    .card-actions {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(140px, 1fr));
+        gap: 12px;
+    }
+
+    .card-actions-admin {
+        display: grid;
+        grid-template-columns: repeat(3, 1fr);
+        gap: 10px;
+    }
+
+    .btn-card {
+        padding: 12px 18px;
+        font-family: 'Poppins', sans-serif;
+        font-size: 13px;
+        font-weight: 600;
+        text-transform: uppercase;
+        letter-spacing: 1px;
+        border: none;
+        border-radius: 12px;
+        cursor: pointer;
+        transition: all 0.3s ease;
+        text-decoration: none;
+        text-align: center;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        gap: 6px;
+    }
+
+    .btn-details {
+        background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+        color: #fff;
+    }
+
+    .btn-details:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 8px 25px rgba(102, 126, 234, 0.4);
+        color: #fff;
+    }
+
+    .btn-cart {
+        background: linear-gradient(135deg, #11998e 0%, #38ef7d 100%);
+        color: #fff;
+    }
+
+    .btn-cart:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 8px 25px rgba(56, 239, 125, 0.4);
+        color: #fff;
+    }
+
+    .btn-edit {
+        background: linear-gradient(135deg, #f093fb 0%, #f5576c 100%);
+        color: #fff;
+    }
+
+    .btn-edit:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 8px 25px rgba(245, 87, 108, 0.4);
+        color: #fff;
+    }
+
+    .btn-delete {
+        background: linear-gradient(135deg, #eb3349 0%, #f45c43 100%);
+        color: #fff;
+    }
+
+    .btn-delete:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 8px 25px rgba(235, 51, 73, 0.4);
+    }
+
+    /* ============================================
+       📭 EMPTY STATE
+       ============================================ */
+    .empty-state {
+        text-align: center;
+        padding: 80px 20px;
+    }
+
+    .empty-icon {
+        font-size: 6rem;
+        margin-bottom: 25px;
+        opacity: 0.6;
+    }
+
+    .empty-text {
+        font-family: 'Playfair Display', serif;
+        font-size: 1.8rem;
+        color: rgba(255, 255, 255, 0.6);
+        margin-bottom: 30px;
+    }
+
+    /* ============================================
+       📱 RESPONSIVE
+       ============================================ */
+    @@media (max-width: 768px) {
+        .packages-title {
+            font-size: 2.5rem;
+        }
+
+        .packages-hero {
+            min-height: 320px;
+        }
+
+        .packages-grid {
+            grid-template-columns: 1fr;
+        }
+
+        .filter-grid {
+            grid-template-columns: 1fr;
+        }
+
+        .filter-buttons {
+            flex-direction: column;
+        }
+
+        .btn-filter {
+            width: 100%;
+            justify-content: center;
+        }
+
+        .card-actions, .card-actions-admin {
+            grid-template-columns: 1fr;
+        }
+    }
+</style>
+
+<!-- 🌍 HERO HEADER -->
+<div class="packages-hero">
+    <div class="packages-hero-content">
+        <h1 class="packages-title">🌍 Explore Destinations</h1>
+        <p class="packages-subtitle">Discover Your Perfect Adventure</p>
+        <div class="trip-counter">
+            ✈️ @totalCount Amazing Trips Available
+        </div>
+    </div>
+</div>
+
+<!-- 🔍 FILTER SECTION -->
+<div class="filter-section">
+    <div class="filter-panel">
+        <form method="get" asp-action="Index">
+            <div class="filter-grid">
+                <div class="filter-group">
+                    <label>🔍 Search</label>
+                    <input type="text" name="search" class="filter-input"
+                           placeholder="Destination or country..."
+                           value="@ViewBag.CurrentSearch" />
+                </div>
+
+                <div class="filter-group">
+                    <label>🌍 Country</label>
+                    <select name="country" class="filter-select">
+                        <option value="">All Countries</option>
+                        @if (ViewBag.Countries != null)
+                        {
+                            @foreach (var country in (List<string>)ViewBag.Countries)
+                            {
+                                <option value="@country" selected="@(country == ViewBag.CurrentCountry)">@country</option>
+                            }
+                        }
+                    </select>
+                </div>
+
+                <div class="filter-group">
+                    <label>🎯 Package Type</label>
+                    <select name="packageType" class="filter-select">
+                        <option value="">All Types</option>
+                        @if (ViewBag.PackageTypes != null)
+                        {
+                            @foreach (var type in (List<string>)ViewBag.PackageTypes)
+                            {
+                                <option value="@type" selected="@(type == ViewBag.CurrentPackageType)">@type</option>
+                            }
+                        }
+                    </select>
+                </div>
+
+                <div class="filter-group">
+                    <label>💵 Min Price</label>
+                    <input type="number" step="0.01" name="minPrice" class="filter-input"
+                           placeholder="e.g. 1000" value="@ViewBag.CurrentMinPrice" />
+                </div>
+
+                <div class="filter-group">
+                    <label>💵 Max Price</label>
+                    <input type="number" step="0.01" name="maxPrice" class="filter-input"
+                           placeholder="e.g. 5000" value="@ViewBag.CurrentMaxPrice" />
+                </div>
+
+                <div class="filter-group">
+                    <label>📅 Start Date From</label>
+                    <input type="date" name="startDateFrom" class="filter-input"
+                           value="@ViewBag.CurrentStartDateFrom" />
+                </div>
+
+                <div class="filter-group">
+                    <label>📅 Start Date To</label>
+                    <input type="date" name="startDateTo" class="filter-input"
+                           value="@ViewBag.CurrentStartDateTo" />
+                </div>
+
+                <div class="filter-group">
+                    <label>📊 Sort By</label>
+                    <select name="sortBy" class="filter-select">
+                        <option value="">Default</option>
+                        <option value="price_asc" selected="@(ViewBag.CurrentSort == "price_asc")">Price: Low to High</option>
+                        <option value="price_desc" selected="@(ViewBag.CurrentSort == "price_desc")">Price: High to Low</option>
+                        <option value="category" selected="@(ViewBag.CurrentSort == "category")">Category</option>
+                        <option value="popular" selected="@(ViewBag.CurrentSort == "popular")">Most Popular</option>
+                        <option value="date_asc" selected="@(ViewBag.CurrentSort == "date_asc")">Date: Earliest</option>
+                        <option value="date_desc" selected="@(ViewBag.CurrentSort == "date_desc")">Date: Latest</option>
+                    </select>
+                </div>
+            </div>
+
+            <label class="discount-checkbox">
+                <input type="checkbox" name="onlyDiscounted" value="true"
+                       checked="@(ViewBag.OnlyDiscounted == true)" />
+                💰 Show Only Discounted Packages
+            </label>
+
+            <div class="filter-buttons">
+                <button type="submit" class="btn-filter btn-search">
+                    🔍 Search
+                </button>
+                <a href="@Url.Action("Index")" class="btn-filter btn-reset">
+                    🔄 Reset
+                </a>
+            </div>
+        </form>
+    </div>
+</div>
+
+<!-- 🎴 PACKAGES GRID -->
+<div class="packages-section">
+    @if (!Model.Any())
+    {
+        <div class="empty-state">
+            <div class="empty-icon">🔍</div>
+            <p class="empty-text">No packages found matching your criteria</p>
+            <a href="@Url.Action("Index")" class="btn-filter btn-search">
+                Show All Packages
+            </a>
+        </div>
+    }
+    else
+    {
+        <div class="packages-grid">
+            @foreach (var package in Model)
+            {
+                var finalPrice = package.FinalPrice;
+                var hasDiscountValue = package.Discount.HasValue && package.Discount.Value < package.Price;
+                var showDiscountBadge = hasDiscountValue;
+
+                <div class="package-card">
+                    <div class="card-image-container">
+                        @if (!string.IsNullOrEmpty(package.ImageUrl))
+                        {
+                            <img src="@package.ImageUrl" alt="@package.Destination" class="card-image" />
+                        }
+                        else
+                        {
+                            <img src="https://images.unsplash.com/photo-1488646953014-85cb44e25828?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80" alt="@package.Destination" class="card-image" />
+                        }
+
+                        @if (showDiscountBadge)
+                        {
+                            var savings = package.Price - package.Discount.Value;
+                            <div class="card-discount-badge">
+                                @if (isAdmin)
+                                {
+                                    <text>💥 Save $@savings.ToString("N0")@(package.IsDiscountActive ? "" : " (inactive)")</text>
+                                }
+                                else
+                                {
+                                    <text>🔥 SALE $@package.Discount.Value.ToString("N0")</text>
+                                }
+                            </div>
+                        }
+
+                        <div class="card-price-badge">
+                            $@finalPrice.ToString("N0")
+                        </div>
+                    </div>
+
+                    <div class="card-body">
+                        <h3 class="card-destination">@package.Destination</h3>
+
+                    <div class="card-info">
+                            <span class="card-badge badge-country">📍 @package.Country</span>
+                            <span class="card-badge badge-rooms">🏨 @package.AvailableRooms Rooms</span>
+                        <span class="card-badge badge-country">🎯 @package.PackageType</span>
+                        <span class="card-badge badge-rooms">👥 @(package.AgeLimit > 0 ? package.AgeLimit + "+" : "All ages")</span>
+                        </div>
+
+                    <div class="card-info" style="margin-top: 8px;">
+                        <span class="card-badge badge-country">📅 @package.StartDate.ToString("dd MMM yyyy")</span>
+                        <span class="card-badge badge-country">➡️ @package.EndDate.ToString("dd MMM yyyy")</span>
+                    </div>
+
+                        <p class="card-description">@package.Description</p>
+
+                    @if (package.IsDiscountActive)
+                    {
+                        <p style="margin: 0 0 12px 0; color: rgba(255,255,255,0.6); text-decoration: line-through;">
+                            $@package.Price.ToString("N0")
+                        </p>
+                    }
+
+                        @if (isAdmin)
+                        {
+                            <div class="card-actions-admin">
+                                <a asp-action="Details" asp-route-id="@package.Id" class="btn-card btn-details">
+                                    👁️ View
+                                </a>
+                                <a asp-action="Edit" asp-route-id="@package.Id" class="btn-card btn-edit">
+                                    ✏️ Edit
+                                </a>
+                                <a asp-action="Delete" asp-route-id="@package.Id" class="btn-card btn-delete">
+                                    🗑️ Delete
+                                </a>
+                            </div>
+                        @if (!package.IsVisible)
+                        {
+                            <p style="margin-top: 10px; color: #fca5a5;">🚫 Hidden from public</p>
+                        }
+                        }
+                        else
+                        {
+                            <div class="card-actions">
+                                <a asp-action="Details" asp-route-id="@package.Id" class="btn-card btn-details">
+                                    👁️ Details
+                                </a>
+
+                                @if (User.Identity!.IsAuthenticated)
+                                {
+                                <form asp-controller="ShoppingCart" asp-action="AddToCart" method="post" style="margin: 0;">
+                                    <input type="hidden" name="packageId" value="@package.Id" />
+                                    <button type="submit" class="btn-card btn-cart" style="width: 100%;">
+                                        📌 Book
+                                    </button>
+                                </form>
+                                <form asp-controller="Bookings" asp-action="Create" method="post" style="margin: 0;">
+                                    <input type="hidden" name="packageId" value="@package.Id" />
+                                    <button type="submit" class="btn-card btn-details" style="width: 100%;">
+                                        ⚡ Buy Now
+                                    </button>
+                                </form>
+                                }
+                                else
+                                {
+                                <a asp-controller="Account" asp-action="Login" class="btn-card btn-cart">
+                                    🔐 Login to Book
+                                </a>
+                                <a asp-controller="Account" asp-action="Login" class="btn-card btn-details">
+                                    🔐 Login to Buy
+                                </a>
+                                }
+                            </div>
+                        }
+                    </div>
+                </div>
+            }
+        </div>
+    }
+</div>

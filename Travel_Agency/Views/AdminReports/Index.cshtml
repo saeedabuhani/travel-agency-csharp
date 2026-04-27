@@ -1,0 +1,70 @@
+﻿@{
+    ViewData["Title"] = "Admin Reports";
+}
+
+<h2 class="mb-4">📊 Admin Reports</h2>
+
+<hr />
+
+<h4>⭐ Top Rated Packages</h4>
+<table class="table table-bordered">
+    <thead>
+        <tr>
+            <th>Package ID</th>
+            <th>Average Rating</th>
+            <th>Reviews</th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var p in ViewBag.TopRated)
+        {
+            <tr>
+                <td>@p.PackageId</td>
+                <td>@p.AvgRating.ToString("0.00")</td>
+                <td>@p.ReviewsCount</td>
+            </tr>
+        }
+    </tbody>
+</table>
+
+<hr />
+
+<h4>📦 Most Booked Packages</h4>
+<table class="table table-bordered">
+    <thead>
+        <tr>
+            <th>Package ID</th>
+            <th>Total Bookings</th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var p in ViewBag.MostBooked)
+        {
+            <tr>
+                <td>@p.PackageId</td>
+                <td>@p.BookingsCount</td>
+            </tr>
+        }
+    </tbody>
+</table>
+
+<hr />
+
+<h4>⏳ Waiting List Statistics</h4>
+<table class="table table-bordered">
+    <thead>
+        <tr>
+            <th>Package ID</th>
+            <th>Users Waiting</th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var p in ViewBag.WaitingStats)
+        {
+            <tr>
+                <td>@p.PackageId</td>
+                <td>@p.WaitingCount</td>
+            </tr>
+        }
+    </tbody>
+</table>

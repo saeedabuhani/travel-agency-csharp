@@ -1,0 +1,299 @@
+@using Travel_Agency.Models
+@model List<Review>
+
+@{
+    ViewData["Title"] = "Reviews & Ratings Management";
+}
+
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;500;600;700;800&family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+
+<style>
+    /* ============================================
+       ⭐ REVIEWS HERO HEADER
+       ============================================ */
+    .reviews-hero {
+        position: relative;
+        min-height: 320px;
+        background: url('https://images.unsplash.com/photo-1436491865332-7a61a109cc05?ixlib=rb-4.0.3&auto=format&fit=crop&w=1920&q=80') center/cover no-repeat;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        text-align: center;
+    }
+
+    .reviews-hero::before {
+        content: '';
+        position: absolute;
+        top: 0;
+        left: 0;
+        right: 0;
+        bottom: 0;
+        background: linear-gradient(135deg, rgba(251, 191, 36, 0.8) 0%, rgba(15, 23, 42, 0.95) 100%);
+        z-index: 1;
+    }
+
+    .reviews-hero-content {
+        position: relative;
+        z-index: 2;
+        padding: 50px 20px;
+    }
+
+    .reviews-title {
+        font-family: 'Playfair Display', serif;
+        font-size: 3rem;
+        font-weight: 700;
+        color: #fff;
+        margin-bottom: 15px;
+        text-shadow: 2px 2px 20px rgba(0, 0, 0, 0.3);
+    }
+
+    .reviews-subtitle {
+        font-family: 'Poppins', sans-serif;
+        font-size: 1.1rem;
+        color: rgba(255, 255, 255, 0.9);
+        letter-spacing: 2px;
+    }
+
+    /* ============================================
+       📋 MAIN CONTENT
+       ============================================ */
+    .reviews-content {
+        background: linear-gradient(180deg, rgba(15, 23, 42, 0.98) 0%, #0f172a 100%);
+        padding: 60px 20px 100px;
+        min-height: calc(100vh - 320px);
+    }
+
+    .reviews-container {
+        max-width: 1400px;
+        margin: 0 auto;
+    }
+
+    /* ============================================
+       📊 STATS
+       ============================================ */
+    .stats-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+        gap: 20px;
+        margin-bottom: 40px;
+    }
+
+    .stat-card {
+        background: rgba(255, 255, 255, 0.03);
+        backdrop-filter: blur(10px);
+        border: 1px solid rgba(255, 255, 255, 0.08);
+        border-radius: 15px;
+        padding: 25px;
+        text-align: center;
+    }
+
+    .stat-number {
+        font-family: 'Playfair Display', serif;
+        font-size: 2.5rem;
+        font-weight: 700;
+        color: #fbbf24;
+        margin-bottom: 8px;
+    }
+
+    .stat-label {
+        font-family: 'Poppins', sans-serif;
+        color: rgba(255, 255, 255, 0.7);
+        font-size: 0.9rem;
+        text-transform: uppercase;
+        letter-spacing: 1px;
+    }
+
+    /* ============================================
+       📝 REVIEW CARDS
+       ============================================ */
+    .reviews-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fill, minmax(400px, 1fr));
+        gap: 25px;
+    }
+
+    .review-card {
+        background: rgba(255, 255, 255, 0.03);
+        backdrop-filter: blur(10px);
+        border: 1px solid rgba(255, 255, 255, 0.08);
+        border-radius: 20px;
+        padding: 30px;
+        transition: all 0.3s ease;
+    }
+
+    .review-card:hover {
+        transform: translateY(-5px);
+        border-color: rgba(251, 191, 36, 0.3);
+        box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
+    }
+
+    .review-header {
+        display: flex;
+        justify-content: space-between;
+        align-items: start;
+        margin-bottom: 20px;
+        padding-bottom: 20px;
+        border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+    }
+
+    .review-user {
+        flex: 1;
+    }
+
+    .review-user-name {
+        font-family: 'Poppins', sans-serif;
+        font-size: 1.1rem;
+        font-weight: 600;
+        color: #fff;
+        margin-bottom: 5px;
+    }
+
+    .review-package {
+        font-family: 'Poppins', sans-serif;
+        color: rgba(255, 255, 255, 0.6);
+        font-size: 0.9rem;
+    }
+
+    .review-rating {
+        font-size: 1.5rem;
+        color: #fbbf24;
+    }
+
+    .review-comment {
+        font-family: 'Poppins', sans-serif;
+        color: rgba(255, 255, 255, 0.8);
+        line-height: 1.6;
+        margin-bottom: 15px;
+        font-size: 0.95rem;
+    }
+
+    .review-date {
+        font-family: 'Poppins', sans-serif;
+        color: rgba(255, 255, 255, 0.5);
+        font-size: 0.85rem;
+    }
+
+    .empty-state {
+        text-align: center;
+        padding: 80px 20px;
+    }
+
+    .empty-icon {
+        font-size: 5rem;
+        margin-bottom: 20px;
+    }
+
+    .empty-text {
+        font-family: 'Playfair Display', serif;
+        font-size: 2rem;
+        color: #fff;
+        margin-bottom: 10px;
+    }
+
+    .empty-subtext {
+        font-family: 'Poppins', sans-serif;
+        color: rgba(255, 255, 255, 0.6);
+        font-size: 1rem;
+    }
+
+    /* ============================================
+       📱 RESPONSIVE
+       ============================================ */
+    @@media (max-width: 768px) {
+        .reviews-grid {
+            grid-template-columns: 1fr;
+        }
+
+        .reviews-title {
+            font-size: 2.2rem;
+        }
+    }
+</style>
+
+<!-- ⭐ REVIEWS HERO HEADER -->
+<div class="reviews-hero">
+    <div class="reviews-hero-content">
+        <h1 class="reviews-title">⭐ Reviews & Ratings</h1>
+        <p class="reviews-subtitle">All User Assessments</p>
+    </div>
+</div>
+
+<!-- 📋 MAIN CONTENT -->
+<div class="reviews-content">
+    <div class="reviews-container">
+
+        @if (TempData["Success"] != null)
+        {
+            <div class="alert-custom alert-success-custom">
+                <span>✅</span>
+                <span>@TempData["Success"]</span>
+            </div>
+        }
+
+        @if (TempData["Error"] != null)
+        {
+            <div class="alert-custom alert-error-custom">
+                <span>❌</span>
+                <span>@TempData["Error"]</span>
+            </div>
+        }
+
+        <!-- 📊 STATS -->
+        <div class="stats-grid">
+            <div class="stat-card">
+                <div class="stat-number">@Model.Count</div>
+                <div class="stat-label">Total Reviews</div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-number">@(Model.Any() ? Model.Average(r => r.Rating).ToString("F1") : "0")</div>
+                <div class="stat-label">Average Rating</div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-number">@Model.Count(r => r.Rating == 5)</div>
+                <div class="stat-label">5⭐ Reviews</div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-number">@Model.Select(r => r.TravelPackageId).Distinct().Count()</div>
+                <div class="stat-label">Packages Reviewed</div>
+            </div>
+        </div>
+
+        <!-- 📝 REVIEWS LIST -->
+        @if (!Model.Any())
+        {
+            <div class="empty-state">
+                <div class="empty-icon">⭐</div>
+                <p class="empty-text">No Reviews Yet</p>
+                <p class="empty-subtext">Users haven't submitted any reviews yet.</p>
+            </div>
+        }
+        else
+        {
+            <div class="reviews-grid">
+                @foreach (var review in Model)
+                {
+                    <div class="review-card">
+                        <div class="review-header">
+                            <div class="review-user">
+                                <div class="review-user-name">@(review.User?.FullName ?? review.User?.Email ?? "Unknown User")</div>
+                                <div class="review-package">📍 @(review.TravelPackage?.Destination ?? "Unknown Package"), @(review.TravelPackage?.Country ?? "")</div>
+                            </div>
+                            <div class="review-rating">
+                                @for (int i = 0; i < review.Rating; i++)
+                                {
+                                    <span>⭐</span>
+                                }
+                            </div>
+                        </div>
+                        @if (!string.IsNullOrEmpty(review.Comment))
+                        {
+                            <div class="review-comment">@review.Comment</div>
+                        }
+                        <div class="review-date">📅 @review.CreatedAt.ToString("dd MMM yyyy 'at' HH:mm")</div>
+                    </div>
+                }
+            </div>
+        }
+
+    </div>
+</div>

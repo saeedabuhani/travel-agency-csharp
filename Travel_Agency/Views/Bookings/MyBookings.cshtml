@@ -1,0 +1,1141 @@
+﻿@model List<Travel_Agency.Models.Booking>
+@using Travel_Agency.Models
+
+@{
+    ViewData["Title"] = "My Bookings";
+    var waitingListEntries = ViewBag.WaitingListEntries as List<WaitingList> ?? new List<WaitingList>();
+    var notifiedEntries = ViewBag.NotifiedEntries as List<WaitingList> ?? new List<WaitingList>();
+    var countdownInfo = ViewBag.CountdownInfo as Dictionary<int, bool> ?? new Dictionary<int, bool>();
+}
+
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;500;600;700;800&family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+
+<style>
+    /* ============================================
+       🎫 BOOKINGS HERO HEADER
+       ============================================ */
+    .bookings-hero {
+        position: relative;
+        min-height: 320px;
+        background: url('https://images.unsplash.com/photo-1530521954074-e64f6810b32d?ixlib=rb-4.0.3&auto=format&fit=crop&w=1920&q=80') center/cover no-repeat;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        text-align: center;
+    }
+
+    .bookings-hero::before {
+        content: '';
+        position: absolute;
+        top: 0;
+        left: 0;
+        right: 0;
+        bottom: 0;
+        background: linear-gradient(135deg, rgba(30, 58, 138, 0.85) 0%, rgba(15, 23, 42, 0.9) 100%);
+        z-index: 1;
+    }
+
+    .bookings-hero-content {
+        position: relative;
+        z-index: 2;
+        padding: 50px 20px;
+    }
+
+    .bookings-title {
+        font-family: 'Playfair Display', serif;
+        font-size: 3.5rem;
+        font-weight: 700;
+        color: #fff;
+        margin-bottom: 15px;
+        text-shadow: 2px 2px 20px rgba(0, 0, 0, 0.3);
+    }
+
+    .bookings-subtitle {
+        font-family: 'Poppins', sans-serif;
+        font-size: 1.2rem;
+        color: rgba(255, 255, 255, 0.8);
+        letter-spacing: 2px;
+    }
+
+    /* ============================================
+       📋 MAIN CONTENT
+       ============================================ */
+    .bookings-content {
+        background: linear-gradient(180deg, rgba(15, 23, 42, 0.98) 0%, #0f172a 100%);
+        padding: 60px 20px 100px;
+        min-height: calc(100vh - 320px);
+    }
+
+    .bookings-container {
+        max-width: 1400px;
+        margin: 0 auto;
+    }
+
+    /* ============================================
+       🔔 ALERTS
+       ============================================ */
+    .alert-custom {
+        padding: 18px 25px;
+        border-radius: 15px;
+        margin-bottom: 30px;
+        font-family: 'Poppins', sans-serif;
+        display: flex;
+        align-items: center;
+        gap: 12px;
+    }
+
+    .alert-success-custom {
+        background: rgba(16, 185, 129, 0.15);
+        border: 1px solid rgba(16, 185, 129, 0.3);
+        color: #6ee7b7;
+    }
+
+    .alert-error-custom {
+        background: rgba(239, 68, 68, 0.15);
+        border: 1px solid rgba(239, 68, 68, 0.3);
+        color: #fca5a5;
+    }
+
+    .alert-info-custom {
+        background: rgba(59, 130, 246, 0.15);
+        border: 1px solid rgba(59, 130, 246, 0.3);
+        color: #93c5fd;
+    }
+
+    /* ============================================
+       🎴 BOOKING CARDS GRID
+       ============================================ */
+    .bookings-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fill, minmax(380px, 1fr));
+        gap: 30px;
+    }
+
+    .booking-card {
+        background: rgba(255, 255, 255, 0.03);
+        backdrop-filter: blur(10px);
+        border: 1px solid rgba(255, 255, 255, 0.08);
+        border-radius: 24px;
+        overflow: hidden;
+        transition: all 0.4s ease;
+    }
+
+    .booking-card:hover {
+        transform: translateY(-10px);
+        border-color: rgba(59, 130, 246, 0.5);
+        box-shadow: 0 25px 60px rgba(0, 0, 0, 0.4);
+    }
+
+    .booking-image {
+        position: relative;
+        height: 200px;
+        overflow: hidden;
+    }
+
+    .booking-image img {
+        width: 100%;
+        height: 100%;
+        object-fit: cover;
+        transition: transform 0.5s ease;
+    }
+
+    .booking-card:hover .booking-image img {
+        transform: scale(1.1);
+    }
+
+    /* ============================================
+       🚫 CANCELLED BOOKING - DIAGONAL WATERMARK
+       ============================================ */
+    .booking-image.cancelled-image::after {
+        content: 'CLOSED';
+        position: absolute;
+        top: 50%;
+        left: 50%;
+        transform: translate(-50%, -50%) rotate(-35deg);
+        font-family: 'Poppins', sans-serif;
+        font-size: 3rem;
+        font-weight: 900;
+        color: rgba(239, 68, 68, 0.6);
+        letter-spacing: 15px;
+        text-transform: uppercase;
+        text-shadow: 
+            2px 2px 0 rgba(0, 0, 0, 0.3),
+            -1px -1px 0 rgba(255, 255, 255, 0.1);
+        pointer-events: none;
+        z-index: 5;
+        white-space: nowrap;
+    }
+
+    .booking-image.cancelled-image::before {
+        content: '';
+        position: absolute;
+        top: 0;
+        left: 0;
+        right: 0;
+        bottom: 0;
+        background: rgba(0, 0, 0, 0.4);
+        z-index: 4;
+    }
+
+    .booking-card.cancelled-card {
+        opacity: 0.85;
+        border-color: rgba(239, 68, 68, 0.3);
+    }
+
+    .booking-card.cancelled-card:hover {
+        transform: none;
+        border-color: rgba(239, 68, 68, 0.4);
+    }
+
+    .booking-status {
+        position: absolute;
+        top: 15px;
+        right: 15px;
+        padding: 8px 18px;
+        border-radius: 20px;
+        font-family: 'Poppins', sans-serif;
+        font-size: 0.8rem;
+        font-weight: 600;
+        text-transform: uppercase;
+        letter-spacing: 1px;
+    }
+
+    .status-paid {
+        background: linear-gradient(135deg, #10b981 0%, #059669 100%);
+        color: #fff;
+    }
+
+    .status-reserved {
+        background: linear-gradient(135deg, #f59e0b 0%, #d97706 100%);
+        color: #fff;
+    }
+
+    .status-cancelled {
+        background: rgba(107, 114, 128, 0.8);
+        color: #fff;
+    }
+
+    .booking-body {
+        padding: 28px;
+    }
+
+    .booking-destination {
+        font-family: 'Playfair Display', serif;
+        font-size: 1.6rem;
+        font-weight: 700;
+        color: #fff;
+        margin-bottom: 18px;
+    }
+
+    .booking-details {
+        margin-bottom: 20px;
+    }
+
+    .booking-detail {
+        display: flex;
+        align-items: center;
+        gap: 10px;
+        padding: 8px 0;
+        border-bottom: 1px solid rgba(255, 255, 255, 0.06);
+        font-family: 'Poppins', sans-serif;
+        font-size: 0.9rem;
+        color: rgba(255, 255, 255, 0.7);
+    }
+
+    .booking-detail:last-child {
+        border-bottom: none;
+    }
+
+    .booking-detail strong {
+        color: #60a5fa;
+        min-width: 100px;
+    }
+
+    .countdown-box {
+        background: rgba(59, 130, 246, 0.15);
+        border: 1px solid rgba(59, 130, 246, 0.3);
+        border-radius: 12px;
+        padding: 15px;
+        margin-bottom: 20px;
+        text-align: center;
+    }
+
+    .countdown-text {
+        font-family: 'Poppins', sans-serif;
+        font-size: 1rem;
+        font-weight: 600;
+        color: #93c5fd;
+    }
+
+    /* ============================================
+       ⏰ PRIORITY COUNTDOWN TIMER
+       ============================================ */
+    .priority-countdown {
+        background: linear-gradient(135deg, rgba(245, 158, 11, 0.2) 0%, rgba(239, 68, 68, 0.2) 100%);
+        border: 2px solid rgba(245, 158, 11, 0.5);
+        border-radius: 15px;
+        padding: 20px;
+        margin: 15px 0;
+        text-align: center;
+        animation: pulse 2s infinite;
+    }
+
+    @@keyframes pulse {
+        0%, 100% { box-shadow: 0 0 0 0 rgba(245, 158, 11, 0.7); }
+        50% { box-shadow: 0 0 0 10px rgba(245, 158, 11, 0); }
+    }
+
+    .countdown-timer {
+        font-family: 'Playfair Display', serif;
+        font-size: 2.5rem;
+        font-weight: 700;
+        color: #fbbf24;
+        margin: 10px 0;
+        text-shadow: 0 0 20px rgba(251, 191, 36, 0.5);
+    }
+
+    .countdown-label {
+        font-family: 'Poppins', sans-serif;
+        font-size: 0.9rem;
+        color: rgba(255, 255, 255, 0.8);
+        text-transform: uppercase;
+        letter-spacing: 1px;
+        margin-top: 5px;
+    }
+
+    .countdown-expired {
+        color: #ef4444;
+        animation: none;
+    }
+
+    .booking-actions {
+        display: flex;
+        flex-direction: column;
+        gap: 12px;
+    }
+
+    .btn-booking {
+        padding: 14px 25px;
+        font-family: 'Poppins', sans-serif;
+        font-size: 14px;
+        font-weight: 600;
+        text-transform: uppercase;
+        letter-spacing: 1px;
+        border: none;
+        border-radius: 12px;
+        cursor: pointer;
+        transition: all 0.3s ease;
+        text-decoration: none;
+        text-align: center;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        gap: 8px;
+    }
+
+    .btn-pay {
+        background: linear-gradient(135deg, #10b981 0%, #059669 100%);
+        color: #fff;
+        box-shadow: 0 8px 25px rgba(16, 185, 129, 0.3);
+    }
+
+    .btn-pay:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 12px 35px rgba(16, 185, 129, 0.4);
+        color: #fff;
+    }
+
+    .btn-cancel {
+        background: linear-gradient(135deg, #ef4444 0%, #dc2626 100%);
+        color: #fff;
+        box-shadow: 0 8px 25px rgba(239, 68, 68, 0.3);
+    }
+
+    .btn-cancel:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 12px 35px rgba(239, 68, 68, 0.4);
+        color: #fff;
+    }
+
+    .btn-download {
+        background: linear-gradient(135deg, #3b82f6 0%, #2563eb 100%);
+        color: #fff;
+        box-shadow: 0 8px 25px rgba(59, 130, 246, 0.3);
+    }
+
+    .btn-download:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 12px 35px rgba(59, 130, 246, 0.4);
+        color: #fff;
+    }
+
+    .btn-review {
+        background: linear-gradient(135deg, #f59e0b 0%, #d97706 100%);
+        color: #fff;
+        box-shadow: 0 8px 25px rgba(245, 158, 11, 0.3);
+    }
+
+    .btn-review:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 12px 35px rgba(245, 158, 11, 0.4);
+        color: #fff;
+    }
+
+    .paid-info {
+        text-align: center;
+        padding: 12px;
+        background: rgba(16, 185, 129, 0.1);
+        border-radius: 10px;
+        color: #6ee7b7;
+        font-family: 'Poppins', sans-serif;
+        font-size: 0.9rem;
+        margin-bottom: 15px;
+    }
+
+    .booking-footer {
+        padding: 15px 28px;
+        background: rgba(0, 0, 0, 0.2);
+        border-top: 1px solid rgba(255, 255, 255, 0.05);
+    }
+
+    .package-type-badge {
+        display: inline-block;
+        padding: 6px 15px;
+        background: rgba(139, 92, 246, 0.2);
+        border: 1px solid rgba(139, 92, 246, 0.3);
+        border-radius: 15px;
+        font-family: 'Poppins', sans-serif;
+        font-size: 0.8rem;
+        font-weight: 600;
+        color: #a78bfa;
+    }
+
+    /* ============================================
+       📭 EMPTY STATE
+       ============================================ */
+    .empty-state {
+        text-align: center;
+        padding: 80px 20px;
+    }
+
+    .empty-icon {
+        font-size: 6rem;
+        margin-bottom: 25px;
+        opacity: 0.5;
+    }
+
+    .empty-text {
+        font-family: 'Playfair Display', serif;
+        font-size: 1.8rem;
+        color: rgba(255, 255, 255, 0.6);
+        margin-bottom: 15px;
+    }
+
+    .empty-subtext {
+        font-family: 'Poppins', sans-serif;
+        color: rgba(255, 255, 255, 0.4);
+        margin-bottom: 30px;
+    }
+
+    .btn-browse {
+        padding: 16px 40px;
+        background: linear-gradient(135deg, #f59e0b 0%, #d97706 100%);
+        color: #fff;
+        font-family: 'Poppins', sans-serif;
+        font-size: 15px;
+        font-weight: 600;
+        text-transform: uppercase;
+        letter-spacing: 2px;
+        border: none;
+        border-radius: 30px;
+        text-decoration: none;
+        display: inline-block;
+        transition: all 0.3s ease;
+        box-shadow: 0 10px 30px rgba(245, 158, 11, 0.4);
+    }
+
+    .btn-browse:hover {
+        transform: translateY(-3px);
+        box-shadow: 0 15px 40px rgba(245, 158, 11, 0.5);
+        color: #fff;
+    }
+
+    /* ============================================
+       🔔 NOTIFICATIONS & WAITING LIST
+       ============================================ */
+    .notifications-section {
+        margin-bottom: 50px;
+    }
+
+    .section-header {
+        font-family: 'Playfair Display', serif;
+        font-size: 1.8rem;
+        color: #fff;
+        margin-bottom: 25px;
+        display: flex;
+        align-items: center;
+        gap: 15px;
+    }
+
+    .notification-card {
+        background: linear-gradient(135deg, rgba(16, 185, 129, 0.15) 0%, rgba(16, 185, 129, 0.05) 100%);
+        border: 2px solid rgba(16, 185, 129, 0.4);
+        border-radius: 20px;
+        padding: 25px 30px;
+        margin-bottom: 20px;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        flex-wrap: wrap;
+        gap: 20px;
+        animation: glow-green 2s infinite alternate;
+    }
+
+    @@keyframes glow-green {
+        0% { box-shadow: 0 0 20px rgba(16, 185, 129, 0.2); }
+        100% { box-shadow: 0 0 40px rgba(16, 185, 129, 0.4); }
+    }
+
+    .notification-content {
+        flex: 1;
+    }
+
+    .notification-title {
+        font-family: 'Poppins', sans-serif;
+        font-size: 1.2rem;
+        font-weight: 600;
+        color: #6ee7b7;
+        margin-bottom: 8px;
+    }
+
+    .notification-message {
+        font-family: 'Poppins', sans-serif;
+        color: rgba(255, 255, 255, 0.8);
+        font-size: 0.95rem;
+    }
+
+    .notification-actions {
+        display: flex;
+        gap: 12px;
+    }
+
+    .btn-notification {
+        padding: 12px 25px;
+        font-family: 'Poppins', sans-serif;
+        font-size: 0.85rem;
+        font-weight: 600;
+        text-transform: uppercase;
+        letter-spacing: 1px;
+        border: none;
+        border-radius: 12px;
+        cursor: pointer;
+        transition: all 0.3s ease;
+        text-decoration: none;
+    }
+
+    .btn-book-now {
+        background: linear-gradient(135deg, #10b981 0%, #059669 100%);
+        color: #fff;
+        box-shadow: 0 8px 25px rgba(16, 185, 129, 0.4);
+    }
+
+    .btn-book-now:hover {
+        transform: translateY(-2px);
+        color: #fff;
+    }
+
+    .btn-leave-wait {
+        background: rgba(239, 68, 68, 0.2);
+        border: 1px solid rgba(239, 68, 68, 0.4);
+        color: #fca5a5;
+    }
+
+    .btn-leave-wait:hover {
+        background: rgba(239, 68, 68, 0.3);
+        color: #fff;
+    }
+
+    .waiting-list-card {
+        background: rgba(245, 158, 11, 0.1);
+        border: 1px solid rgba(245, 158, 11, 0.3);
+        border-radius: 15px;
+        padding: 20px 25px;
+        margin-bottom: 15px;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        flex-wrap: wrap;
+        gap: 15px;
+    }
+
+    .waiting-info {
+        flex: 1;
+    }
+
+    .waiting-destination {
+        font-family: 'Poppins', sans-serif;
+        font-size: 1.1rem;
+        font-weight: 600;
+        color: #fbbf24;
+        margin-bottom: 5px;
+    }
+
+    .waiting-position {
+        font-family: 'Poppins', sans-serif;
+        color: rgba(255, 255, 255, 0.6);
+        font-size: 0.9rem;
+    }
+
+    .position-badge {
+        background: linear-gradient(135deg, #f59e0b 0%, #d97706 100%);
+        color: #fff;
+        padding: 8px 15px;
+        border-radius: 20px;
+        font-family: 'Poppins', sans-serif;
+        font-size: 0.85rem;
+        font-weight: 600;
+    }
+
+    /* ============================================
+       📧 SHARE BUTTON
+       ============================================ */
+    .btn-share {
+        background: linear-gradient(135deg, #8b5cf6 0%, #7c3aed 100%);
+        color: #fff;
+        box-shadow: 0 8px 25px rgba(139, 92, 246, 0.3);
+    }
+
+    .btn-share:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 12px 35px rgba(139, 92, 246, 0.4);
+        color: #fff;
+    }
+
+    /* ============================================
+       📧 SHARE MODAL
+       ============================================ */
+    .share-modal-overlay {
+        display: none;
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        background: rgba(0, 0, 0, 0.8);
+        z-index: 9999;
+        align-items: center;
+        justify-content: center;
+    }
+
+    .share-modal-overlay.active {
+        display: flex;
+    }
+
+    .share-modal {
+        background: linear-gradient(180deg, #1e293b 0%, #0f172a 100%);
+        border: 1px solid rgba(139, 92, 246, 0.3);
+        border-radius: 25px;
+        padding: 40px;
+        max-width: 500px;
+        width: 90%;
+        position: relative;
+        animation: modalSlideIn 0.3s ease;
+    }
+
+    @@keyframes modalSlideIn {
+        from {
+            opacity: 0;
+            transform: translateY(-30px);
+        }
+        to {
+            opacity: 1;
+            transform: translateY(0);
+        }
+    }
+
+    .share-modal-close {
+        position: absolute;
+        top: 15px;
+        right: 20px;
+        background: none;
+        border: none;
+        color: rgba(255, 255, 255, 0.5);
+        font-size: 1.5rem;
+        cursor: pointer;
+        transition: color 0.3s ease;
+    }
+
+    .share-modal-close:hover {
+        color: #fff;
+    }
+
+    .share-modal-title {
+        font-family: 'Playfair Display', serif;
+        font-size: 1.8rem;
+        color: #fff;
+        margin-bottom: 10px;
+        text-align: center;
+    }
+
+    .share-modal-subtitle {
+        font-family: 'Poppins', sans-serif;
+        color: rgba(255, 255, 255, 0.6);
+        text-align: center;
+        margin-bottom: 30px;
+        font-size: 0.95rem;
+    }
+
+    .share-destination {
+        background: rgba(139, 92, 246, 0.15);
+        border: 1px solid rgba(139, 92, 246, 0.3);
+        border-radius: 15px;
+        padding: 15px 20px;
+        margin-bottom: 25px;
+        text-align: center;
+    }
+
+    .share-destination-name {
+        font-family: 'Poppins', sans-serif;
+        font-size: 1.2rem;
+        font-weight: 600;
+        color: #a78bfa;
+    }
+
+    .share-form-group {
+        margin-bottom: 20px;
+    }
+
+    .share-form-label {
+        display: block;
+        font-family: 'Poppins', sans-serif;
+        font-size: 0.9rem;
+        font-weight: 600;
+        color: #a78bfa;
+        margin-bottom: 8px;
+    }
+
+    .share-form-input {
+        width: 100%;
+        padding: 15px 20px;
+        background: rgba(255, 255, 255, 0.05);
+        border: 1px solid rgba(255, 255, 255, 0.15);
+        border-radius: 12px;
+        color: #fff;
+        font-family: 'Poppins', sans-serif;
+        font-size: 15px;
+        transition: all 0.3s ease;
+        box-sizing: border-box;
+    }
+
+    .share-form-input::placeholder {
+        color: rgba(255, 255, 255, 0.4);
+    }
+
+    .share-form-input:focus {
+        outline: none;
+        border-color: #a78bfa;
+        background: rgba(139, 92, 246, 0.1);
+        box-shadow: 0 0 20px rgba(139, 92, 246, 0.2);
+    }
+
+    .btn-send-share {
+        width: 100%;
+        padding: 16px;
+        background: linear-gradient(135deg, #8b5cf6 0%, #7c3aed 100%);
+        color: #fff;
+        font-family: 'Poppins', sans-serif;
+        font-size: 15px;
+        font-weight: 600;
+        text-transform: uppercase;
+        letter-spacing: 1px;
+        border: none;
+        border-radius: 12px;
+        cursor: pointer;
+        transition: all 0.3s ease;
+        box-shadow: 0 8px 25px rgba(139, 92, 246, 0.4);
+    }
+
+    .btn-send-share:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 12px 35px rgba(139, 92, 246, 0.5);
+    }
+
+    .share-note {
+        text-align: center;
+        margin-top: 15px;
+        font-family: 'Poppins', sans-serif;
+        font-size: 0.8rem;
+        color: rgba(255, 255, 255, 0.4);
+    }
+
+    /* ============================================
+       📱 RESPONSIVE
+       ============================================ */
+    @@media (max-width: 768px) {
+        .bookings-title {
+            font-size: 2.5rem;
+        }
+
+        .bookings-hero {
+            min-height: 250px;
+        }
+
+        .bookings-grid {
+            grid-template-columns: 1fr;
+        }
+
+        .share-modal {
+            padding: 25px;
+        }
+    }
+</style>
+
+<!-- 🎫 BOOKINGS HERO HEADER -->
+<div class="bookings-hero">
+    <div class="bookings-hero-content">
+        <h1 class="bookings-title">🎫 My Bookings</h1>
+        <p class="bookings-subtitle">Your Travel Adventures</p>
+    </div>
+</div>
+
+<!-- 📋 MAIN CONTENT -->
+<div class="bookings-content">
+    <div class="bookings-container">
+
+    @if (TempData["Success"] != null)
+    {
+            <div class="alert-custom alert-success-custom">
+                ✅ @TempData["Success"]
+            </div>
+    }
+    @if (TempData["Error"] != null)
+    {
+            <div class="alert-custom alert-error-custom">
+                ❌ @TempData["Error"]
+            </div>
+        }
+        @if (TempData["Message"] != null)
+        {
+            <div class="alert-custom alert-info-custom">
+                ℹ️ @TempData["Message"]
+            </div>
+        }
+
+        @* 🔔 ROOM AVAILABLE NOTIFICATIONS *@
+        @if (notifiedEntries.Any())
+        {
+            <div class="notifications-section">
+                <h2 class="section-header">🔔 Room Available!</h2>
+                
+                @foreach (var entry in notifiedEntries)
+                {
+                    var showCountdown = countdownInfo.ContainsKey(entry.TravelPackageId) && countdownInfo[entry.TravelPackageId];
+                    var expiresAt = entry.ExpiresAt?.ToString("yyyy-MM-ddTHH:mm:ss") ?? "";
+                    <div class="notification-card">
+                        <div class="notification-content">
+                            <div class="notification-title">🎉 It's Your Turn to Book!</div>
+                            <div class="notification-message">
+                                A room is now available for <strong>@entry.TravelPackage?.Destination</strong> (@entry.TravelPackage?.Country).
+                                @if (showCountdown)
+                                {
+                                    <br /><br />
+                                    <text>⏰ <strong>You have priority! Book within the time limit or the next person in queue will get the chance.</strong></text>
+                                }
+                                else
+                                {
+                                    <br /><br />
+                                    <text>Don't miss out - book now before someone else does!</text>
+                                }
+                            </div>
+                            @if (showCountdown && !string.IsNullOrEmpty(expiresAt))
+                            {
+                                <div class="priority-countdown" data-expires-at="@expiresAt" data-package-id="@entry.TravelPackageId">
+                                    <div class="countdown-label">⏰ Time Remaining</div>
+                                    <div class="countdown-timer" id="countdown-@entry.TravelPackageId">--:--</div>
+                                    <div class="countdown-label">Book now or the opportunity passes to the next person!</div>
+                                </div>
+                            }
+                        </div>
+                        <div class="notification-actions">
+                            <form asp-controller="Bookings" asp-action="Create" method="post" style="margin: 0;">
+                                <input type="hidden" name="packageId" value="@entry.TravelPackageId" />
+                                <button type="submit" class="btn-notification btn-book-now">
+                                    🚀 Book Now
+                                </button>
+                            </form>
+                            <form asp-controller="Bookings" asp-action="LeaveWaitingList" method="post" style="margin: 0;">
+                                <input type="hidden" name="packageId" value="@entry.TravelPackageId" />
+                                <button type="submit" class="btn-notification btn-leave-wait">
+                                    ❌ Not Interested
+                                </button>
+                            </form>
+                        </div>
+                    </div>
+                }
+            </div>
+        }
+
+        @* ⏳ WAITING LIST STATUS (users still waiting for notification) *@
+        @if (waitingListEntries.Any(w => w.Status == WaitingListStatus.Waiting))
+        {
+            <div class="notifications-section">
+                <h2 class="section-header">⏳ Waiting List</h2>
+                
+                @foreach (var entry in waitingListEntries.Where(w => w.Status == WaitingListStatus.Waiting))
+                {
+                    <div class="waiting-list-card">
+                        <div class="waiting-info">
+                            <div class="waiting-destination">@entry.TravelPackage?.Destination, @entry.TravelPackage?.Country</div>
+                            <div class="waiting-position">
+                                Joined on @entry.JoinedAt.ToString("dd MMM yyyy") • 
+                                We'll notify you when a room becomes available
+                            </div>
+                        </div>
+                        <span class="position-badge">Position #@entry.Position</span>
+                        <form asp-controller="Bookings" asp-action="LeaveWaitingList" method="post" style="margin: 0;">
+                            <input type="hidden" name="packageId" value="@entry.TravelPackageId" />
+                            <button type="submit" class="btn-notification btn-leave-wait">
+                                Leave List
+                            </button>
+                        </form>
+                    </div>
+                }
+            </div>
+    }
+
+    @if (!Model.Any())
+    {
+            <div class="empty-state">
+                <div class="empty-icon">🎒</div>
+                <p class="empty-text">No bookings yet</p>
+                <p class="empty-subtext">Start exploring amazing destinations and book your next adventure!</p>
+                <a asp-controller="TravelPackages" asp-action="Index" class="btn-browse">
+                    🌍 Browse Packages
+                </a>
+        </div>
+    }
+    else
+    {
+            <div class="bookings-grid">
+            @foreach (var booking in Model.OrderByDescending(b => b.BookingDate))
+            {
+                var isPaid = booking.Status == BookingStatus.Paid;
+                var isCancelled = booking.Status == BookingStatus.Cancelled;
+                var isUpcoming = booking.Package.StartDate > DateTime.Now;
+                var daysUntilDeparture = (booking.Package.StartDate - DateTime.Now).Days;
+                var canCancel = booking.Status == BookingStatus.Reserved;
+
+                    <div class="booking-card @(isCancelled ? "cancelled-card" : "")">
+                        <div class="booking-image @(isCancelled ? "cancelled-image" : "")">
+                        @if (!string.IsNullOrEmpty(booking.Package.ImageUrl))
+                        {
+                                <img src="@booking.Package.ImageUrl" alt="@booking.Package.Destination">
+                            }
+                            else
+                            {
+                                <img src="https://images.unsplash.com/photo-1488646953014-85cb44e25828?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80" alt="@booking.Package.Destination">
+                            }
+
+                            <span class="booking-status @(isPaid ? "status-paid" : booking.Status == BookingStatus.Reserved ? "status-reserved" : "status-cancelled")">
+                                    @booking.Status
+                                </span>
+                        </div>
+
+                        <div class="booking-body">
+                            <h3 class="booking-destination">@booking.Package.Destination</h3>
+
+                            <div class="booking-details">
+                                <div class="booking-detail">
+                                    <strong>📍 Country</strong>
+                                    <span>@booking.Package.Country</span>
+                                </div>
+                                <div class="booking-detail">
+                                    <strong>📅 Booked</strong>
+                                    <span>@booking.BookingDate.ToString("dd MMM yyyy")</span>
+                                </div>
+                                <div class="booking-detail">
+                                    <strong>✈️ Travel</strong>
+                                    <span>@booking.Package.StartDate.ToString("dd MMM") - @booking.Package.EndDate.ToString("dd MMM yyyy")</span>
+                                </div>
+                                <div class="booking-detail">
+                                    <strong>🌙 Duration</strong>
+                                    <span>@booking.Package.Nights nights</span>
+                                </div>
+                                <div class="booking-detail">
+                                    <strong>💰 Price</strong>
+                                    <span>$@(booking.Package.EffectivePrice.ToString("N0"))</span>
+                                </div>
+                            </div>
+
+                            @if (isPaid && isUpcoming)
+                            {
+                                <div class="countdown-box">
+                                    <div class="countdown-text">
+                                    @if (daysUntilDeparture > 0)
+                                    {
+                                            <span>⏰ Departure in @daysUntilDeparture day@(daysUntilDeparture > 1 ? "s" : "")</span>
+                                    }
+                                    else if (daysUntilDeparture == 0)
+                                    {
+                                            <span>🎉 Trip starts today!</span>
+                                    }
+                                    else
+                                    {
+                                            <span>✈️ Trip in progress</span>
+                                    }
+                                    </div>
+                                </div>
+                            }
+
+                            <div class="booking-actions">
+                                @if (booking.Status == BookingStatus.Reserved)
+                                {
+                                    <a asp-controller="Bookings" asp-action="Payment" asp-route-bookingId="@booking.Id" class="btn-booking btn-pay">
+                                        💳 Pay Now
+                                    </a>
+                                    <a asp-controller="Bookings" asp-action="Cancel" asp-route-id="@booking.Id" 
+                                       class="btn-booking btn-cancel"
+                                       onclick="return confirm('Are you sure you want to cancel this booking?')">
+                                        ❌ Cancel Booking
+                                    </a>
+                                }
+                                else if (isPaid)
+                                {
+                                    <div class="paid-info">
+                                        ✅ Paid on @booking.PaidAt?.ToString("dd MMM yyyy")
+                                    </div>
+
+                                    <a asp-controller="Bookings" asp-action="DownloadItinerary" asp-route-bookingId="@booking.Id" class="btn-booking btn-download">
+                                        📄 Download Itinerary
+                                    </a>
+
+                                    <button type="button" class="btn-booking btn-share" 
+                                            onclick="openShareModal(@booking.Id, '@booking.Package.Destination', '@booking.Package.Country')">
+                                        📧 Share with Friend
+                                    </button>
+
+                                    @if (!isUpcoming)
+                                    {
+                                        <a asp-controller="Reviews" asp-action="Create" asp-route-packageId="@booking.TravelPackageId" class="btn-booking btn-review">
+                                                ⭐ Leave Review
+                                            </a>
+                                    }
+                                }
+                                else
+                                {
+                                    <div class="paid-info" style="background: rgba(107, 114, 128, 0.2); color: #9ca3af;">
+                                        Booking Cancelled
+                                    </div>
+                                }
+                            </div>
+                        </div>
+
+<div class="booking-footer">
+                            <span class="package-type-badge">@booking.Package.PackageType</span>
+                        </div>
+                    </div>
+                }
+            </div>
+        }
+
+    </div>
+</div>
+
+<!-- 📧 SHARE MODAL -->
+<div id="shareModal" class="share-modal-overlay">
+    <div class="share-modal">
+        <button type="button" class="share-modal-close" onclick="closeShareModal()">✕</button>
+        
+        <h2 class="share-modal-title">📧 Share Itinerary</h2>
+        <p class="share-modal-subtitle">Send your travel itinerary to a friend via email</p>
+        
+        <div class="share-destination">
+            <span class="share-destination-name" id="shareDestination">Destination</span>
+        </div>
+        
+        <form asp-controller="Bookings" asp-action="ShareItinerary" method="post" id="shareForm">
+            <input type="hidden" name="bookingId" id="shareBookingId" />
+            
+            <div class="share-form-group">
+                <label class="share-form-label">📧 Friend's Email *</label>
+                <input type="email" name="friendEmail" class="share-form-input" 
+                       placeholder="friend@example.com" required />
+            </div>
+            
+            <div class="share-form-group">
+                <label class="share-form-label">👤 Friend's Name (optional)</label>
+                <input type="text" name="friendName" class="share-form-input" 
+                       placeholder="John" />
+            </div>
+            
+            <button type="submit" class="btn-send-share">
+                ✉️ Send Itinerary
+            </button>
+        </form>
+        
+        <p class="share-note">
+            🔒 Your friend will receive a PDF with your travel details
+        </p>
+    </div>
+</div>
+
+<script>
+    function openShareModal(bookingId, destination, country) {
+        document.getElementById('shareBookingId').value = bookingId;
+        document.getElementById('shareDestination').textContent = '📍 ' + destination + ', ' + country;
+        document.getElementById('shareModal').classList.add('active');
+        document.body.style.overflow = 'hidden';
+    }
+    
+    function closeShareModal() {
+        document.getElementById('shareModal').classList.remove('active');
+        document.body.style.overflow = 'auto';
+    }
+    
+    // Close modal when clicking outside
+    document.getElementById('shareModal').addEventListener('click', function(e) {
+        if (e.target === this) {
+            closeShareModal();
+        }
+    });
+    
+    // Close modal with Escape key
+    document.addEventListener('keydown', function(e) {
+        if (e.key === 'Escape') {
+            closeShareModal();
+        }
+    });
+
+    // ⏰ COUNTDOWN TIMER FOR PRIORITY QUEUE
+    function updateCountdowns() {
+        document.querySelectorAll('.priority-countdown').forEach(function(countdownEl) {
+            var expiresAt = countdownEl.getAttribute('data-expires-at');
+            var packageId = countdownEl.getAttribute('data-package-id');
+            var timerEl = document.getElementById('countdown-' + packageId);
+            
+            if (!expiresAt || !timerEl) return;
+            
+            var expires = new Date(expiresAt);
+            var now = new Date();
+            var diff = expires - now;
+            
+            if (diff <= 0) {
+                timerEl.textContent = '00:00';
+                timerEl.style.color = '#ef4444';
+                countdownEl.classList.add('countdown-expired');
+                return;
+            }
+            
+            var minutes = Math.floor(diff / 60000);
+            var seconds = Math.floor((diff % 60000) / 1000);
+            
+            timerEl.textContent = 
+                (minutes < 10 ? '0' : '') + minutes + ':' + 
+                (seconds < 10 ? '0' : '') + seconds;
+        });
+    }
+
+    // Update countdown every second
+    setInterval(updateCountdowns, 1000);
+    updateCountdowns(); // Initial update
+</script>

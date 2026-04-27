@@ -1,0 +1,546 @@
+@using Travel_Agency.Models
+@model List<Notification>
+@{
+    ViewData["Title"] = "My Notifications";
+    var activeWaiting = ViewBag.ActiveWaiting as List<WaitingList> ?? new List<WaitingList>();
+    var unreadCount = (int)(ViewBag.UnreadCount ?? 0);
+}
+
+<style>
+    /* =========================================
+       NOTIFICATIONS INBOX THEME
+       ========================================= */
+    .notifications-hero {
+        position: relative;
+        height: 280px;
+        background: linear-gradient(135deg, rgba(59, 130, 246, 0.95), rgba(139, 92, 246, 0.9)),
+                    url('https://images.unsplash.com/photo-1488646953014-85cb44e25828?w=1600') center/cover;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        text-align: center;
+        color: white;
+        margin-bottom: -60px;
+    }
+
+    .hero-content h1 {
+        font-size: 2.8rem;
+        font-weight: 700;
+        text-shadow: 2px 2px 8px rgba(0,0,0,0.3);
+        margin-bottom: 0.5rem;
+    }
+
+    .hero-content p {
+        font-size: 1.2rem;
+        opacity: 0.9;
+    }
+
+    .notifications-container {
+        max-width: 900px;
+        margin: 0 auto;
+        padding: 0 1rem 3rem;
+    }
+
+    /* Priority Bookings Alert Box */
+    .priority-alert-box {
+        background: linear-gradient(135deg, #fef3c7, #fde68a);
+        border: 2px solid #f59e0b;
+        border-radius: 16px;
+        padding: 1.5rem;
+        margin-bottom: 2rem;
+        box-shadow: 0 4px 20px rgba(245, 158, 11, 0.2);
+    }
+
+    .priority-alert-box h3 {
+        color: #92400e;
+        font-size: 1.3rem;
+        margin-bottom: 1rem;
+        display: flex;
+        align-items: center;
+        gap: 0.5rem;
+    }
+
+    .priority-card {
+        background: white;
+        border-radius: 12px;
+        padding: 1.25rem;
+        margin-bottom: 1rem;
+        border-left: 5px solid #f59e0b;
+        box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+    }
+
+    .priority-card:last-child {
+        margin-bottom: 0;
+    }
+
+    .priority-card h4 {
+        font-size: 1.1rem;
+        color: #1f2937;
+        margin-bottom: 0.5rem;
+    }
+
+    .time-remaining {
+        display: inline-flex;
+        align-items: center;
+        gap: 0.5rem;
+        background: #fef3c7;
+        padding: 0.4rem 0.8rem;
+        border-radius: 20px;
+        font-size: 0.9rem;
+        font-weight: 600;
+        color: #92400e;
+        animation: pulse 2s ease-in-out infinite;
+    }
+
+    @@keyframes pulse {
+        0%, 100% { transform: scale(1); }
+        50% { transform: scale(1.02); }
+    }
+
+    .priority-actions {
+        display: flex;
+        gap: 0.75rem;
+        margin-top: 1rem;
+    }
+
+    .btn-book-now {
+        background: linear-gradient(135deg, #10b981, #059669);
+        color: white;
+        padding: 0.6rem 1.5rem;
+        border-radius: 8px;
+        font-weight: 600;
+        text-decoration: none;
+        transition: all 0.3s;
+        border: none;
+        cursor: pointer;
+    }
+
+    .btn-book-now:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 4px 15px rgba(16, 185, 129, 0.4);
+        color: white;
+    }
+
+    .btn-decline {
+        background: #f3f4f6;
+        color: #6b7280;
+        padding: 0.6rem 1.5rem;
+        border-radius: 8px;
+        font-weight: 500;
+        text-decoration: none;
+        transition: all 0.3s;
+        border: none;
+        cursor: pointer;
+    }
+
+    .btn-decline:hover {
+        background: #e5e7eb;
+        color: #374151;
+    }
+
+    /* Notifications List */
+    .notifications-header {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        margin-bottom: 1.5rem;
+        padding: 1rem 1.5rem;
+        background: white;
+        border-radius: 16px;
+        box-shadow: 0 4px 20px rgba(0,0,0,0.08);
+    }
+
+    .notifications-header h2 {
+        font-size: 1.4rem;
+        color: #1f2937;
+        margin: 0;
+    }
+
+    .unread-badge {
+        background: #ef4444;
+        color: white;
+        padding: 0.3rem 0.8rem;
+        border-radius: 20px;
+        font-size: 0.85rem;
+        font-weight: 600;
+    }
+
+    .notification-card {
+        background: white;
+        border-radius: 16px;
+        padding: 1.5rem;
+        margin-bottom: 1rem;
+        box-shadow: 0 2px 15px rgba(0,0,0,0.06);
+        transition: all 0.3s;
+        border-left: 4px solid transparent;
+    }
+
+    .notification-card:hover {
+        transform: translateX(5px);
+        box-shadow: 0 4px 20px rgba(0,0,0,0.1);
+    }
+
+    .notification-card.unread {
+        background: linear-gradient(to right, #eff6ff, white);
+        border-left-color: #3b82f6;
+    }
+
+    .notification-card.type-package {
+        border-left-color: #10b981;
+    }
+
+    .notification-card.type-expired {
+        border-left-color: #ef4444;
+    }
+
+    .notification-card.type-booking {
+        border-left-color: #8b5cf6;
+    }
+
+    .notification-header {
+        display: flex;
+        justify-content: space-between;
+        align-items: flex-start;
+        margin-bottom: 0.75rem;
+    }
+
+    .notification-title {
+        font-size: 1.1rem;
+        font-weight: 600;
+        color: #1f2937;
+        margin: 0;
+    }
+
+    .notification-time {
+        font-size: 0.8rem;
+        color: #9ca3af;
+    }
+
+    .notification-body {
+        color: #4b5563;
+        line-height: 1.6;
+        margin-bottom: 1rem;
+    }
+
+    .notification-footer {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+    }
+
+    .notification-actions {
+        display: flex;
+        gap: 0.5rem;
+    }
+
+    .btn-action {
+        padding: 0.4rem 1rem;
+        border-radius: 6px;
+        font-size: 0.85rem;
+        text-decoration: none;
+        transition: all 0.2s;
+        border: none;
+        cursor: pointer;
+    }
+
+    .btn-action.primary {
+        background: #3b82f6;
+        color: white;
+    }
+
+    .btn-action.primary:hover {
+        background: #2563eb;
+    }
+
+    .btn-action.secondary {
+        background: #f3f4f6;
+        color: #6b7280;
+    }
+
+    .btn-action.secondary:hover {
+        background: #e5e7eb;
+    }
+
+    .btn-action.danger {
+        background: #fee2e2;
+        color: #dc2626;
+    }
+
+    .btn-action.danger:hover {
+        background: #fecaca;
+    }
+
+    .type-icon {
+        font-size: 1.3rem;
+        margin-right: 0.5rem;
+    }
+
+    .empty-state {
+        text-align: center;
+        padding: 4rem 2rem;
+        background: white;
+        border-radius: 16px;
+        box-shadow: 0 4px 20px rgba(0,0,0,0.08);
+    }
+
+    .empty-state-icon {
+        font-size: 4rem;
+        margin-bottom: 1rem;
+    }
+
+    .empty-state h3 {
+        color: #6b7280;
+        font-size: 1.3rem;
+        margin-bottom: 0.5rem;
+    }
+
+    .empty-state p {
+        color: #9ca3af;
+    }
+
+    .bulk-actions {
+        display: flex;
+        gap: 0.75rem;
+    }
+
+    .status-badge {
+        display: inline-block;
+        padding: 0.2rem 0.6rem;
+        border-radius: 12px;
+        font-size: 0.75rem;
+        font-weight: 600;
+    }
+
+    .status-badge.expired {
+        background: #fee2e2;
+        color: #dc2626;
+    }
+
+    .status-badge.read {
+        background: #f3f4f6;
+        color: #6b7280;
+    }
+</style>
+
+<!-- Hero Section -->
+<div class="notifications-hero">
+    <div class="hero-content">
+        <h1>📬 My Notifications</h1>
+        <p>Stay updated on your bookings and waiting list status</p>
+    </div>
+</div>
+
+<div class="notifications-container">
+
+    <!-- Success/Error Messages -->
+    @if (TempData["Success"] != null)
+    {
+        <div class="alert alert-success alert-dismissible fade show" role="alert" style="border-radius: 12px; margin-bottom: 1.5rem;">
+            @TempData["Success"]
+            <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+        </div>
+    }
+    @if (TempData["Error"] != null)
+    {
+        <div class="alert alert-danger alert-dismissible fade show" role="alert" style="border-radius: 12px; margin-bottom: 1.5rem;">
+            @TempData["Error"]
+            <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+        </div>
+    }
+    @if (TempData["Info"] != null)
+    {
+        <div class="alert alert-info alert-dismissible fade show" role="alert" style="border-radius: 12px; margin-bottom: 1.5rem;">
+            @TempData["Info"]
+            <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+        </div>
+    }
+
+    <!-- 🔥 Priority Booking Alerts (Time-Sensitive) -->
+    @if (activeWaiting.Any())
+    {
+        <div class="priority-alert-box">
+            <h3>⏰ Action Required - Priority Booking Available!</h3>
+            <p style="color: #92400e; margin-bottom: 1rem;">
+                You have @activeWaiting.Count package(s) with rooms available. Book before your time expires!
+            </p>
+
+            @foreach (var waiting in activeWaiting)
+            {
+                <div class="priority-card">
+                    <h4>🌍 @waiting.TravelPackage?.Destination, @waiting.TravelPackage?.Country</h4>
+                    <p style="margin: 0.5rem 0; color: #6b7280;">
+                        You are #@waiting.Position in queue | 
+                        @waiting.TravelPackage?.Nights nights | 
+                        $@(waiting.TravelPackage?.EffectivePrice.ToString("N0"))
+                    </p>
+                    
+                    @if (waiting.TimeRemaining.HasValue)
+                    {
+                        <div class="time-remaining">
+                            ⏱️ @waiting.TimeRemainingDisplay
+                        </div>
+                    }
+
+                    <div class="priority-actions">
+                        <a href="/TravelPackages/Details/@waiting.TravelPackageId" class="btn-book-now">
+                            ✅ Book Now
+                        </a>
+                        <form asp-action="DeclineBooking" method="post" style="display: inline;">
+                            @Html.AntiForgeryToken()
+                            <input type="hidden" name="waitingListId" value="@waiting.Id" />
+                            <button type="submit" class="btn-decline" 
+                                    onclick="return confirm('Are you sure you want to decline? The opportunity will pass to the next person in queue.')">
+                                ❌ Decline
+                            </button>
+                        </form>
+                    </div>
+                </div>
+            }
+        </div>
+    }
+
+    <!-- Notifications Header -->
+    <div class="notifications-header">
+        <div>
+            <h2>📥 All Notifications</h2>
+        </div>
+        <div class="d-flex align-items-center gap-3">
+            @if (unreadCount > 0)
+            {
+                <span class="unread-badge">@unreadCount unread</span>
+            }
+            <div class="bulk-actions">
+                @if (unreadCount > 0)
+                {
+                    <form asp-action="MarkAllAsRead" method="post" style="display: inline;">
+                        @Html.AntiForgeryToken()
+                        <button type="submit" class="btn-action secondary">
+                            ✓ Mark all read
+                        </button>
+                    </form>
+                }
+                @if (Model.Any(n => n.Status == NotificationStatus.Read))
+                {
+                    <form asp-action="ClearAllRead" method="post" style="display: inline;">
+                        @Html.AntiForgeryToken()
+                        <button type="submit" class="btn-action danger" 
+                                onclick="return confirm('Clear all read notifications?')">
+                            🗑️ Clear read
+                        </button>
+                    </form>
+                }
+            </div>
+        </div>
+    </div>
+
+    <!-- Notifications List -->
+    @if (Model.Any())
+    {
+        @foreach (var notification in Model)
+        {
+            var cardClass = notification.Status == NotificationStatus.Unread ? "unread" : "";
+            var typeClass = notification.Type switch
+            {
+                NotificationType.PackageAvailable => "type-package",
+                NotificationType.PriorityExpired => "type-expired",
+                NotificationType.BookingConfirmed => "type-booking",
+                _ => ""
+            };
+            var typeIcon = notification.Type switch
+            {
+                NotificationType.PackageAvailable => "🎉",
+                NotificationType.BookingConfirmed => "✅",
+                NotificationType.BookingCancelled => "❌",
+                NotificationType.WaitingListJoined => "📋",
+                NotificationType.PriorityExpired => "⏰",
+                _ => "📩"
+            };
+
+            <div class="notification-card @cardClass @typeClass">
+                <div class="notification-header">
+                    <h4 class="notification-title">
+                        <span class="type-icon">@typeIcon</span>
+                        @notification.Title
+                    </h4>
+                    <div class="text-end">
+                        <span class="notification-time">@notification.CreatedAt.ToString("MMM dd, HH:mm")</span>
+                        @if (notification.IsExpired)
+                        {
+                            <br/><span class="status-badge expired">Expired</span>
+                        }
+                        else if (notification.Status == NotificationStatus.Read)
+                        {
+                            <br/><span class="status-badge read">Read</span>
+                        }
+                    </div>
+                </div>
+
+                <div class="notification-body">
+                    @Html.Raw(notification.Message)
+                </div>
+
+                <div class="notification-footer">
+                    <div class="notification-actions">
+                        @if (notification.HasAction && !notification.IsExpired)
+                        {
+                            <a href="@notification.ActionUrl" class="btn-action primary">
+                                @(notification.ActionText ?? "View")
+                            </a>
+                        }
+                        
+                        @if (notification.Status == NotificationStatus.Unread)
+                        {
+                            <form asp-action="MarkAsRead" method="post" style="display: inline;">
+                                @Html.AntiForgeryToken()
+                                <input type="hidden" name="id" value="@notification.Id" />
+                                <button type="submit" class="btn-action secondary">
+                                    ✓ Mark as read
+                                </button>
+                            </form>
+                        }
+                        
+                        <form asp-action="Delete" method="post" style="display: inline;">
+                            @Html.AntiForgeryToken()
+                            <input type="hidden" name="id" value="@notification.Id" />
+                            <button type="submit" class="btn-action danger" 
+                                    onclick="return confirm('Delete this notification?')">
+                                🗑️
+                            </button>
+                        </form>
+                    </div>
+
+                    @if (notification.TravelPackage != null)
+                    {
+                        <small style="color: #9ca3af;">
+                            📍 @notification.TravelPackage.Destination, @notification.TravelPackage.Country
+                        </small>
+                    }
+                </div>
+            </div>
+        }
+    }
+    else
+    {
+        <div class="empty-state">
+            <div class="empty-state-icon">📭</div>
+            <h3>No notifications yet</h3>
+            <p>When you join a waiting list or make a booking, notifications will appear here.</p>
+            <a href="/TravelPackages" class="btn-book-now" style="margin-top: 1rem; display: inline-block;">
+                Browse Packages
+            </a>
+        </div>
+    }
+
+</div>
+
+@section Scripts {
+    <script>
+        // Auto-refresh priority timers
+        setInterval(function() {
+            const timeElements = document.querySelectorAll('.time-remaining');
+            timeElements.forEach(el => {
+                // Just reload the page every minute to update times
+            });
+        }, 60000);
+    </script>
+}

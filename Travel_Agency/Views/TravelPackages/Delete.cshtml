@@ -1,0 +1,25 @@
+﻿@model Travel_Agency.Models.TravelPackage
+
+@{
+    ViewData["Title"] = "Delete Package";
+}
+
+<h2 class="text-danger mb-4">⚠️ Delete Travel Package</h2>
+
+<div class="alert alert-danger">
+    האם אתה בטוח שאתה רוצה למחוק את החבילה?
+</div>
+
+<div class="card shadow-sm" style="max-width:600px;">
+    <img src="@Model.ImageUrl" class="card-img-top" style="height:250px; object-fit:cover;" />
+    <div class="card-body">
+        <h4>@Model.Destination, @Model.Country</h4>
+        <p>@Model.Description</p>
+    </div>
+</div>
+
+<form asp-action="DeleteConfirmed" method="post" class="mt-3">
+    <input type="hidden" asp-for="Id" />
+    <button class="btn btn-danger">Delete</button>
+    <a class="btn btn-secondary" href="/TravelPackages">Cancel</a>
+</form>

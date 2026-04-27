@@ -1,0 +1,513 @@
+﻿@{
+    ViewData["Title"] = "Analytics";
+    var totalRevenue = ViewBag.TotalRevenue ?? 0m;
+    var pendingBookings = ViewBag.PendingBookings ?? 0;
+    var cancelledBookings = ViewBag.CancelledBookings ?? 0;
+    var totalUsers = ViewBag.TotalUsers ?? 0;
+    var adminCount = ViewBag.AdminCount ?? 0;
+    var paidBookings = ViewBag.PaidBookings ?? 0;
+    var totalPackages = ViewBag.TotalPackages ?? 0;
+}
+
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;500;600;700;800&family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+
+<style>
+    /* ============================================
+       📊 ANALYTICS HERO
+       ============================================ */
+    .analytics-hero {
+        position: relative;
+        min-height: 350px;
+        background: url('https://images.unsplash.com/photo-1551288049-bebda4e38f71?ixlib=rb-4.0.3&auto=format&fit=crop&w=1920&q=80') center/cover no-repeat;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        text-align: center;
+        margin-top: -20px;
+    }
+
+    .analytics-hero::before {
+        content: '';
+        position: absolute;
+        top: 0;
+        left: 0;
+        right: 0;
+        bottom: 0;
+        background: linear-gradient(135deg, rgba(79, 70, 229, 0.85) 0%, rgba(15, 23, 42, 0.92) 100%);
+        z-index: 1;
+    }
+
+    .analytics-hero-content {
+        position: relative;
+        z-index: 2;
+        padding: 60px 20px;
+    }
+
+    .analytics-title {
+        font-family: 'Playfair Display', serif;
+        font-size: 4rem;
+        font-weight: 700;
+        color: #fff;
+        margin-bottom: 15px;
+        text-shadow: 2px 2px 30px rgba(0, 0, 0, 0.4);
+    }
+
+    .analytics-subtitle {
+        font-family: 'Poppins', sans-serif;
+        font-size: 1.2rem;
+        color: rgba(255, 255, 255, 0.9);
+        letter-spacing: 3px;
+        text-transform: uppercase;
+    }
+
+    /* ============================================
+       📋 MAIN CONTENT
+       ============================================ */
+    .analytics-content {
+        background: linear-gradient(180deg, #0f172a 0%, #1e293b 100%);
+        padding: 70px 20px 120px;
+        min-height: 100vh;
+    }
+
+    .analytics-container {
+        max-width: 1400px;
+        margin: 0 auto;
+    }
+
+    /* ============================================
+       📈 STATS GRID - PRIMARY
+       ============================================ */
+    .stats-primary {
+        display: grid;
+        grid-template-columns: repeat(3, 1fr);
+        gap: 30px;
+        margin-bottom: 50px;
+    }
+
+    .stat-card-large {
+        background: linear-gradient(145deg, rgba(30, 41, 59, 0.9) 0%, rgba(15, 23, 42, 0.95) 100%);
+        border: 1px solid rgba(255, 255, 255, 0.08);
+        border-radius: 25px;
+        padding: 40px 35px;
+        text-align: center;
+        position: relative;
+        overflow: hidden;
+        transition: all 0.4s ease;
+    }
+
+    .stat-card-large::before {
+        content: '';
+        position: absolute;
+        top: 0;
+        left: 0;
+        right: 0;
+        height: 5px;
+        background: var(--accent-color);
+    }
+
+    .stat-card-large:hover {
+        transform: translateY(-12px);
+        box-shadow: 0 25px 60px rgba(0, 0, 0, 0.4), 0 0 40px var(--glow-color);
+        border-color: var(--accent-color);
+    }
+
+    .stat-card-revenue { --accent-color: #fbbf24; --glow-color: rgba(251, 191, 36, 0.3); }
+    .stat-card-paid { --accent-color: #10b981; --glow-color: rgba(16, 185, 129, 0.3); }
+    .stat-card-packages { --accent-color: #3b82f6; --glow-color: rgba(59, 130, 246, 0.3); }
+
+    .stat-icon-large {
+        font-size: 4rem;
+        margin-bottom: 20px;
+        filter: drop-shadow(0 5px 15px var(--glow-color));
+    }
+
+    .stat-value-large {
+        font-family: 'Playfair Display', serif;
+        font-size: 3.5rem;
+        font-weight: 700;
+        color: var(--accent-color);
+        margin-bottom: 10px;
+        text-shadow: 0 0 30px var(--glow-color);
+    }
+
+    .stat-label-large {
+        font-family: 'Poppins', sans-serif;
+        font-size: 1.1rem;
+        color: rgba(255, 255, 255, 0.7);
+        text-transform: uppercase;
+        letter-spacing: 2px;
+    }
+
+    /* ============================================
+       📊 STATS GRID - SECONDARY
+       ============================================ */
+    .stats-secondary {
+        display: grid;
+        grid-template-columns: repeat(4, 1fr);
+        gap: 25px;
+        margin-bottom: 60px;
+    }
+
+    .stat-card-small {
+        background: rgba(30, 41, 59, 0.7);
+        border: 1px solid rgba(255, 255, 255, 0.06);
+        border-radius: 20px;
+        padding: 30px 25px;
+        text-align: center;
+        transition: all 0.3s ease;
+        position: relative;
+        overflow: hidden;
+    }
+
+    .stat-card-small::after {
+        content: '';
+        position: absolute;
+        bottom: 0;
+        left: 0;
+        right: 0;
+        height: 3px;
+        background: var(--accent-color);
+        transform: scaleX(0);
+        transition: transform 0.3s ease;
+    }
+
+    .stat-card-small:hover::after {
+        transform: scaleX(1);
+    }
+
+    .stat-card-small:hover {
+        transform: translateY(-8px);
+        background: rgba(30, 41, 59, 0.9);
+    }
+
+    .stat-card-pending { --accent-color: #f59e0b; }
+    .stat-card-cancelled { --accent-color: #ef4444; }
+    .stat-card-users { --accent-color: #8b5cf6; }
+    .stat-card-admins { --accent-color: #ec4899; }
+
+    .stat-icon-small {
+        font-size: 2.5rem;
+        margin-bottom: 15px;
+    }
+
+    .stat-value-small {
+        font-family: 'Poppins', sans-serif;
+        font-size: 2.2rem;
+        font-weight: 700;
+        color: var(--accent-color);
+        margin-bottom: 8px;
+    }
+
+    .stat-label-small {
+        font-family: 'Poppins', sans-serif;
+        font-size: 0.9rem;
+        color: rgba(255, 255, 255, 0.6);
+        text-transform: uppercase;
+        letter-spacing: 1px;
+    }
+
+    /* ============================================
+       📈 CHARTS SECTION
+       ============================================ */
+    .charts-section {
+        background: rgba(30, 41, 59, 0.6);
+        border: 1px solid rgba(255, 255, 255, 0.08);
+        border-radius: 25px;
+        padding: 50px;
+        margin-bottom: 50px;
+    }
+
+    .section-header-analytics {
+        font-family: 'Playfair Display', serif;
+        font-size: 2rem;
+        font-weight: 700;
+        color: #fff;
+        margin-bottom: 40px;
+        text-align: center;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        gap: 15px;
+    }
+
+    .charts-grid {
+        display: grid;
+        grid-template-columns: repeat(2, 1fr);
+        gap: 30px;
+    }
+
+    .chart-card {
+        background: rgba(15, 23, 42, 0.5);
+        border: 1px solid rgba(139, 92, 246, 0.2);
+        border-radius: 20px;
+        padding: 30px;
+        transition: all 0.3s ease;
+    }
+
+    .chart-card:hover {
+        border-color: rgba(139, 92, 246, 0.5);
+        box-shadow: 0 15px 40px rgba(139, 92, 246, 0.15);
+    }
+
+    .chart-title {
+        font-family: 'Poppins', sans-serif;
+        font-size: 1.1rem;
+        font-weight: 600;
+        color: #a78bfa;
+        margin-bottom: 20px;
+        text-align: center;
+        text-transform: uppercase;
+        letter-spacing: 1px;
+    }
+
+    .chart-placeholder {
+        height: 200px;
+        background: linear-gradient(135deg, rgba(139, 92, 246, 0.1) 0%, rgba(79, 70, 229, 0.1) 100%);
+        border-radius: 15px;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+        border: 2px dashed rgba(139, 92, 246, 0.3);
+    }
+
+    .chart-placeholder-icon {
+        font-size: 3rem;
+        margin-bottom: 15px;
+        opacity: 0.6;
+    }
+
+    .chart-placeholder-text {
+        font-family: 'Poppins', sans-serif;
+        color: rgba(255, 255, 255, 0.5);
+        font-size: 0.95rem;
+    }
+
+    /* ============================================
+       🎯 ACTION BUTTONS
+       ============================================ */
+    .actions-section {
+        display: flex;
+        gap: 20px;
+        justify-content: center;
+        flex-wrap: wrap;
+    }
+
+    .btn-analytics {
+        padding: 18px 40px;
+        font-family: 'Poppins', sans-serif;
+        font-size: 15px;
+        font-weight: 700;
+        text-transform: uppercase;
+        letter-spacing: 2px;
+        border: none;
+        border-radius: 16px;
+        cursor: pointer;
+        transition: all 0.4s ease;
+        text-decoration: none;
+        display: inline-flex;
+        align-items: center;
+        gap: 10px;
+    }
+
+    .btn-pdf {
+        background: linear-gradient(135deg, #ef4444 0%, #dc2626 100%);
+        color: #fff;
+        box-shadow: 0 12px 30px rgba(239, 68, 68, 0.4);
+    }
+
+    .btn-pdf:hover {
+        transform: translateY(-4px);
+        box-shadow: 0 18px 45px rgba(239, 68, 68, 0.5);
+        color: #fff;
+    }
+
+    .btn-excel {
+        background: linear-gradient(135deg, #10b981 0%, #059669 100%);
+        color: #fff;
+        box-shadow: 0 12px 30px rgba(16, 185, 129, 0.4);
+    }
+
+    .btn-excel:hover {
+        transform: translateY(-4px);
+        box-shadow: 0 18px 45px rgba(16, 185, 129, 0.5);
+        color: #fff;
+    }
+
+    .btn-back {
+        background: linear-gradient(135deg, #8b5cf6 0%, #7c3aed 100%);
+        color: #fff;
+        box-shadow: 0 12px 30px rgba(139, 92, 246, 0.4);
+    }
+
+    .btn-back:hover {
+        transform: translateY(-4px);
+        box-shadow: 0 18px 45px rgba(139, 92, 246, 0.5);
+        color: #fff;
+    }
+
+    /* ============================================
+       📱 RESPONSIVE
+       ============================================ */
+    @@media (max-width: 1200px) {
+        .stats-primary {
+            grid-template-columns: repeat(2, 1fr);
+        }
+
+        .stats-secondary {
+            grid-template-columns: repeat(2, 1fr);
+        }
+    }
+
+    @@media (max-width: 768px) {
+        .analytics-title {
+            font-size: 2.8rem;
+        }
+
+        .stats-primary,
+        .stats-secondary {
+            grid-template-columns: 1fr;
+        }
+
+        .charts-grid {
+            grid-template-columns: 1fr;
+        }
+
+        .charts-section {
+            padding: 30px 20px;
+        }
+
+        .actions-section {
+            flex-direction: column;
+        }
+
+        .btn-analytics {
+            width: 100%;
+            justify-content: center;
+        }
+    }
+</style>
+
+<!-- 📊 ANALYTICS HERO -->
+<div class="analytics-hero">
+    <div class="analytics-hero-content">
+        <h1 class="analytics-title">📊 Analytics</h1>
+        <p class="analytics-subtitle">Business Insights & Statistics</p>
+    </div>
+</div>
+
+<!-- 📋 MAIN CONTENT -->
+<div class="analytics-content">
+    <div class="analytics-container">
+
+        <!-- 📈 PRIMARY STATS -->
+        <div class="stats-primary">
+            <div class="stat-card-large stat-card-revenue">
+                <div class="stat-icon-large">💰</div>
+                <div class="stat-value-large">$@totalRevenue.ToString("N0")</div>
+                <div class="stat-label-large">Total Revenue</div>
+            </div>
+
+            <div class="stat-card-large stat-card-paid">
+                <div class="stat-icon-large">✅</div>
+                <div class="stat-value-large">@paidBookings</div>
+                <div class="stat-label-large">Paid Bookings</div>
+            </div>
+
+            <div class="stat-card-large stat-card-packages">
+                <div class="stat-icon-large">📦</div>
+                <div class="stat-value-large">@totalPackages</div>
+                <div class="stat-label-large">Travel Packages</div>
+            </div>
+        </div>
+
+        <!-- 📊 SECONDARY STATS -->
+        <div class="stats-secondary">
+            <div class="stat-card-small stat-card-pending">
+                <div class="stat-icon-small">⏳</div>
+                <div class="stat-value-small">@pendingBookings</div>
+                <div class="stat-label-small">Pending Bookings</div>
+            </div>
+
+            <div class="stat-card-small stat-card-cancelled">
+                <div class="stat-icon-small">❌</div>
+                <div class="stat-value-small">@cancelledBookings</div>
+                <div class="stat-label-small">Cancelled</div>
+            </div>
+
+            <div class="stat-card-small stat-card-users">
+                <div class="stat-icon-small">👥</div>
+                <div class="stat-value-small">@totalUsers</div>
+                <div class="stat-label-small">Total Users</div>
+            </div>
+
+            <div class="stat-card-small stat-card-admins">
+                <div class="stat-icon-small">👑</div>
+                <div class="stat-value-small">@adminCount</div>
+                <div class="stat-label-small">Admins</div>
+            </div>
+        </div>
+
+        <!-- 📈 CHARTS SECTION -->
+        <div class="charts-section">
+            <h2 class="section-header-analytics">📈 Visual Analytics</h2>
+
+            <div class="charts-grid">
+                <div class="chart-card">
+                    <h3 class="chart-title">📊 Revenue by Month</h3>
+                    <div class="chart-placeholder">
+                        <div class="chart-placeholder-icon">📈</div>
+                        <div class="chart-placeholder-text">Chart coming soon</div>
+                    </div>
+                </div>
+
+                <div class="chart-card">
+                    <h3 class="chart-title">🌍 Bookings by Country</h3>
+                    <div class="chart-placeholder">
+                        <div class="chart-placeholder-icon">🗺️</div>
+                        <div class="chart-placeholder-text">Chart coming soon</div>
+                    </div>
+                </div>
+
+                <div class="chart-card">
+                    <h3 class="chart-title">📅 Booking Trends</h3>
+                    <div class="chart-placeholder">
+                        <div class="chart-placeholder-icon">📉</div>
+                        <div class="chart-placeholder-text">Chart coming soon</div>
+                    </div>
+                </div>
+
+                <div class="chart-card">
+                    <h3 class="chart-title">⭐ Top Destinations</h3>
+                    <div class="chart-placeholder">
+                        <div class="chart-placeholder-icon">🏆</div>
+                        <div class="chart-placeholder-text">Chart coming soon</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- 🎯 ACTION BUTTONS -->
+        <div class="actions-section">
+            <a asp-action="ExportPdf" class="btn-analytics btn-pdf">
+                📄 Export PDF
+            </a>
+
+            <a asp-action="ExportExcel" class="btn-analytics btn-excel">
+                📊 Export Excel
+            </a>
+
+            <a asp-action="Dashboard" class="btn-analytics btn-back">
+                ← Back to Dashboard
+            </a>
+        </div>
+
+    </div>
+</div>
+
+@section Scripts {
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script>
+        console.log('Analytics loaded - Revenue: $@totalRevenue, Users: @totalUsers');
+    </script>
+}

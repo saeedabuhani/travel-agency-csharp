@@ -1,0 +1,1088 @@
+﻿/* ===================================================================
+   🚀 FUTURISTIC TRAVEL AGENCY - ULTRA MODERN DESIGN (UPDATED)
+   Location: wwwroot/css/futuristic-design.css
+   =================================================================== */
+
+/*:root {*/
+    /* 🌈 Color Palette */
+    /*--neon-cyan: #00ffff;
+    --neon-pink: #ff006e;
+    --neon-purple: #8b00ff;
+    --neon-blue: #0080ff;
+    --dark-bg: #0a0e27;
+    --darker-bg: #050816;
+    --glass-bg: rgba(255, 255, 255, 0.1);*/
+    /* 💫 Gradients */
+    /*--gradient-main: linear-gradient(135deg, #667eea 0%, #764ba2 50%, #f093fb 100%);
+    --gradient-neon: linear-gradient(135deg, #00ffff 0%, #ff006e 50%, #8b00ff 100%);
+    --gradient-cosmic: linear-gradient(135deg, #0f0c29, #302b63, #24243e);
+    --gradient-fire: linear-gradient(135deg, #ff0080 0%, #ff8c00 50%, #ffd700 100%);*/
+    /* ✨ Effects */
+    /*--glow-neon: 0 0 20px var(--neon-cyan), 0 0 40px var(--neon-cyan), 0 0 60px var(--neon-cyan);
+    --shadow-deep: 0 20px 60px rgba(0, 0, 0, 0.5);
+    --shadow-glass: 0 8px 32px 0 rgba(31, 38, 135, 0.37);
+}*/
+
+/* 🌟 SMOOTH ANIMATIONS */
+/** {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+html {
+    scroll-behavior: smooth;
+}*/
+
+/* ===================================================================
+   🌌 ENHANCED COSMIC BACKGROUND
+   =================================================================== */
+
+/*body {
+    font-family: 'Segoe UI', 'Roboto', sans-serif;
+    font-size: 18px;*/ /* ⭐ הגדלה מ-16px */
+    /*background: linear-gradient(135deg, #0a0e27 0%, #1a1f3a 50%, #0f1729 100%);
+    color: #ffffff;
+    overflow-x: hidden;
+    position: relative;
+    min-height: 100vh;
+    line-height: 1.6;
+}*/
+
+    /* 🌠 ANIMATED COSMIC OVERLAY */
+    /*body::before {
+        content: '';
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        background: radial-gradient(circle at 20% 50%, rgba(0, 255, 255, 0.08) 0%, transparent 50%), radial-gradient(circle at 80% 80%, rgba(255, 0, 110, 0.08) 0%, transparent 50%), radial-gradient(circle at 40% 20%, rgba(139, 0, 255, 0.08) 0%, transparent 50%);
+        z-index: -1;
+        animation: backgroundPulse 15s ease-in-out infinite;
+    }
+
+@keyframes backgroundPulse {
+    0%, 100% {
+        opacity: 1;
+        transform: scale(1);
+    }
+
+    50% {
+        opacity: 0.7;
+        transform: scale(1.05);
+    }
+}*/
+
+/* 💫 MOVING GRADIENT LAYER */
+/*body::after {
+    content: '';
+    position: fixed;
+    top: -50%;
+    left: -50%;
+    width: 200%;
+    height: 200%;
+    background: radial-gradient(ellipse at 30% 30%, rgba(0, 255, 255, 0.05) 0%, transparent 40%), radial-gradient(ellipse at 70% 70%, rgba(255, 0, 110, 0.05) 0%, transparent 40%);
+    animation: gradientMove 20s ease-in-out infinite;
+    z-index: -1;
+}
+
+@keyframes gradientMove {
+    0%, 100% {
+        transform: translate(0, 0) rotate(0deg);
+    }
+
+    50% {
+        transform: translate(-100px, -100px) rotate(180deg);
+    }
+}*/
+
+/* ============================================
+   ⭐ ENHANCED FLOATING PARTICLES
+   ============================================ */
+
+/*.particle-container {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    overflow: hidden;
+    z-index: -1;
+    pointer-events: none;
+}
+
+.particle {
+    position: absolute;
+    width: 3px;
+    height: 3px;
+    background: rgba(0, 255, 255, 0.6);
+    border-radius: 50%;
+    box-shadow: 0 0 10px rgba(0, 255, 255, 0.8);
+    animation: particleFloat 20s linear infinite;
+}
+
+@keyframes particleFloat {
+    0% {
+        transform: translateY(100vh) translateX(0) scale(0);
+        opacity: 0;
+    }
+
+    10% {
+        opacity: 1;
+    }
+
+    90% {
+        opacity: 1;
+    }
+
+    100% {
+        transform: translateY(-10vh) translateX(100px) scale(1);
+        opacity: 0;
+    }
+}
+
+.particle:nth-child(2n) {
+    background: rgba(255, 0, 110, 0.6);
+    box-shadow: 0 0 10px rgba(255, 0, 110, 0.8);
+    animation-delay: 2s;
+    animation-duration: 15s;
+}
+
+.particle:nth-child(3n) {
+    background: rgba(139, 0, 255, 0.6);
+    box-shadow: 0 0 10px rgba(139, 0, 255, 0.8);
+    animation-delay: 4s;
+    animation-duration: 25s;
+}
+
+.particle:nth-child(4n) {
+    background: rgba(255, 215, 0, 0.5);
+    box-shadow: 0 0 10px rgba(255, 215, 0, 0.7);
+    animation-delay: 6s;
+    animation-duration: 18s;
+}*/
+
+/* ============================================
+   🎯 BUTTONS - FUTURISTIC STYLE (LARGER)
+   ============================================ */
+
+/*.btn,
+.btn-futuristic,
+.btn-primary,
+.btn-secondary,
+.btn-search,
+.btn-reset,
+.btn-filter,
+button {
+    position: relative;
+    padding: 18px 45px;*/ /* ⭐ הגדלה */
+    /*font-size: 1.3rem !important;*/ /* ⭐ 23.4px */
+    /*font-weight: 800 !important;
+    text-transform: uppercase;
+    letter-spacing: 2px;
+    border: none;
+    border-radius: 50px;
+    background: var(--gradient-neon);
+    color: #fff;
+    cursor: pointer;
+    overflow: hidden;
+    box-shadow: 0 0 20px rgba(0, 255, 255, 0.5);
+    transition: all 0.4s ease;
+}
+
+    .btn::before,
+    .btn-futuristic::before {
+        content: '';
+        position: absolute;
+        top: 50%;
+        left: 50%;
+        width: 0;
+        height: 0;
+        border-radius: 50%;
+        background: rgba(255, 255, 255, 0.3);
+        transform: translate(-50%, -50%);
+        transition: width 0.6s, height 0.6s;
+    }
+
+    .btn:hover::before,
+    .btn-futuristic:hover::before {
+        width: 300px;
+        height: 300px;
+    }
+
+    .btn:hover,
+    .btn-futuristic:hover {
+        transform: translateY(-5px) scale(1.05);
+        box-shadow: 0 0 30px rgba(0, 255, 255, 0.8), 0 0 60px rgba(255, 0, 110, 0.6), 0 10px 40px rgba(0, 0, 0, 0.5);
+    }
+
+    .btn:active,
+    .btn-futuristic:active {
+        transform: translateY(-2px) scale(0.98);
+    }*/
+
+/* 🔥 PRIMARY BUTTON */
+/*.btn-primary-glow,
+.btn-lg {
+    background: var(--gradient-fire);
+    animation: pulseGlow 2s ease-in-out infinite;
+    font-size: 1.6rem !important;*/ /* ⭐ 28.8px */
+    /*padding: 22px 55px !important;
+}
+
+@keyframes pulseGlow {
+    0%, 100% {
+        box-shadow: 0 0 20px rgba(255, 0, 128, 0.5);
+    }
+
+    50% {
+        box-shadow: 0 0 40px rgba(255, 0, 128, 0.8), 0 0 60px rgba(255, 140, 0, 0.6);
+    }
+}*/
+
+/* 🎮 SECONDARY BUTTON */
+/*.btn-secondary-glow {
+    background: linear-gradient(135deg, #00c9ff 0%, #92fe9d 100%);
+}*/
+
+/* ============================================
+   💎 CARDS - GLASS MORPHISM
+   ============================================ */
+
+/*.card,
+.card-futuristic {
+    position: relative;
+    background: rgba(10, 14, 39, 0.85);
+    backdrop-filter: blur(20px);
+    border: 2px solid rgba(0, 255, 255, 0.2);
+    border-radius: 30px;
+    padding: 30px;
+    box-shadow: var(--shadow-glass);
+    overflow: hidden;
+    transition: all 0.5s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+    .card::before,
+    .card-futuristic::before {
+        content: '';
+        position: absolute;
+        top: -50%;
+        left: -50%;
+        width: 200%;
+        height: 200%;
+        background: linear-gradient( 45deg, transparent, rgba(0, 255, 255, 0.1), transparent );
+        transform: rotate(45deg);
+        transition: all 0.6s;
+    }
+
+    .card:hover::before,
+    .card-futuristic:hover::before {
+        left: 100%;
+    }
+
+    .card:hover,
+    .card-futuristic:hover {
+        transform: translateY(-15px) rotateX(5deg);
+        border-color: var(--neon-cyan);
+        box-shadow: 0 20px 60px rgba(0, 0, 0, 0.5), 0 0 40px rgba(0, 255, 255, 0.3), inset 0 0 20px rgba(0, 255, 255, 0.1);
+    }*/
+
+/* ============================================
+   ✨ INPUTS - NEON STYLE (LARGER)
+   ============================================ */
+
+/*.input-futuristic,
+.form-control,
+input,
+textarea,
+select {
+    width: 100%;
+    padding: 20px 28px;*/ /* ⭐ הגדלה */
+    /*font-size: 1.2rem !important;*/ /* ⭐ 21.6px */
+    /*background: rgba(10, 14, 39, 0.8);
+    border: 2px solid rgba(0, 255, 255, 0.2);
+    border-radius: 15px;
+    color: #fff;
+    backdrop-filter: blur(10px);
+    transition: all 0.4s ease;
+}
+
+::placeholder {
+    color: rgba(255, 255, 255, 0.5);
+    font-size: 1.1rem !important;*/ /* ⭐ 19.8px */
+/*}
+
+.input-futuristic:focus,
+.form-control:focus,
+input:focus,
+select:focus {
+    outline: none;
+    border-color: var(--neon-cyan);
+    background: rgba(0, 255, 255, 0.05);
+    box-shadow: 0 0 20px rgba(0, 255, 255, 0.3), inset 0 0 10px rgba(0, 255, 255, 0.1);
+    transform: translateY(-2px);
+}*/
+
+/* ============================================
+   🏷️ LABELS (LARGER)
+   ============================================ */
+
+/*label,
+.form-label,
+.filter-group label {
+    font-size: 1.25rem !important;*/ /* ⭐ 22.5px */
+    /*font-weight: 800 !important;
+    letter-spacing: 2px !important;
+    text-transform: uppercase !important;
+    color: #00ffff !important;
+    margin-bottom: 12px !important;
+}*/
+
+/* ============================================
+   🌟 NAVBAR - FLOATING FUTURISTIC (LARGER)
+   ============================================ */
+
+/*.navbar-futuristic {
+    position: fixed;
+    top: 20px;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 90%;
+    max-width: 1200px;
+    padding: 20px 40px;
+    background: rgba(10, 14, 39, 0.85);
+    backdrop-filter: blur(20px);
+    border: 2px solid rgba(0, 255, 255, 0.2);
+    border-radius: 100px;
+    box-shadow: 0 10px 40px rgba(0, 0, 0, 0.5), 0 0 20px rgba(0, 255, 255, 0.2);
+    z-index: 1000;
+    transition: all 0.4s ease;
+}
+
+    .navbar-futuristic:hover {
+        border-color: var(--neon-cyan);
+        box-shadow: 0 15px 50px rgba(0, 0, 0, 0.6), 0 0 40px rgba(0, 255, 255, 0.4);
+    }*/
+
+    /* Navbar Links */
+    /*.nav-link,
+    .nav-link-epic,
+    .navbar-futuristic a,
+    nav a {
+        font-size: 1.3rem !important;*/ /* ⭐ 23.4px */
+        /*font-weight: 800 !important;
+        letter-spacing: 2px !important;
+    }*/
+
+/* Navbar Brand */
+/*.navbar-brand,
+.navbar-brand-epic {
+    font-size: 2.5rem !important;*/ /* ⭐ 45px */
+    /*letter-spacing: 4px !important;
+}*/
+
+/* ============================================
+   📰 HEADINGS (LARGER)
+   ============================================ */
+
+/*h1, .h1 {
+    font-size: 5rem !important;*/ /* ⭐ 90px */
+    /*line-height: 1.1 !important;
+    font-weight: 900 !important;
+}
+
+h2, .h2 {
+    font-size: 3.5rem !important;*/ /* ⭐ 63px */
+    /*line-height: 1.2 !important;
+    font-weight: 900 !important;
+}
+
+h3, .h3 {
+    font-size: 2.5rem !important;*/ /* ⭐ 45px */
+    /*line-height: 1.3 !important;
+    font-weight: 800 !important;
+}
+
+h4, .h4 {
+    font-size: 2rem !important;*/ /* ⭐ 36px */
+    /*font-weight: 800 !important;
+}
+
+h5, .h5 {
+    font-size: 1.6rem !important;*/ /* ⭐ 28.8px */
+    /*font-weight: 700 !important;
+}
+
+h6, .h6 {
+    font-size: 1.3rem !important;*/ /* ⭐ 23.4px */
+    /*font-weight: 700 !important;
+}*/
+
+/* ============================================
+   📄 PARAGRAPHS & TEXT (LARGER)
+   ============================================ */
+
+/*p,
+.text,
+span,
+div {
+    font-size: 1.2rem !important;*/ /* ⭐ 21.6px */
+    /*line-height: 1.8 !important;
+}*/
+
+/* ============================================
+   🎪 LOADING ANIMATION
+   ============================================ */
+
+/*.loader-futuristic {
+    width: 60px;
+    height: 60px;
+    border: 5px solid rgba(255, 255, 255, 0.1);
+    border-top: 5px solid var(--neon-cyan);
+    border-radius: 50%;
+    animation: spin 1s linear infinite, colorChange 3s ease infinite;
+}
+
+@keyframes spin {
+    0% {
+        transform: rotate(0deg);
+    }
+
+    100% {
+        transform: rotate(360deg);
+    }
+}
+
+@keyframes colorChange {
+    0%, 100% {
+        border-top-color: var(--neon-cyan);
+    }
+
+    33% {
+        border-top-color: var(--neon-pink);
+    }
+
+    66% {
+        border-top-color: var(--neon-purple);
+    }
+}*/
+
+/* ============================================
+   💫 TEXT EFFECTS
+   ============================================ */
+
+/*.text-glow {
+    text-shadow: 0 0 10px rgba(0, 255, 255, 0.8), 0 0 20px rgba(0, 255, 255, 0.6), 0 0 30px rgba(0, 255, 255, 0.4);
+    animation: textPulse 2s ease-in-out infinite;
+}
+
+@keyframes textPulse {
+    0%, 100% {
+        text-shadow: 0 0 10px rgba(0, 255, 255, 0.8), 0 0 20px rgba(0, 255, 255, 0.6);
+    }
+
+    50% {
+        text-shadow: 0 0 20px rgba(0, 255, 255, 1), 0 0 40px rgba(0, 255, 255, 0.8), 0 0 60px rgba(0, 255, 255, 0.6);
+    }
+}
+
+.text-gradient {
+    background: var(--gradient-neon);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+    font-weight: 900;
+    font-size: 4rem;*/ /* ⭐ הגדלה */
+/*}*/
+
+/* ============================================
+   🔮 SPECIAL EFFECTS
+   ============================================ */
+
+/*.hologram-effect {
+    position: relative;
+    animation: hologramFlicker 0.1s infinite;
+}
+
+@keyframes hologramFlicker {
+    0%, 100% {
+        opacity: 1;
+    }
+
+    50% {
+        opacity: 0.95;
+    }
+}*/
+
+/* ✨ SHINE EFFECT */
+/*.shine-effect {
+    position: relative;
+    overflow: hidden;
+}
+
+    .shine-effect::after {
+        content: '';
+        position: absolute;
+        top: -50%;
+        left: -100%;
+        width: 100%;
+        height: 200%;
+        background: linear-gradient( 90deg, transparent, rgba(255, 255, 255, 0.3), transparent );
+        transform: skewX(-25deg);
+        animation: shine 3s infinite;
+    }
+
+@keyframes shine {
+    0% {
+        left: -100%;
+    }
+
+    100% {
+        left: 200%;
+    }
+}*/
+
+/* ============================================
+   🎯 CONTENT VISIBILITY FIX
+   ============================================ */
+
+/*.container,
+.main-content {
+    position: relative;
+    z-index: 10;
+}*/
+
+/* Tables */
+/*.table {
+    background: rgba(10, 14, 39, 0.95) !important;
+    backdrop-filter: blur(20px);
+    color: #fff !important;
+    font-size: 1.15rem !important;*/ /* ⭐ הגדלה */
+/*}
+
+    .table thead th {
+        background: rgba(0, 255, 255, 0.1) !important;
+        color: #00ffff !important;
+        border-color: rgba(0, 255, 255, 0.3) !important;
+        font-size: 1.3rem !important;*/ /* ⭐ 23.4px */
+        /*font-weight: 800 !important;
+        padding: 20px 24px !important;
+    }
+
+    .table tbody td {
+        color: rgba(255, 255, 255, 0.9) !important;
+        border-color: rgba(255, 255, 255, 0.1) !important;
+        font-size: 1.15rem !important;*/ /* ⭐ 20.7px */
+        /*padding: 18px 24px !important;
+    }*/
+
+/* ============================================
+   📱 RESPONSIVE
+   ============================================ */
+
+/*@media (max-width: 768px) {
+    body {
+        font-size: 16px;
+    }
+
+    .navbar-futuristic {
+        width: 95%;
+        padding: 15px 20px;
+    }
+
+    .text-gradient {
+        font-size: 2.5rem;
+    }
+
+    .btn,
+    .btn-futuristic {
+        padding: 14px 32px;
+        font-size: 1.1rem !important;
+    }
+
+    h1, .h1 {
+        font-size: 3.5rem !important;
+    }
+
+    h2, .h2 {
+        font-size: 2.5rem !important;
+    }
+
+    .navbar-brand {
+        font-size: 1.8rem !important;
+    }
+
+    .nav-link {
+        font-size: 1.1rem !important;
+    }
+}*/
+
+/* ============================================
+   🌈 TEXT SHADOWS FOR READABILITY
+   ============================================ */
+
+/*body,
+p,
+span,
+div,
+label,
+button {
+    text-shadow: 0 2px 4px rgba(0, 0, 0, 0.4);
+}
+
+h1, h2, h3, h4, h5, h6 {
+    text-shadow: 0 3px 6px rgba(0, 0, 0, 0.5);
+}*/
+
+
+
+
+/* ===================================================================
+   🔤 MEGA LARGE TYPOGRAPHY - כתב ענק מקסימלי!
+   הוסף את זה בסוף futuristic-design.css
+   =================================================================== */
+
+/* ============================================
+   📏 BASE FONT SIZE - הגדלה בסיסית
+   ============================================ */
+
+body {
+    font-size: 22px !important; /* ⭐ 22px במקום 18px */
+}
+
+/* ============================================
+   🎯 MEGA BUTTONS - כפתורים ענקיים
+   ============================================ */
+
+.btn,
+.btn-futuristic,
+.btn-primary,
+.btn-secondary,
+.btn-search,
+.btn-reset,
+.btn-filter,
+.btn-action,
+.btn-card,
+.btn-login,
+.btn-register,
+button {
+    font-size: 1.8rem !important; /* 39.6px - ענק! */
+    font-weight: 900 !important;
+    letter-spacing: 3px !important;
+    padding: 24px 60px !important;
+    text-transform: uppercase !important;
+}
+
+.btn-lg,
+.btn-primary-glow {
+    font-size: 2.2rem !important; /* 48.4px - מאסיבי! */
+    padding: 30px 70px !important;
+}
+
+/* ============================================
+   🔍 SEARCH & FILTER LABELS - תוויות ענקיות
+   ============================================ */
+
+.filter-group label,
+.form-label,
+label,
+.input-label {
+    font-size: 1.6rem !important; /* 35.2px */
+    font-weight: 900 !important;
+    letter-spacing: 3px !important;
+    text-transform: uppercase !important;
+    margin-bottom: 15px !important;
+}
+
+/* ============================================
+   📝 INPUTS & SELECTS - שדות ענקיים
+   ============================================ */
+
+.filter-input,
+.filter-select,
+.form-control,
+.input-futuristic,
+input,
+textarea,
+select,
+.form-select {
+    font-size: 1.6rem !important; /* 35.2px */
+    padding: 24px 35px !important;
+    font-weight: 700 !important;
+}
+
+::placeholder {
+    font-size: 1.5rem !important; /* 33px */
+    font-weight: 600 !important;
+}
+
+/* ============================================
+   ✅ CHECKBOX LABELS
+   ============================================ */
+
+input[type="checkbox"] + label,
+.form-check-label,
+.checkbox-label {
+    font-size: 1.5rem !important; /* 33px */
+    font-weight: 800 !important;
+}
+
+input[type="checkbox"] {
+    width: 30px !important;
+    height: 30px !important;
+}
+
+/* ============================================
+   🧭 NAVBAR - תפריט ניווט ענק
+   ============================================ */
+
+.nav-link,
+.nav-link-epic,
+.navbar-futuristic a,
+.navbar-epic a,
+nav a {
+    font-size: 1.7rem !important; /* 37.4px */
+    font-weight: 900 !important;
+    letter-spacing: 3px !important;
+}
+
+.navbar-brand,
+.navbar-brand-epic {
+    font-size: 3rem !important; /* 66px - ענק! */
+    letter-spacing: 5px !important;
+}
+
+.user-name {
+    font-size: 1.6rem !important; /* 35.2px */
+    font-weight: 800 !important;
+}
+
+.btn-logout {
+    font-size: 1.6rem !important; /* 35.2px */
+    padding: 16px 40px !important;
+}
+
+/* ============================================
+   📰 HEADINGS - כותרות מאסיביות
+   ============================================ */
+
+h1, .h1,
+.packages-title,
+.analytics-title,
+.admin-title,
+.users-title {
+    font-size: 6.5rem !important; /* 143px - מאסיבי! */
+    line-height: 1 !important;
+    font-weight: 900 !important;
+    letter-spacing: 2px !important;
+}
+
+h2, .h2,
+.section-title,
+.section-title-analytics {
+    font-size: 4.5rem !important; /* 99px */
+    line-height: 1.1 !important;
+    font-weight: 900 !important;
+}
+
+h3, .h3,
+.action-title,
+.chart-title,
+.card-destination {
+    font-size: 3.2rem !important; /* 70.4px */
+    line-height: 1.2 !important;
+    font-weight: 900 !important;
+}
+
+h4, .h4 {
+    font-size: 2.6rem !important; /* 57.2px */
+    font-weight: 900 !important;
+}
+
+h5, .h5 {
+    font-size: 2rem !important; /* 44px */
+    font-weight: 800 !important;
+}
+
+h6, .h6 {
+    font-size: 1.7rem !important; /* 37.4px */
+    font-weight: 800 !important;
+}
+
+/* ============================================
+   📄 PARAGRAPHS & TEXT - טקסט גדול
+   ============================================ */
+
+p,
+.text,
+span,
+div,
+.card-text,
+.card-description {
+    font-size: 1.6rem !important; /* 35.2px */
+    line-height: 1.9 !important;
+}
+
+.lead,
+.packages-subtitle,
+.analytics-subtitle {
+    font-size: 2.4rem !important; /* 52.8px */
+    line-height: 1.7 !important;
+}
+
+/* ============================================
+   🎴 CARD COMPONENTS - כרטיסים
+   ============================================ */
+
+.card-title,
+.card-destination {
+    font-size: 3.5rem !important; /* 77px */
+    font-weight: 900 !important;
+}
+
+.card-text,
+.card-description,
+.action-description {
+    font-size: 1.7rem !important; /* 37.4px */
+    line-height: 1.9 !important;
+}
+
+.card-badge,
+.badge,
+.badge-role {
+    font-size: 1.5rem !important; /* 33px */
+    padding: 14px 28px !important;
+    font-weight: 800 !important;
+}
+
+.card-price-badge {
+    font-size: 3rem !important; /* 66px */
+    font-weight: 900 !important;
+    padding: 20px 40px !important;
+}
+
+/* ============================================
+   📊 TABLES - טבלאות גדולות
+   ============================================ */
+
+.table,
+table {
+    font-size: 1.6rem !important; /* 35.2px */
+}
+
+    .table thead th,
+    table thead th {
+        font-size: 1.8rem !important; /* 39.6px */
+        font-weight: 900 !important;
+        padding: 24px 28px !important;
+        letter-spacing: 2px !important;
+    }
+
+    .table tbody td,
+    table tbody td {
+        font-size: 1.6rem !important; /* 35.2px */
+        padding: 22px 28px !important;
+    }
+
+/* ============================================
+   📊 STATS & NUMBERS - מספרים ענקיים
+   ============================================ */
+
+.stat-number,
+.stat-number-analytics {
+    font-size: 7rem !important; /* 154px - מאסיבי! */
+    font-weight: 900 !important;
+}
+
+.stat-label,
+.stat-label-analytics {
+    font-size: 2rem !important; /* 44px */
+    font-weight: 900 !important;
+    letter-spacing: 3px !important;
+}
+
+.stat-icon,
+.stat-icon-analytics {
+    font-size: 7rem !important; /* 154px */
+}
+
+/* ============================================
+   🔔 ALERTS & MESSAGES
+   ============================================ */
+
+.alert,
+.alert-futuristic,
+.alert-success,
+.alert-error,
+.alert-info {
+    font-size: 1.8rem !important; /* 39.6px */
+    padding: 28px 42px !important;
+    font-weight: 700 !important;
+}
+
+.trip-counter {
+    font-size: 2.4rem !important; /* 52.8px */
+    font-weight: 900 !important;
+    padding: 24px 60px !important;
+}
+
+/* ============================================
+   📋 LIST ITEMS
+   ============================================ */
+
+li,
+.list-item {
+    font-size: 1.6rem !important; /* 35.2px */
+    line-height: 1.9 !important;
+}
+
+/* ============================================
+   🔗 LINKS
+   ============================================ */
+
+a {
+    font-size: inherit !important;
+    font-weight: 700 !important;
+}
+
+/* ============================================
+   📱 RESPONSIVE - התאמות למובייל
+   ============================================ */
+
+@media (max-width: 992px) {
+    body {
+        font-size: 19px !important;
+    }
+
+    .btn,
+    .btn-futuristic,
+    button {
+        font-size: 1.5rem !important; /* 28.5px */
+        padding: 18px 45px !important;
+    }
+
+    h1, .h1 {
+        font-size: 4.5rem !important; /* 85.5px */
+    }
+
+    h2, .h2 {
+        font-size: 3.5rem !important; /* 66.5px */
+    }
+
+    h3, .h3 {
+        font-size: 2.5rem !important; /* 47.5px */
+    }
+
+    .navbar-brand {
+        font-size: 2.2rem !important; /* 41.8px */
+    }
+
+    .nav-link {
+        font-size: 1.4rem !important; /* 26.6px */
+    }
+
+    label {
+        font-size: 1.4rem !important; /* 26.6px */
+    }
+
+    input,
+    select {
+        font-size: 1.4rem !important; /* 26.6px */
+    }
+}
+
+@media (max-width: 768px) {
+    body {
+        font-size: 17px !important;
+    }
+
+    .btn,
+    button {
+        font-size: 1.3rem !important; /* 22.1px */
+        padding: 16px 35px !important;
+    }
+
+    h1, .h1 {
+        font-size: 3.5rem !important; /* 59.5px */
+    }
+
+    h2, .h2 {
+        font-size: 2.8rem !important; /* 47.6px */
+    }
+}
+
+/* ============================================
+   💪 EXTRA BOLD
+   ============================================ */
+
+.text-bold,
+strong,
+b {
+    font-weight: 900 !important;
+}
+
+/* ============================================
+   🎨 ENHANCED TEXT SHADOWS
+   ============================================ */
+
+body,
+p,
+span,
+div,
+label,
+button,
+input,
+select {
+    text-shadow: 0 3px 6px rgba(0, 0, 0, 0.5);
+}
+
+h1, h2, h3, h4, h5, h6 {
+    text-shadow: 0 4px 8px rgba(0, 0, 0, 0.6);
+}
+
+.btn,
+button {
+    text-shadow: 0 2px 4px rgba(0, 0, 0, 0.3);
+}
+
+/* ============================================
+   ⚡ SPECIFIC COMPONENTS
+   ============================================ */
+
+/* Empty State */
+.empty-text {
+    font-size: 2.5rem !important; /* 55px */
+}
+
+.empty-icon {
+    font-size: 10rem !important; /* 220px */
+}
+
+/* Footer */
+.footer-epic,
+footer {
+    font-size: 1.5rem !important; /* 33px */
+}
+
+/* Breadcrumbs */
+.breadcrumb,
+.breadcrumb-item {
+    font-size: 1.5rem !important; /* 33px */
+}
+
+/* Tooltips */
+.tooltip,
+.tooltip-inner {
+    font-size: 1.4rem !important; /* 30.8px */
+}
+
+/* Modal */
+.modal-title {
+    font-size: 3rem !important; /* 66px */
+}
+
+.modal-body {
+    font-size: 1.6rem !important; /* 35.2px */
+}

@@ -1,0 +1,609 @@
+﻿@using Microsoft.AspNetCore.Identity
+@using Travel_Agency.Models
+@inject UserManager<AppUser> UserManager
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>@ViewData["Title"] - Travel Agency</title>
+
+    <link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.min.css" />
+    <link rel="stylesheet" href="~/css/site.css" />
+    <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;500;600;700;800&family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+
+    <style>
+        /* ============================================
+           🌿 NATURE-INSPIRED NAVBAR
+           ============================================ */
+        .navbar-nature {
+            position: fixed;
+            top: 20px;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 94%;
+            max-width: 1350px;
+            background: linear-gradient(135deg, rgba(15, 23, 42, 0.92) 0%, rgba(30, 41, 59, 0.95) 100%);
+            backdrop-filter: blur(20px);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            border-radius: 60px;
+            padding: 12px 35px;
+            box-shadow: 0 15px 50px rgba(0, 0, 0, 0.3);
+            z-index: 9999;
+            transition: all 0.4s ease;
+        }
+
+        .navbar-nature:hover {
+            background: linear-gradient(135deg, rgba(15, 23, 42, 0.98) 0%, rgba(30, 41, 59, 0.98) 100%);
+            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.4), 0 0 30px rgba(251, 191, 36, 0.1);
+            border-color: rgba(251, 191, 36, 0.2);
+        }
+
+        .navbar-container {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            gap: 30px;
+        }
+
+        /* 🌅 BRAND LOGO */
+        .navbar-brand-nature {
+            font-family: 'Playfair Display', serif;
+            font-size: 1.7rem;
+            font-weight: 700;
+            background: linear-gradient(135deg, #fbbf24 0%, #f59e0b 50%, #ea580c 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            text-decoration: none;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            transition: all 0.3s ease;
+        }
+
+        .navbar-brand-nature:hover {
+            transform: scale(1.05);
+            filter: drop-shadow(0 0 15px rgba(251, 191, 36, 0.5));
+        }
+
+        .brand-icon {
+            font-size: 1.8rem;
+            filter: drop-shadow(0 2px 8px rgba(251, 191, 36, 0.4));
+        }
+
+        /* 🔗 NAV LINKS */
+        .navbar-nav-nature {
+            display: flex;
+            gap: 8px;
+            align-items: center;
+            list-style: none;
+            margin: 0;
+            padding: 0;
+        }
+
+        .nav-link-nature {
+            font-family: 'Poppins', sans-serif;
+            padding: 10px 22px;
+            font-size: 0.9rem;
+            font-weight: 600;
+            color: rgba(255, 255, 255, 0.75);
+            text-decoration: none;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            border-radius: 30px;
+            position: relative;
+            transition: all 0.3s ease;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .nav-link-nature:hover {
+            color: #fbbf24;
+            background: rgba(251, 191, 36, 0.1);
+        }
+
+        .nav-link-nature.active {
+            color: #fbbf24;
+            background: rgba(251, 191, 36, 0.15);
+        }
+
+        /* 👤 USER SECTION */
+        .user-section {
+            display: flex;
+            gap: 12px;
+            align-items: center;
+        }
+
+        .user-name {
+            font-family: 'Poppins', sans-serif;
+            color: #fbbf24;
+            font-weight: 600;
+            font-size: 0.9rem;
+            padding: 10px 20px;
+            background: rgba(251, 191, 36, 0.1);
+            border-radius: 30px;
+            border: 1px solid rgba(251, 191, 36, 0.25);
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .btn-nav-nature {
+            font-family: 'Poppins', sans-serif;
+            padding: 10px 25px;
+            font-size: 0.85rem;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            border: none;
+            border-radius: 30px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            text-decoration: none;
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+        }
+
+        .btn-login-nature {
+            background: linear-gradient(135deg, #3b82f6 0%, #2563eb 100%);
+            color: #fff;
+            box-shadow: 0 6px 20px rgba(59, 130, 246, 0.35);
+        }
+
+        .btn-login-nature:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 10px 30px rgba(59, 130, 246, 0.45);
+            color: #fff;
+        }
+
+        .btn-register-nature {
+            background: linear-gradient(135deg, #f59e0b 0%, #ea580c 100%);
+            color: #fff;
+            box-shadow: 0 6px 20px rgba(245, 158, 11, 0.35);
+        }
+
+        .btn-register-nature:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 10px 30px rgba(245, 158, 11, 0.45);
+            color: #fff;
+        }
+
+        .btn-logout-nature {
+            background: linear-gradient(135deg, #ef4444 0%, #dc2626 100%);
+            color: #fff;
+            padding: 10px 20px;
+            border: none;
+            border-radius: 30px;
+            font-family: 'Poppins', sans-serif;
+            font-size: 0.85rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            display: flex;
+            align-items: center;
+            gap: 6px;
+        }
+
+        .btn-logout-nature:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 25px rgba(239, 68, 68, 0.4);
+        }
+
+        /* 📱 MOBILE MENU */
+        .mobile-toggle {
+            display: none;
+            font-size: 1.8rem;
+            color: #fbbf24;
+            cursor: pointer;
+            background: none;
+            border: none;
+            padding: 5px;
+        }
+
+        @@media (max-width: 1100px) {
+            .navbar-nature {
+                width: 92%;
+                padding: 12px 25px;
+            }
+
+            .mobile-toggle {
+                display: block;
+            }
+
+            .navbar-nav-nature {
+                display: none;
+                position: absolute;
+                top: calc(100% + 15px);
+                left: 0;
+                right: 0;
+                background: linear-gradient(135deg, rgba(15, 23, 42, 0.98) 0%, rgba(30, 41, 59, 0.98) 100%);
+                backdrop-filter: blur(20px);
+                border-radius: 25px;
+                padding: 25px;
+                flex-direction: column;
+                box-shadow: 0 20px 50px rgba(0, 0, 0, 0.4);
+                border: 1px solid rgba(255, 255, 255, 0.1);
+            }
+
+            .navbar-nav-nature.show {
+                display: flex;
+            }
+
+            .nav-link-nature {
+                width: 100%;
+                justify-content: center;
+                padding: 14px;
+            }
+
+            .user-section {
+                flex-direction: column;
+                width: 100%;
+                margin-top: 15px;
+                padding-top: 15px;
+                border-top: 1px solid rgba(255, 255, 255, 0.1);
+            }
+
+            .btn-nav-nature,
+            .user-name {
+                width: 100%;
+                justify-content: center;
+            }
+        }
+
+        /* 🎨 BODY & MAIN CONTENT */
+        body {
+            font-family: 'Poppins', sans-serif;
+            background: #0f172a;
+            color: #fff;
+            padding-top: 100px;
+            min-height: 100vh;
+        }
+
+        .main-content {
+            min-height: calc(100vh - 300px);
+        }
+
+        /* ============================================
+           🌿 NATURE-INSPIRED FOOTER
+           ============================================ */
+        .footer-nature {
+            background: linear-gradient(180deg, #0f172a 0%, #1e293b 100%);
+            border-top: 1px solid rgba(251, 191, 36, 0.15);
+            padding: 70px 0 30px;
+            margin-top: 80px;
+        }
+
+        .footer-content {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 50px;
+            margin-bottom: 50px;
+        }
+
+        .footer-section h4 {
+            font-family: 'Playfair Display', serif;
+            color: #fbbf24;
+            font-size: 1.3rem;
+            font-weight: 700;
+            margin-bottom: 25px;
+        }
+
+        .footer-section p,
+        .footer-section a {
+            font-family: 'Poppins', sans-serif;
+            color: rgba(255, 255, 255, 0.65);
+            text-decoration: none;
+            display: block;
+            margin-bottom: 12px;
+            font-size: 0.95rem;
+            transition: all 0.3s ease;
+            line-height: 1.7;
+        }
+
+        .footer-section a:hover {
+            color: #fbbf24;
+            transform: translateX(8px);
+        }
+
+        .footer-brand {
+            font-family: 'Playfair Display', serif;
+            font-size: 1.8rem;
+            font-weight: 700;
+            color: #fbbf24;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            margin-bottom: 20px;
+        }
+
+        .footer-bottom {
+            text-align: center;
+            padding-top: 30px;
+            border-top: 1px solid rgba(255, 255, 255, 0.08);
+        }
+
+        .footer-bottom p {
+            font-family: 'Poppins', sans-serif;
+            color: rgba(255, 255, 255, 0.5);
+            font-size: 0.9rem;
+            margin: 0;
+        }
+
+        .footer-bottom a {
+            color: #fbbf24;
+            text-decoration: none;
+        }
+
+        .footer-bottom a:hover {
+            text-decoration: underline;
+        }
+
+        /* Social icons */
+        .social-links {
+            display: flex;
+            gap: 15px;
+            margin-top: 20px;
+        }
+
+        .social-link {
+            width: 45px;
+            height: 45px;
+            background: rgba(251, 191, 36, 0.1);
+            border: 1px solid rgba(251, 191, 36, 0.2);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.2rem;
+            transition: all 0.3s ease;
+        }
+
+        .social-link:hover {
+            background: rgba(251, 191, 36, 0.2);
+            transform: translateY(-5px);
+            box-shadow: 0 10px 25px rgba(251, 191, 36, 0.2);
+        }
+
+        /* 🔔 NOTIFICATION BELL */
+        .notification-bell {
+            position: relative;
+        }
+
+        .notification-badge {
+            position: absolute;
+            top: 2px;
+            right: 8px;
+            background: #ef4444;
+            color: white;
+            font-size: 0.65rem;
+            font-weight: 700;
+            min-width: 18px;
+            height: 18px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            animation: pulse-badge 2s ease-in-out infinite;
+        }
+
+        @@keyframes pulse-badge {
+            0%, 100% { transform: scale(1); }
+            50% { transform: scale(1.1); }
+        }
+    </style>
+</head>
+<body>
+    <!-- 🌿 NATURE-INSPIRED NAVBAR -->
+    <nav class="navbar-nature">
+        <div class="navbar-container">
+            <a href="@Url.Action("Index", "Home")" class="navbar-brand-nature">
+                <span class="brand-icon">🌍</span>
+                <span>TravelScape</span>
+            </a>
+
+            <button class="mobile-toggle" onclick="toggleMenu()">☰</button>
+
+            <ul class="navbar-nav-nature" id="navMenu">
+                <li>
+                    <a href="@Url.Action("Index", "Home")" class="nav-link-nature @(ViewContext.RouteData.Values["controller"]?.ToString() == "Home" ? "active" : "")">
+                        🏠 Home
+                    </a>
+                </li>
+                <li>
+                    <a href="@Url.Action("Index", "TravelPackages")" class="nav-link-nature @(ViewContext.RouteData.Values["controller"]?.ToString() == "TravelPackages" ? "active" : "")">
+                        ✈️ Packages
+                    </a>
+                </li>
+
+                @if (User.Identity!.IsAuthenticated)
+                {
+                    @if (User.IsInRole("Admin"))
+                    {
+                        <li>
+                            <a href="@Url.Action("Dashboard", "Admin")" class="nav-link-nature @(ViewContext.RouteData.Values["controller"]?.ToString() == "Admin" ? "active" : "")">
+                                👑 Admin
+                            </a>
+                        </li>
+                    }
+                    else
+                    {
+                        <li>
+                            <a href="@Url.Action("Index", "ShoppingCart")" class="nav-link-nature @(ViewContext.RouteData.Values["controller"]?.ToString() == "ShoppingCart" ? "active" : "")">
+                                🛒 Cart
+                            </a>
+                        </li>
+                        <li>
+                            <a href="@Url.Action("MyBookings", "Bookings")" class="nav-link-nature @(ViewContext.RouteData.Values["controller"]?.ToString() == "Bookings" ? "active" : "")">
+                                🎫 My Bookings
+                            </a>
+                        </li>
+                        <li>
+                            <a href="@Url.Action("Index", "Notifications")" class="nav-link-nature notification-bell @(ViewContext.RouteData.Values["controller"]?.ToString() == "Notifications" ? "active" : "")" id="notificationBell">
+                                🔔 <span class="notification-badge" id="notifBadge" style="display: none;">0</span>
+                            </a>
+                        </li>
+                    }
+                }
+            </ul>
+
+            <div class="user-section">
+                @if (User.Identity.IsAuthenticated)
+                {
+                    var currentUser = await UserManager.GetUserAsync(User);
+                    int? currentAge = null;
+                    if (currentUser?.DateOfBirth != null)
+                    {
+                        var today = DateTime.Today;
+                        var age = today.Year - currentUser.DateOfBirth.Value.Year;
+                        if (currentUser.DateOfBirth.Value.Date > today.AddYears(-age))
+                        {
+                            age--;
+                        }
+                        currentAge = age;
+                    }
+
+                    <span class="user-name">
+                        <span>👤</span>
+                        @User.Identity.Name
+                        <span style="margin-left: 6px; opacity: 0.8;">
+                            (@(currentAge.HasValue ? currentAge.Value.ToString() : "N/A"))
+                        </span>
+                    </span>
+                    <form method="post" asp-controller="Account" asp-action="Logout" style="margin: 0;">
+                        <button type="submit" class="btn-logout-nature">
+                            🚪 Logout
+                        </button>
+                    </form>
+                }
+                else
+                {
+                    <a href="@Url.Action("Login", "Account")" class="btn-nav-nature btn-login-nature">
+                        🔐 Login
+                    </a>
+                    <a href="@Url.Action("Register", "Account")" class="btn-nav-nature btn-register-nature">
+                        ✨ Register
+                    </a>
+                }
+            </div>
+        </div>
+    </nav>
+
+    <!-- 🎨 MAIN CONTENT -->
+    <div class="main-content">
+        @RenderBody()
+    </div>
+
+    <!-- 🌿 NATURE-INSPIRED FOOTER -->
+    <footer class="footer-nature">
+        <div class="container">
+            <div class="footer-content">
+                <div class="footer-section">
+                    <div class="footer-brand">
+                        🌍 TravelScape
+                    </div>
+                    <p>Discover breathtaking destinations and create unforgettable memories. Your adventure awaits with every journey we craft.</p>
+                    <div class="social-links">
+                        <a href="#" class="social-link">📘</a>
+                        <a href="#" class="social-link">📸</a>
+                        <a href="#" class="social-link">🐦</a>
+                        <a href="#" class="social-link">📺</a>
+                    </div>
+                </div>
+
+                <div class="footer-section">
+                    <h4>Quick Links</h4>
+                    <a href="@Url.Action("Index", "Home")">🏠 Home</a>
+                    <a href="@Url.Action("Index", "TravelPackages")">✈️ Travel Packages</a>
+                    @if (User.Identity.IsAuthenticated)
+                    {
+                        <a href="@Url.Action("MyBookings", "Bookings")">🎫 My Bookings</a>
+                        <a href="@Url.Action("Index", "ShoppingCart")">🛒 Shopping Cart</a>
+                    }
+                </div>
+
+                <div class="footer-section">
+                    <h4>Destinations</h4>
+                    <a href="#">🗼 Paris, France</a>
+                    <a href="#">🏛️ Rome, Italy</a>
+                    <a href="#">🗽 New York, USA</a>
+                    <a href="#">🏝️ Bali, Indonesia</a>
+                </div>
+
+                <div class="footer-section">
+                    <h4>Contact Us</h4>
+                    <p>📧 hello@travelscape.com</p>
+                    <p>📞 +1 (555) 123-4567</p>
+                    <p>📍 123 Adventure Lane, Travel City</p>
+                    <p>🕐 Mon - Fri: 9AM - 6PM</p>
+                </div>
+            </div>
+
+            <div class="footer-bottom">
+                <p>&copy; @DateTime.Now.Year TravelScape. All rights reserved. | Crafted with ❤️ for travelers</p>
+            </div>
+        </div>
+    </footer>
+
+    <script src="~/lib/jquery/dist/jquery.min.js"></script>
+    <script src="~/lib/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="~/js/site.js" asp-append-version="true"></script>
+
+    <script>
+        function toggleMenu() {
+            const menu = document.getElementById('navMenu');
+            menu.classList.toggle('show');
+        }
+
+        document.addEventListener('click', function(event) {
+            const navbar = document.querySelector('.navbar-nature');
+            const menu = document.getElementById('navMenu');
+            const toggle = document.querySelector('.mobile-toggle');
+
+            if (!navbar.contains(event.target) && menu.classList.contains('show')) {
+                menu.classList.remove('show');
+            }
+        });
+
+        // Navbar scroll effect
+        window.addEventListener('scroll', function() {
+            const navbar = document.querySelector('.navbar-nature');
+            if (window.scrollY > 50) {
+                navbar.style.top = '10px';
+                navbar.style.padding = '10px 30px';
+            } else {
+                navbar.style.top = '20px';
+                navbar.style.padding = '12px 35px';
+            }
+        });
+
+        // 🔔 Fetch notification count
+        function updateNotificationBadge() {
+            const badge = document.getElementById('notifBadge');
+            if (!badge) return;
+
+            fetch('/Notifications/GetUnreadCount')
+                .then(response => response.json())
+                .then(data => {
+                    if (data.count > 0) {
+                        badge.textContent = data.count > 9 ? '9+' : data.count;
+                        badge.style.display = 'flex';
+                    } else {
+                        badge.style.display = 'none';
+                    }
+                })
+                .catch(() => {
+                    badge.style.display = 'none';
+                });
+        }
+
+        // Update on page load and every 30 seconds
+        updateNotificationBadge();
+        setInterval(updateNotificationBadge, 30000);
+    </script>
+
+    @await RenderSectionAsync("Scripts", required: false)
+</body>
+</html>

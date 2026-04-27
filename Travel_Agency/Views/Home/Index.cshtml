@@ -1,0 +1,733 @@
+﻿@{
+    ViewData["Title"] = "Home";
+}
+
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;500;600;700;800&family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+
+<style>
+    /* ============================================
+       🎈 HERO SECTION WITH HOT AIR BALLOONS
+       ============================================ */
+    .hero-balloon {
+        min-height: 100vh;
+        position: relative;
+        display: flex;
+        align-items: center;
+        background: url('https://images.unsplash.com/photo-1507608616759-54f48f0af0ee?ixlib=rb-4.0.3&auto=format&fit=crop&w=1920&q=80') center/cover no-repeat;
+        overflow: hidden;
+    }
+
+    .hero-balloon::before {
+        content: '';
+        position: absolute;
+        top: 0;
+        left: 0;
+        right: 0;
+        bottom: 0;
+        background: linear-gradient(135deg, rgba(30, 60, 114, 0.3) 0%, rgba(42, 82, 152, 0.4) 50%, rgba(255, 165, 0, 0.2) 100%);
+        z-index: 1;
+    }
+
+    .hero-content-balloon {
+        position: relative;
+        z-index: 2;
+        padding: 0 60px;
+        max-width: 700px;
+    }
+
+    .hero-title-balloon {
+        font-family: 'Playfair Display', serif;
+        font-size: 5.5rem;
+        font-weight: 700;
+        color: #fff;
+        line-height: 1.1;
+        margin-bottom: 30px;
+        text-shadow: 3px 3px 20px rgba(0, 0, 0, 0.3);
+        animation: slideInLeft 1.2s ease;
+    }
+
+    @@keyframes slideInLeft {
+        from {
+            opacity: 0;
+            transform: translateX(-80px);
+        }
+        to {
+            opacity: 1;
+            transform: translateX(0);
+        }
+    }
+
+    .hero-subtitle-balloon {
+        font-family: 'Poppins', sans-serif;
+        font-size: 1.3rem;
+        color: rgba(255, 255, 255, 0.9);
+        margin-bottom: 40px;
+        letter-spacing: 1px;
+        animation: fadeInUp 1.5s ease;
+    }
+
+    @@keyframes fadeInUp {
+        from {
+            opacity: 0;
+            transform: translateY(30px);
+        }
+        to {
+            opacity: 1;
+            transform: translateY(0);
+        }
+    }
+
+    .hero-buttons-balloon {
+        display: flex;
+        gap: 20px;
+        flex-wrap: wrap;
+        animation: fadeInUp 1.8s ease;
+    }
+
+    .btn-explore {
+        padding: 18px 45px;
+        font-size: 1rem;
+        font-weight: 600;
+        text-transform: uppercase;
+        letter-spacing: 2px;
+        border: none;
+        border-radius: 50px;
+        cursor: pointer;
+        text-decoration: none;
+        display: inline-flex;
+        align-items: center;
+        gap: 10px;
+        transition: all 0.4s ease;
+    }
+
+    .btn-explore-primary {
+        background: linear-gradient(135deg, #ff8c00 0%, #ff6b00 100%);
+        color: #fff;
+        box-shadow: 0 10px 30px rgba(255, 140, 0, 0.4);
+    }
+
+    .btn-explore-primary:hover {
+        transform: translateY(-5px) scale(1.05);
+        box-shadow: 0 15px 40px rgba(255, 140, 0, 0.6);
+        color: #fff;
+    }
+
+    .btn-explore-secondary {
+        background: rgba(255, 255, 255, 0.15);
+        color: #fff;
+        border: 2px solid rgba(255, 255, 255, 0.5);
+        backdrop-filter: blur(10px);
+    }
+
+    .btn-explore-secondary:hover {
+        background: rgba(255, 255, 255, 0.25);
+        border-color: #fff;
+        transform: translateY(-5px);
+        color: #fff;
+    }
+
+    /* Scroll indicator */
+    .scroll-indicator {
+        position: absolute;
+        bottom: 40px;
+        left: 50%;
+        transform: translateX(-50%);
+        z-index: 2;
+        animation: bounce 2s infinite;
+    }
+
+    .scroll-indicator span {
+        display: block;
+        width: 30px;
+        height: 50px;
+        border: 2px solid rgba(255, 255, 255, 0.6);
+        border-radius: 25px;
+        position: relative;
+    }
+
+    .scroll-indicator span::before {
+        content: '';
+        position: absolute;
+        top: 10px;
+        left: 50%;
+        transform: translateX(-50%);
+        width: 6px;
+        height: 6px;
+        background: #fff;
+        border-radius: 50%;
+        animation: scrollDown 2s infinite;
+    }
+
+    @@keyframes bounce {
+        0%, 100% { transform: translateX(-50%) translateY(0); }
+        50% { transform: translateX(-50%) translateY(-10px); }
+    }
+
+    @@keyframes scrollDown {
+        0% { top: 10px; opacity: 1; }
+        100% { top: 30px; opacity: 0; }
+    }
+
+    /* ============================================
+       ✨ FEATURES SECTION
+       ============================================ */
+    .features-section {
+        padding: 100px 0;
+        background: linear-gradient(180deg, #0a0e27 0%, #1a1f3a 100%);
+        position: relative;
+    }
+
+    .section-title {
+        text-align: center;
+        font-family: 'Playfair Display', serif;
+        font-size: 3rem;
+        font-weight: 700;
+        color: #fff;
+        margin-bottom: 60px;
+    }
+
+    .section-title span {
+        background: linear-gradient(135deg, #ff8c00 0%, #ffd700 100%);
+        -webkit-background-clip: text;
+        -webkit-text-fill-color: transparent;
+        background-clip: text;
+    }
+
+    .features-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+        gap: 30px;
+        padding: 0 20px;
+        max-width: 1200px;
+        margin: 0 auto;
+    }
+
+    .feature-card {
+        background: rgba(255, 255, 255, 0.03);
+        backdrop-filter: blur(10px);
+        border: 1px solid rgba(255, 255, 255, 0.1);
+        border-radius: 20px;
+        padding: 40px 30px;
+        text-align: center;
+        transition: all 0.4s ease;
+    }
+
+    .feature-card:hover {
+        transform: translateY(-15px);
+        background: rgba(255, 255, 255, 0.08);
+        border-color: rgba(255, 140, 0, 0.5);
+        box-shadow: 0 20px 50px rgba(255, 140, 0, 0.15);
+    }
+
+    .feature-icon {
+        font-size: 3.5rem;
+        margin-bottom: 20px;
+    }
+
+    .feature-title {
+        font-family: 'Poppins', sans-serif;
+        font-size: 1.3rem;
+        font-weight: 600;
+        color: #fff;
+        margin-bottom: 15px;
+    }
+
+    .feature-description {
+        color: rgba(255, 255, 255, 0.7);
+        font-size: 0.95rem;
+        line-height: 1.6;
+    }
+
+    /* ============================================
+       📊 STATS SECTION
+       ============================================ */
+    .stats-section {
+        padding: 80px 20px;
+        background: linear-gradient(135deg, #1e3c72 0%, #2a5298 100%);
+        position: relative;
+        overflow: hidden;
+    }
+
+    .stats-section::before {
+        content: '';
+        position: absolute;
+        top: -50%;
+        left: -50%;
+        width: 200%;
+        height: 200%;
+        background: url('https://images.unsplash.com/photo-1488085061387-422e29b40080?ixlib=rb-4.0.3&auto=format&fit=crop&w=1920&q=80') center/cover no-repeat;
+        opacity: 0.1;
+        z-index: 0;
+    }
+
+    .stats-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+        gap: 40px;
+        max-width: 1000px;
+        margin: 0 auto;
+        position: relative;
+        z-index: 1;
+    }
+
+    .stat-item {
+        text-align: center;
+        padding: 30px;
+        background: rgba(255, 255, 255, 0.1);
+        border-radius: 20px;
+        backdrop-filter: blur(10px);
+        transition: all 0.3s ease;
+    }
+
+    .stat-item:hover {
+        transform: scale(1.05);
+        background: rgba(255, 255, 255, 0.15);
+    }
+
+    .stat-number {
+        font-family: 'Playfair Display', serif;
+        font-size: 3.5rem;
+        font-weight: 700;
+        color: #ffd700;
+        margin-bottom: 10px;
+    }
+
+    .stat-label {
+        font-family: 'Poppins', sans-serif;
+        font-size: 1rem;
+        color: rgba(255, 255, 255, 0.9);
+        text-transform: uppercase;
+        letter-spacing: 2px;
+    }
+
+    /* ============================================
+       🌟 DESTINATIONS PREVIEW
+       ============================================ */
+    .destinations-preview {
+        padding: 100px 20px;
+        background: linear-gradient(180deg, #1a1f3a 0%, #0a0e27 100%);
+    }
+
+    .destinations-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+        gap: 25px;
+        max-width: 1200px;
+        margin: 0 auto;
+    }
+
+    .destination-card {
+        position: relative;
+        height: 350px;
+        border-radius: 20px;
+        overflow: hidden;
+        cursor: pointer;
+        transition: all 0.5s ease;
+    }
+
+    .destination-card img {
+        width: 100%;
+        height: 100%;
+        object-fit: cover;
+        transition: transform 0.5s ease;
+    }
+
+    .destination-card:hover img {
+        transform: scale(1.1);
+    }
+
+    .destination-overlay {
+        position: absolute;
+        bottom: 0;
+        left: 0;
+        right: 0;
+        padding: 30px;
+        background: linear-gradient(transparent, rgba(0, 0, 0, 0.8));
+        transition: all 0.3s ease;
+    }
+
+    .destination-card:hover .destination-overlay {
+        background: linear-gradient(transparent, rgba(255, 140, 0, 0.8));
+    }
+
+    .destination-name {
+        font-family: 'Playfair Display', serif;
+        font-size: 1.8rem;
+        color: #fff;
+        margin-bottom: 5px;
+    }
+
+    .destination-country {
+        color: rgba(255, 255, 255, 0.8);
+        font-size: 0.95rem;
+    }
+
+    /* ============================================
+       🎯 CTA SECTION
+       ============================================ */
+    .cta-section {
+        padding: 100px 20px;
+        background: linear-gradient(135deg, #ff8c00 0%, #ff6b00 100%);
+        text-align: center;
+        position: relative;
+        overflow: hidden;
+    }
+
+    .cta-section::before {
+        content: '🎈';
+        position: absolute;
+        font-size: 15rem;
+        opacity: 0.1;
+        top: -50px;
+        right: -50px;
+    }
+
+    .cta-title {
+        font-family: 'Playfair Display', serif;
+        font-size: 3rem;
+        font-weight: 700;
+        color: #fff;
+        margin-bottom: 20px;
+    }
+
+    .cta-subtitle {
+        font-size: 1.2rem;
+        color: rgba(255, 255, 255, 0.9);
+        margin-bottom: 40px;
+        max-width: 600px;
+        margin-left: auto;
+        margin-right: auto;
+    }
+
+    .btn-cta {
+        padding: 20px 50px;
+        font-size: 1.1rem;
+        font-weight: 600;
+        text-transform: uppercase;
+        letter-spacing: 2px;
+        border: none;
+        border-radius: 50px;
+        background: #fff;
+        color: #ff6b00;
+        text-decoration: none;
+        display: inline-block;
+        transition: all 0.4s ease;
+        box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
+    }
+
+    .btn-cta:hover {
+        transform: translateY(-5px) scale(1.05);
+        box-shadow: 0 15px 40px rgba(0, 0, 0, 0.3);
+        color: #ff6b00;
+    }
+
+    /* ============================================
+       📱 RESPONSIVE
+       ============================================ */
+    @@media (max-width: 992px) {
+        .hero-title-balloon {
+            font-size: 4rem;
+        }
+
+        .hero-content-balloon {
+            padding: 0 40px;
+        }
+    }
+
+    @@media (max-width: 768px) {
+        .hero-title-balloon {
+            font-size: 3rem;
+        }
+
+        .hero-subtitle-balloon {
+            font-size: 1.1rem;
+        }
+
+        .hero-content-balloon {
+            padding: 0 25px;
+        }
+
+        .hero-buttons-balloon {
+            flex-direction: column;
+        }
+
+        .btn-explore {
+            width: 100%;
+            justify-content: center;
+        }
+
+        .section-title {
+            font-size: 2.2rem;
+        }
+
+        .stat-number {
+            font-size: 2.5rem;
+        }
+
+        .cta-title {
+            font-size: 2rem;
+        }
+
+        .destination-card {
+            height: 280px;
+        }
+    }
+</style>
+
+<!-- 🎈 HERO SECTION -->
+<div class="hero-balloon">
+    <div class="hero-content-balloon">
+        <h1 class="hero-title-balloon">
+            ENJOY THE<br>WORLD
+        </h1>
+        <p class="hero-subtitle-balloon">
+            Discover breathtaking destinations and create memories that last a lifetime.
+            Your next adventure awaits.
+        </p>
+
+        <div class="hero-buttons-balloon">
+            <a href="@Url.Action("Index", "TravelPackages")" class="btn-explore btn-explore-primary">
+                <span>🌍</span> Explore Destinations
+            </a>
+
+            @if (!User.Identity!.IsAuthenticated)
+            {
+                <a href="@Url.Action("Register", "Account")" class="btn-explore btn-explore-secondary">
+                    <span>✨</span> Start Your Journey
+                </a>
+            }
+            else
+            {
+                <a href="@Url.Action("MyBookings", "Bookings")" class="btn-explore btn-explore-secondary">
+                    <span>🎫</span> My Bookings
+                </a>
+            }
+        </div>
+    </div>
+
+    <div class="scroll-indicator">
+        <span></span>
+    </div>
+</div>
+
+<!-- ✨ FEATURES SECTION -->
+<div class="features-section">
+    <h2 class="section-title">Why Travel <span>With Us</span></h2>
+
+    <div class="features-grid">
+        <div class="feature-card">
+            <div class="feature-icon">🎈</div>
+            <h3 class="feature-title">Unique Experiences</h3>
+            <p class="feature-description">
+                From hot air balloon rides to hidden gems, we craft extraordinary adventures
+            </p>
+        </div>
+
+        <div class="feature-card">
+            <div class="feature-icon">💎</div>
+            <h3 class="feature-title">Premium Quality</h3>
+            <p class="feature-description">
+                Handpicked accommodations and experiences that exceed expectations
+            </p>
+        </div>
+
+        <div class="feature-card">
+            <div class="feature-icon">🛡️</div>
+            <h3 class="feature-title">Secure Booking</h3>
+            <p class="feature-description">
+                Your payments and data are protected with industry-leading security
+            </p>
+        </div>
+
+        <div class="feature-card">
+            <div class="feature-icon">💰</div>
+            <h3 class="feature-title">Best Price Guarantee</h3>
+            <p class="feature-description">
+                We match any price - travel more, spend less with our guarantee
+            </p>
+        </div>
+
+        <div class="feature-card">
+            <div class="feature-icon">🌟</div>
+            <h3 class="feature-title">24/7 Support</h3>
+            <p class="feature-description">
+                Our travel experts are always available to help plan your perfect trip
+            </p>
+        </div>
+
+        <div class="feature-card">
+            <div class="feature-icon">🔄</div>
+            <h3 class="feature-title">Flexible Cancellation</h3>
+            <p class="feature-description">
+                Plans change - enjoy flexible booking options for peace of mind
+            </p>
+        </div>
+    </div>
+</div>
+
+<!-- 📊 STATS SECTION -->
+<div class="stats-section">
+    <div class="stats-grid">
+        <div class="stat-item">
+            <div class="stat-number">27+</div>
+            <div class="stat-label">Destinations</div>
+        </div>
+
+        <div class="stat-item">
+            <div class="stat-number">10K+</div>
+            <div class="stat-label">Happy Travelers</div>
+        </div>
+
+        <div class="stat-item">
+            <div class="stat-number">99%</div>
+            <div class="stat-label">Satisfaction</div>
+        </div>
+
+        <div class="stat-item">
+            <div class="stat-number">24/7</div>
+            <div class="stat-label">Support</div>
+        </div>
+    </div>
+</div>
+
+<!-- 🌟 DESTINATIONS PREVIEW -->
+<div class="destinations-preview">
+    <h2 class="section-title">Popular <span>Destinations</span></h2>
+
+    <div class="destinations-grid">
+        <a href="@Url.Action("Index", "TravelPackages", new { country = "Greece" })" class="destination-card">
+            <img src="https://images.unsplash.com/photo-1613395877344-13d4a8e0d49e?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80" alt="Santorini">
+            <div class="destination-overlay">
+                <h3 class="destination-name">Santorini</h3>
+                <p class="destination-country">Greece</p>
+            </div>
+        </a>
+
+        <a href="@Url.Action("Index", "TravelPackages", new { country = "Japan" })" class="destination-card">
+            <img src="https://images.unsplash.com/photo-1493976040374-85c8e12f0c0e?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80" alt="Kyoto">
+            <div class="destination-overlay">
+                <h3 class="destination-name">Kyoto</h3>
+                <p class="destination-country">Japan</p>
+            </div>
+        </a>
+
+        <a href="@Url.Action("Index", "TravelPackages", new { country = "Turkey" })" class="destination-card">
+            <img src="https://images.unsplash.com/photo-1541432901042-2d8bd64b4a9b?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80" alt="Cappadocia">
+            <div class="destination-overlay">
+                <h3 class="destination-name">Cappadocia</h3>
+                <p class="destination-country">Turkey</p>
+            </div>
+        </a>
+
+        <a href="@Url.Action("Index", "TravelPackages", new { country = "Maldives" })" class="destination-card">
+            <img src="https://images.unsplash.com/photo-1514282401047-d79a71a590e8?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80" alt="Maldives">
+            <div class="destination-overlay">
+                <h3 class="destination-name">Malé</h3>
+                <p class="destination-country">Maldives</p>
+            </div>
+        </a>
+
+        <a href="@Url.Action("Index", "TravelPackages", new { country = "France" })" class="destination-card">
+            <img src="https://images.unsplash.com/photo-1502602898657-3e91760cbb34?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80" alt="Paris">
+            <div class="destination-overlay">
+                <h3 class="destination-name">Paris</h3>
+                <p class="destination-country">France</p>
+            </div>
+        </a>
+
+        <a href="@Url.Action("Index", "TravelPackages", new { country = "UAE" })" class="destination-card">
+            <img src="https://images.unsplash.com/photo-1512453979798-5ea266f8880c?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80" alt="Dubai">
+            <div class="destination-overlay">
+                <h3 class="destination-name">Dubai</h3>
+                <p class="destination-country">UAE</p>
+            </div>
+        </a>
+    </div>
+</div>
+
+<!-- ⭐ TESTIMONIALS SECTION: "What users think about our service" -->
+@{
+    var websiteReviews = ViewBag.WebsiteReviews as List<Travel_Agency.Models.WebsiteReview> ?? new List<Travel_Agency.Models.WebsiteReview>();
+    var averageRating = ViewBag.AverageRating as double? ?? 0.0;
+    var totalReviews = ViewBag.TotalReviews as int? ?? 0;
+}
+
+@if (websiteReviews.Any())
+{
+    <div class="testimonials-section" style="padding: 100px 20px; background: linear-gradient(180deg, #0a0e27 0%, #1a1f3a 100%);">
+        <div style="max-width: 1200px; margin: 0 auto;">
+            <h2 class="section-title">
+                What Users Think <span>About Our Service</span>
+            </h2>
+
+            @if (averageRating > 0)
+            {
+                <div style="text-align: center; margin-bottom: 50px;">
+                    <div style="font-family: 'Playfair Display', serif; font-size: 3rem; font-weight: 700; color: #ffd700; margin-bottom: 10px;">
+                        @averageRating.ToString("N1") ⭐
+                    </div>
+                    <div style="color: rgba(255, 255, 255, 0.8); font-size: 1.1rem;">
+                        Based on @totalReviews review@(totalReviews != 1 ? "s" : "")
+                    </div>
+                </div>
+            }
+
+            <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 30px; margin-top: 40px;">
+                @foreach (var review in websiteReviews.Take(6))
+                {
+                    <div style="background: rgba(255, 255, 255, 0.03); backdrop-filter: blur(10px); border: 1px solid rgba(255, 255, 255, 0.1); border-radius: 20px; padding: 30px; transition: all 0.4s ease;">
+                        <div style="display: flex; align-items: center; margin-bottom: 15px;">
+                            <div style="width: 50px; height: 50px; border-radius: 50%; background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); display: flex; align-items: center; justify-content: center; color: white; font-weight: bold; font-size: 1.2rem; margin-right: 15px;">
+                                @(review.User?.FullName?.Substring(0, 1).ToUpper() ?? "U")
+                            </div>
+                            <div>
+                                <div style="font-weight: 600; color: #fff; font-size: 1rem;">@(review.User?.FullName ?? "Anonymous")</div>
+                                <div style="color: rgba(255, 255, 255, 0.6); font-size: 0.85rem;">@review.CreatedAt.ToString("MMM yyyy")</div>
+                            </div>
+                        </div>
+                        <div style="margin-bottom: 15px;">
+                            @for (int i = 0; i < 5; i++)
+                            {
+                                if (i < review.Rating)
+                                {
+                                    <span style="color: #ffd700; font-size: 1.2rem;">★</span>
+                                }
+                                else
+                                {
+                                    <span style="color: rgba(255, 255, 255, 0.3); font-size: 1.2rem;">☆</span>
+                                }
+                            }
+                        </div>
+                        @if (!string.IsNullOrEmpty(review.Comment))
+                        {
+                            <p style="color: rgba(255, 255, 255, 0.8); line-height: 1.6; font-size: 0.95rem; margin: 0;">
+                                "@review.Comment"
+                            </p>
+                        }
+                    </div>
+                }
+            </div>
+
+            @if (User.Identity!.IsAuthenticated)
+            {
+                <div style="text-align: center; margin-top: 50px;">
+                    <a href="@Url.Action("CreateWebsiteReview", "Reviews")" 
+                       style="display: inline-block; padding: 15px 40px; background: linear-gradient(135deg, #ff8c00 0%, #ff6b00 100%); color: white; text-decoration: none; border-radius: 50px; font-weight: 600; transition: all 0.3s ease;">
+                        Share Your Experience
+                    </a>
+                </div>
+            }
+        </div>
+    </div>
+}
+
+<!-- 🎯 CTA SECTION -->
+<div class="cta-section">
+    <h2 class="cta-title">Ready for Your Next Adventure?</h2>
+    <p class="cta-subtitle">
+        Join thousands of happy travelers who have discovered their dream destinations with us.
+    </p>
+    <a href="@Url.Action("Index", "TravelPackages")" class="btn-cta">
+        Browse All Packages
+    </a>
+</div>

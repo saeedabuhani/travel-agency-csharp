@@ -1,0 +1,441 @@
+﻿@model Travel_Agency.Models.TravelPackage
+
+@{
+    ViewData["Title"] = "Create Travel Package";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;500;600;700;800&family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+
+<style>
+    /* ============================================
+       ➕ CREATE HERO HEADER
+       ============================================ */
+    .create-hero {
+        position: relative;
+        min-height: 320px !important;
+        background: url('https://images.unsplash.com/photo-1476514525535-07fb3b4ae5f1?ixlib=rb-4.0.3&auto=format&fit=crop&w=1920&q=80') center/cover no-repeat !important;
+        display: flex !important;
+        align-items: center !important;
+        justify-content: center !important;
+        text-align: center !important;
+        margin-top: -20px;
+    }
+
+    .create-hero::before {
+        content: '';
+        position: absolute;
+        top: 0;
+        left: 0;
+        right: 0;
+        bottom: 0;
+        background: linear-gradient(135deg, rgba(16, 185, 129, 0.85) 0%, rgba(15, 23, 42, 0.92) 100%) !important;
+        z-index: 1;
+    }
+
+    .create-hero-content {
+        position: relative;
+        z-index: 2;
+        padding: 60px 20px;
+    }
+
+    .create-title {
+        font-family: 'Playfair Display', serif !important;
+        font-size: 3.5rem !important;
+        font-weight: 700 !important;
+        color: #fff !important;
+        margin-bottom: 15px !important;
+        text-shadow: 2px 2px 30px rgba(0, 0, 0, 0.4);
+    }
+
+    .create-subtitle {
+        font-family: 'Poppins', sans-serif !important;
+        font-size: 1.2rem !important;
+        color: rgba(255, 255, 255, 0.9) !important;
+        letter-spacing: 3px;
+        text-transform: uppercase;
+    }
+
+    /* ============================================
+       📋 FORM CONTENT
+       ============================================ */
+    .form-content {
+        background: linear-gradient(180deg, #0f172a 0%, #1e293b 100%) !important;
+        padding: 70px 20px 120px !important;
+        min-height: 100vh;
+    }
+
+    .form-container {
+        max-width: 1100px;
+        margin: 0 auto;
+    }
+
+    .form-card {
+        background: rgba(30, 41, 59, 0.8) !important;
+        backdrop-filter: blur(20px);
+        border: 1px solid rgba(16, 185, 129, 0.2) !important;
+        border-radius: 30px !important;
+        padding: 50px !important;
+        box-shadow: 0 25px 80px rgba(0, 0, 0, 0.4) !important;
+    }
+
+    .form-section {
+        margin-bottom: 45px;
+    }
+
+    .section-header {
+        font-family: 'Poppins', sans-serif !important;
+        font-size: 1.3rem !important;
+        font-weight: 700 !important;
+        color: #10b981 !important;
+        margin-bottom: 30px !important;
+        padding-bottom: 18px;
+        border-bottom: 2px solid rgba(16, 185, 129, 0.3) !important;
+        display: flex;
+        align-items: center;
+        gap: 12px;
+    }
+
+    .form-row {
+        display: grid !important;
+        grid-template-columns: 1fr 1fr !important;
+        gap: 30px !important;
+    }
+
+    .form-group {
+        margin-bottom: 25px !important;
+    }
+
+    .form-group label,
+    .form-label {
+        display: block !important;
+        font-family: 'Poppins', sans-serif !important;
+        font-size: 0.95rem !important;
+        font-weight: 600 !important;
+        color: #6ee7b7 !important;
+        margin-bottom: 12px !important;
+    }
+
+    .form-group input,
+    .form-group textarea,
+    .form-group select,
+    .form-control,
+    .form-input,
+    .form-textarea {
+        width: 100% !important;
+        padding: 16px 22px !important;
+        background: rgba(15, 23, 42, 0.6) !important;
+        border: 2px solid rgba(16, 185, 129, 0.25) !important;
+        border-radius: 14px !important;
+        color: #fff !important;
+        font-family: 'Poppins', sans-serif !important;
+        font-size: 15px !important;
+        transition: all 0.3s ease !important;
+    }
+
+    .form-group input::placeholder,
+    .form-group textarea::placeholder {
+        color: rgba(255, 255, 255, 0.4) !important;
+    }
+
+    .form-group input:focus,
+    .form-group textarea:focus,
+    .form-group select:focus,
+    .form-control:focus {
+        outline: none !important;
+        border-color: #10b981 !important;
+        background: rgba(16, 185, 129, 0.12) !important;
+        box-shadow: 0 0 25px rgba(16, 185, 129, 0.3) !important;
+    }
+
+    .form-group select option {
+        background: #0f172a;
+        color: #fff;
+    }
+
+    .form-group textarea {
+        min-height: 140px !important;
+        resize: vertical;
+    }
+
+    .form-hint,
+    .text-muted {
+        font-family: 'Poppins', sans-serif !important;
+        font-size: 0.85rem !important;
+        color: rgba(255, 255, 255, 0.5) !important;
+        margin-top: 10px !important;
+    }
+
+    .text-danger,
+    span.text-danger {
+        color: #f87171 !important;
+        font-family: 'Poppins', sans-serif !important;
+        font-size: 0.85rem !important;
+        margin-top: 8px !important;
+        display: block !important;
+    }
+
+    .validation-errors,
+    .alert-danger {
+        background: rgba(239, 68, 68, 0.15) !important;
+        border: 1px solid rgba(239, 68, 68, 0.4) !important;
+        border-radius: 16px !important;
+        padding: 22px !important;
+        margin-bottom: 35px !important;
+        color: #fca5a5 !important;
+        font-family: 'Poppins', sans-serif !important;
+    }
+
+    /* ============================================
+       🔘 BUTTONS
+       ============================================ */
+    .form-actions {
+        display: flex !important;
+        gap: 25px !important;
+        margin-top: 50px !important;
+        padding-top: 35px !important;
+        border-top: 2px solid rgba(16, 185, 129, 0.2) !important;
+    }
+
+    .btn-form,
+    .btn-success,
+    .btn-secondary {
+        padding: 18px 45px !important;
+        font-family: 'Poppins', sans-serif !important;
+        font-size: 16px !important;
+        font-weight: 700 !important;
+        text-transform: uppercase !important;
+        letter-spacing: 2px !important;
+        border: none !important;
+        border-radius: 16px !important;
+        cursor: pointer !important;
+        transition: all 0.4s ease !important;
+        text-decoration: none !important;
+        display: inline-flex !important;
+        align-items: center !important;
+        gap: 10px !important;
+    }
+
+    .btn-create,
+    .btn-success {
+        background: linear-gradient(135deg, #10b981 0%, #059669 100%) !important;
+        color: #fff !important;
+        box-shadow: 0 12px 35px rgba(16, 185, 129, 0.45) !important;
+    }
+
+    .btn-create:hover,
+    .btn-success:hover {
+        transform: translateY(-4px) !important;
+        box-shadow: 0 18px 50px rgba(16, 185, 129, 0.55) !important;
+    }
+
+    .btn-cancel,
+    .btn-secondary {
+        background: transparent !important;
+        border: 2px solid rgba(255, 255, 255, 0.35) !important;
+        color: rgba(255, 255, 255, 0.8) !important;
+    }
+
+    .btn-cancel:hover,
+    .btn-secondary:hover {
+        background: rgba(255, 255, 255, 0.08) !important;
+        border-color: rgba(255, 255, 255, 0.6) !important;
+        color: #fff !important;
+    }
+
+    /* ============================================
+       📱 RESPONSIVE
+       ============================================ */
+    @@media (max-width: 768px) {
+        .create-title {
+            font-size: 2.5rem !important;
+        }
+
+        .form-row {
+            grid-template-columns: 1fr !important;
+        }
+
+        .form-card {
+            padding: 30px !important;
+        }
+
+        .form-actions {
+            flex-direction: column !important;
+        }
+
+        .btn-form,
+        .btn-success,
+        .btn-secondary {
+            width: 100% !important;
+            justify-content: center !important;
+        }
+    }
+</style>
+
+<!-- ➕ CREATE HERO HEADER -->
+<div class="create-hero">
+    <div class="create-hero-content">
+        <h1 class="create-title">➕ Create New Package</h1>
+        <p class="create-subtitle">Add a New Travel Destination</p>
+    </div>
+</div>
+
+<!-- 📋 FORM CONTENT -->
+<div class="form-content">
+    <div class="form-container">
+
+        <form asp-action="Create" method="post">
+            <div class="form-card">
+
+                <div asp-validation-summary="All" class="validation-errors"></div>
+
+                <!-- 📍 BASIC INFO -->
+                <div class="form-section">
+                    <h3 class="section-header">📍 Basic Information</h3>
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label asp-for="Destination">Destination</label>
+                            <input asp-for="Destination" class="form-control" placeholder="e.g. Paris" />
+                            <span asp-validation-for="Destination" class="text-danger"></span>
+                        </div>
+                        <div class="form-group">
+                            <label asp-for="PackageType">Package Type</label>
+                            <select asp-for="PackageType" class="form-control">
+                                <option value="">-- Select Type --</option>
+                                <option>Family</option>
+                                <option>Honeymoon</option>
+                                <option>Adventure</option>
+                                <option>Cruise</option>
+                                <option>Luxury</option>
+                                <option>Beach</option>
+                                <option>Cultural</option>
+                                <option>Nature</option>
+                                <option>Party</option>
+                                <option>Culinary</option>
+                                <option>Romantic</option>
+                            </select>
+                            <span asp-validation-for="PackageType" class="text-danger"></span>
+                        </div>
+                    </div>
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label asp-for="Country">Country</label>
+                            <input asp-for="Country" class="form-control" placeholder="e.g. France" />
+                            <span asp-validation-for="Country" class="text-danger"></span>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- 💰 PRICING -->
+                <div class="form-section">
+                    <h3 class="section-header">💰 Pricing</h3>
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label asp-for="Price">Price (Original)</label>
+                            <input asp-for="Price" type="number" step="0.01" class="form-control" placeholder="e.g. 2500" />
+                            <span asp-validation-for="Price" class="text-danger"></span>
+                        </div>
+                        <div class="form-group">
+                            <label asp-for="Discount">Discounted Price</label>
+                            <input asp-for="Discount" type="number" step="0.01" class="form-control" placeholder="e.g. 2100" />
+                            <span asp-validation-for="Discount" class="text-danger"></span>
+                            <small class="form-hint">Leave empty if no discount</small>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- 📅 TRAVEL DATES -->
+                <div class="form-section">
+                    <h3 class="section-header">📅 Travel Dates</h3>
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label asp-for="StartDate">Trip Start Date</label>
+                            <input asp-for="StartDate" type="date" class="form-control" />
+                            <span asp-validation-for="StartDate" class="text-danger"></span>
+                        </div>
+                        <div class="form-group">
+                            <label asp-for="EndDate">Trip End Date</label>
+                            <input asp-for="EndDate" type="date" class="form-control" />
+                            <span asp-validation-for="EndDate" class="text-danger"></span>
+                        </div>
+                    </div>
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label asp-for="Nights">Nights</label>
+                            <input asp-for="Nights" type="number" min="1" max="60" class="form-control" placeholder="e.g. 7" />
+                            <span asp-validation-for="Nights" class="text-danger"></span>
+                            <small class="form-hint">Number of nights (1-60)</small>
+                        </div>
+                        <div class="form-group">
+                            <label asp-for="AvailableRooms">Available Rooms</label>
+                            <input asp-for="AvailableRooms" type="number" class="form-control" placeholder="e.g. 20" />
+                            <span asp-validation-for="AvailableRooms" class="text-danger"></span>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- 🔥 DISCOUNT PERIOD -->
+                <div class="form-section">
+                    <h3 class="section-header">🔥 Discount Period (Max 7 Days)</h3>
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label asp-for="DiscountStartDate">Discount Start Date</label>
+                            <input asp-for="DiscountStartDate" type="date" class="form-control" />
+                            <span asp-validation-for="DiscountStartDate" class="text-danger"></span>
+                        </div>
+                        <div class="form-group">
+                            <label asp-for="DiscountEndDate">Discount End Date</label>
+                            <input asp-for="DiscountEndDate" type="date" class="form-control" />
+                            <span asp-validation-for="DiscountEndDate" class="text-danger"></span>
+                            <small class="form-hint">Discount period cannot exceed 7 days</small>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- 📝 DETAILS -->
+                <div class="form-section">
+                    <h3 class="section-header">📝 Package Details</h3>
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label asp-for="AgeLimit">Age Limit</label>
+                            <input asp-for="AgeLimit" type="number" class="form-control" placeholder="e.g. 18 (0 = no limit)" />
+                            <span asp-validation-for="AgeLimit" class="text-danger"></span>
+                        </div>
+                        <div class="form-group">
+                            <label asp-for="ImageUrl">Image URL</label>
+                            <input asp-for="ImageUrl" class="form-control" placeholder="https://..." />
+                            <span asp-validation-for="ImageUrl" class="text-danger"></span>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label asp-for="IsVisible">Visibility</label>
+                        <div class="form-hint">Hidden packages are not shown to regular users.</div>
+                        <input asp-for="IsVisible" type="checkbox" />
+                        <span asp-validation-for="IsVisible" class="text-danger"></span>
+                    </div>
+                    <div class="form-group">
+                        <label asp-for="Description">Description</label>
+                        <textarea asp-for="Description" class="form-control" rows="5" placeholder="Describe the travel package..."></textarea>
+                        <span asp-validation-for="Description" class="text-danger"></span>
+                    </div>
+                </div>
+
+                <!-- 🔘 BUTTONS -->
+                <div class="form-actions">
+                    <button type="submit" class="btn-form btn-create">
+                        ✅ Create Package
+                    </button>
+                    <a asp-action="Index" class="btn-form btn-cancel">
+                        ← Cancel
+                    </a>
+                </div>
+
+            </div>
+        </form>
+
+    </div>
+</div>
+
+@section Scripts {
+    <partial name="_ValidationScriptsPartial" />
+}

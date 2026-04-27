@@ -1,0 +1,528 @@
+﻿@model Travel_Agency.ViewModels.LoginViewModel
+
+@{
+    ViewData["Title"] = "Login";
+    Layout = null;
+}
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>@ViewData["Title"] - Travel Agency</title>
+    <link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.min.css" />
+    <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;500;600;700&family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" />
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Poppins', sans-serif;
+            min-height: 100vh;
+            background: linear-gradient(135deg, #1a1a2e 0%, #16213e 50%, #0f3460 100%);
+            overflow-x: hidden;
+        }
+
+        .login-wrapper {
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 20px;
+        }
+
+        .login-container {
+            display: flex;
+            width: 100%;
+            max-width: 1100px;
+            min-height: 650px;
+            border-radius: 25px;
+            overflow: hidden;
+            box-shadow: 0 25px 80px rgba(0, 0, 0, 0.5);
+        }
+
+        /* LEFT SIDE - IMAGE SECTION */
+        .image-section {
+            flex: 1.2;
+            position: relative;
+            background: url('https://images.unsplash.com/photo-1476514525535-07fb3b4ae5f1?ixlib=rb-4.0.3&auto=format&fit=crop&w=1470&q=80') center/cover no-repeat;
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+            padding: 40px;
+        }
+
+        .image-section::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: linear-gradient(180deg, rgba(26, 47, 89, 0.4) 0%, rgba(15, 52, 96, 0.7) 100%);
+            z-index: 1;
+        }
+
+        .image-section > * {
+            position: relative;
+            z-index: 2;
+        }
+
+        .quote-section {
+            text-align: center;
+            margin-top: 80px;
+        }
+
+        .quote-text {
+            font-family: 'Playfair Display', serif;
+            font-size: 2.5rem;
+            font-weight: 600;
+            color: #fff;
+            line-height: 1.3;
+            text-shadow: 2px 2px 10px rgba(0, 0, 0, 0.3);
+            letter-spacing: 1px;
+        }
+
+        .social-icons-left {
+            display: flex;
+            justify-content: center;
+            gap: 15px;
+            margin-top: auto;
+        }
+
+        .social-icons-left a {
+            width: 45px;
+            height: 45px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            text-decoration: none;
+            font-size: 18px;
+            transition: all 0.3s ease;
+        }
+
+        .social-icons-left .facebook {
+            background: #3b5998;
+            color: #fff;
+        }
+
+        .social-icons-left .twitter {
+            background: #1da1f2;
+            color: #fff;
+        }
+
+        .social-icons-left .instagram {
+            background: linear-gradient(45deg, #f09433, #e6683c, #dc2743, #cc2366, #bc1888);
+            color: #fff;
+        }
+
+        .social-icons-left a:hover {
+            transform: translateY(-5px) scale(1.1);
+            box-shadow: 0 10px 25px rgba(0, 0, 0, 0.3);
+        }
+
+        /* RIGHT SIDE - FORM SECTION */
+        .form-section {
+            flex: 1;
+            background: #1a2f59;
+            padding: 60px 50px;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+        }
+
+        .brand-title {
+            font-family: 'Playfair Display', serif;
+            font-size: 2.2rem;
+            font-weight: 700;
+            color: #fff;
+            text-align: center;
+            margin-bottom: 40px;
+            position: relative;
+            letter-spacing: 3px;
+        }
+
+        .brand-title::before,
+        .brand-title::after {
+            content: '';
+            position: absolute;
+            top: 50%;
+            width: 15px;
+            height: 2px;
+            background: #fff;
+        }
+
+        .brand-title::before {
+            left: 15%;
+            transform: translateX(-50%);
+        }
+
+        .brand-title::after {
+            right: 15%;
+            transform: translateX(50%);
+        }
+
+        .social-login {
+            display: flex;
+            justify-content: center;
+            gap: 20px;
+            margin-bottom: 25px;
+        }
+
+        .social-login a {
+            width: 50px;
+            height: 50px;
+            border-radius: 50%;
+            border: 2px solid rgba(255, 255, 255, 0.3);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: #5b8fd9;
+            font-size: 20px;
+            text-decoration: none;
+            transition: all 0.3s ease;
+        }
+
+        .social-login a:hover {
+            background: rgba(255, 255, 255, 0.1);
+            border-color: #5b8fd9;
+            transform: scale(1.1);
+        }
+
+        .divider-text {
+            text-align: center;
+            color: rgba(255, 255, 255, 0.6);
+            font-size: 0.85rem;
+            margin-bottom: 30px;
+        }
+
+        .form-group {
+            margin-bottom: 25px;
+            position: relative;
+        }
+
+        .form-control-custom {
+            width: 100%;
+            padding: 15px 20px 15px 50px;
+            font-size: 14px;
+            background: transparent;
+            border: none;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.3);
+            border-radius: 0;
+            color: #fff;
+            transition: all 0.3s ease;
+        }
+
+        .form-control-custom::placeholder {
+            color: rgba(255, 255, 255, 0.5);
+        }
+
+        .form-control-custom:focus {
+            outline: none;
+            border-bottom-color: #5b8fd9;
+            box-shadow: none;
+            background: rgba(255, 255, 255, 0.02);
+        }
+
+        .input-icon {
+            position: absolute;
+            left: 15px;
+            top: 50%;
+            transform: translateY(-50%);
+            color: rgba(255, 255, 255, 0.5);
+            font-size: 18px;
+        }
+
+        .password-toggle {
+            position: absolute;
+            right: 15px;
+            top: 50%;
+            transform: translateY(-50%);
+            color: rgba(255, 255, 255, 0.5);
+            cursor: pointer;
+            transition: color 0.3s ease;
+        }
+
+        .password-toggle:hover {
+            color: #5b8fd9;
+        }
+
+        .forgot-password {
+            text-align: right;
+            margin-bottom: 30px;
+        }
+
+        .forgot-password a {
+            color: rgba(255, 255, 255, 0.7);
+            font-size: 0.85rem;
+            text-decoration: none;
+            transition: color 0.3s ease;
+        }
+
+        .forgot-password a:hover {
+            color: #5b8fd9;
+        }
+
+        .btn-login {
+            width: 100%;
+            padding: 16px;
+            font-size: 16px;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 2px;
+            border: none;
+            border-radius: 30px;
+            background: #fff;
+            color: #1a2f59;
+            cursor: pointer;
+            transition: all 0.4s ease;
+            box-shadow: 0 5px 20px rgba(0, 0, 0, 0.2);
+        }
+
+        .btn-login:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 10px 30px rgba(255, 255, 255, 0.2);
+            background: #f0f0f0;
+        }
+
+        .register-link {
+            text-align: center;
+            margin-top: 35px;
+            padding-top: 25px;
+            border-top: 1px solid rgba(255, 255, 255, 0.1);
+        }
+
+        .register-link p {
+            color: rgba(255, 255, 255, 0.6);
+            margin-bottom: 10px;
+            font-size: 0.9rem;
+        }
+
+        .register-link a {
+            color: #5b8fd9;
+            text-decoration: none;
+            font-weight: 600;
+            transition: all 0.3s ease;
+        }
+
+        .register-link a:hover {
+            color: #fff;
+        }
+
+        .alert-custom {
+            padding: 15px 20px;
+            border-radius: 10px;
+            margin-bottom: 25px;
+            background: rgba(255, 107, 107, 0.1);
+            border: 1px solid rgba(255, 107, 107, 0.3);
+            color: #ff6b6b;
+            font-size: 0.9rem;
+        }
+
+        .back-home {
+            position: absolute;
+            top: 20px;
+            left: 20px;
+            z-index: 10;
+        }
+
+        .back-home a {
+            color: #fff;
+            text-decoration: none;
+            font-size: 0.9rem;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            opacity: 0.8;
+            transition: all 0.3s ease;
+        }
+
+        .back-home a:hover {
+            opacity: 1;
+        }
+
+        .form-check {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            margin-bottom: 25px;
+        }
+
+        .form-check-input {
+            width: 18px;
+            height: 18px;
+            cursor: pointer;
+            accent-color: #5b8fd9;
+        }
+
+        .form-check-label {
+            color: rgba(255, 255, 255, 0.7);
+            font-size: 0.9rem;
+            cursor: pointer;
+        }
+
+        /* RESPONSIVE */
+        @@media (max-width: 992px) {
+            .login-container {
+                flex-direction: column;
+                max-width: 500px;
+            }
+
+            .image-section {
+                min-height: 300px;
+            }
+
+            .quote-text {
+                font-size: 1.8rem;
+            }
+
+            .form-section {
+                padding: 40px 30px;
+            }
+        }
+
+        @@media (max-width: 576px) {
+            .login-wrapper {
+                padding: 10px;
+            }
+
+            .image-section {
+                min-height: 250px;
+                padding: 30px;
+            }
+
+            .quote-text {
+                font-size: 1.5rem;
+            }
+
+            .brand-title {
+                font-size: 1.8rem;
+            }
+
+            .brand-title::before,
+            .brand-title::after {
+                display: none;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="back-home">
+        <a asp-controller="Home" asp-action="Index">
+            <i class="fas fa-arrow-left"></i> Back to Home
+        </a>
+    </div>
+
+    <div class="login-wrapper">
+        <div class="login-container">
+            <!-- LEFT SIDE - IMAGE -->
+            <div class="image-section">
+                <div class="quote-section">
+                    <p class="quote-text">
+                        TRAVEL IS THE ONLY THING<br>
+                        YOU BUY THAT MAKES YOU<br>
+                        RICHER
+                    </p>
+                </div>
+
+                <div class="social-icons-left">
+                    <a href="#" class="facebook"><i class="fab fa-facebook-f"></i></a>
+                    <a href="#" class="twitter"><i class="fab fa-twitter"></i></a>
+                    <a href="#" class="instagram"><i class="fab fa-instagram"></i></a>
+                </div>
+            </div>
+
+            <!-- RIGHT SIDE - FORM -->
+            <div class="form-section">
+                <h1 class="brand-title">TRAVEL AGENCY</h1>
+
+                <div class="social-login">
+                    <a href="#" title="Login with Facebook"><i class="fab fa-facebook-f"></i></a>
+                    <a href="#" title="Login with Google"><i class="fab fa-google"></i></a>
+                    <a href="#" title="Login with LinkedIn"><i class="fab fa-linkedin-in"></i></a>
+                </div>
+
+                <p class="divider-text">or use your email account</p>
+
+                @if (!ViewData.ModelState.IsValid)
+                {
+                    <div class="alert-custom">
+                        <i class="fas fa-exclamation-circle"></i> Invalid login credentials. Please try again.
+                    </div>
+                }
+
+                <form method="post" asp-action="Login">
+                    <div class="form-group">
+                        <i class="fas fa-user input-icon"></i>
+                        <input asp-for="Email"
+                               class="form-control-custom"
+                               placeholder="Email"
+                               required />
+                        <span asp-validation-for="Email" class="text-danger small"></span>
+                    </div>
+
+                    <div class="form-group">
+                        <i class="fas fa-lock input-icon"></i>
+                        <input asp-for="Password"
+                               type="password"
+                               id="passwordInput"
+                               class="form-control-custom"
+                               placeholder="Password"
+                               required />
+                        <i class="fas fa-eye-slash password-toggle" onclick="togglePassword()"></i>
+                        <span asp-validation-for="Password" class="text-danger small"></span>
+                    </div>
+
+                    <div class="d-flex justify-content-between align-items-center mb-4">
+                        <div class="form-check m-0">
+                            <input asp-for="RememberMe"
+                                   type="checkbox"
+                                   class="form-check-input"
+                                   id="rememberMe" />
+                            <label class="form-check-label" for="rememberMe">Remember Me</label>
+                        </div>
+                        <div class="forgot-password m-0">
+                            <a href="#">Forgot Your Password?</a>
+                        </div>
+                    </div>
+
+                    <button type="submit" class="btn-login">
+                        ENTER
+                    </button>
+                </form>
+
+                <div class="register-link">
+                    <p>Don't have an account?</p>
+                    <a asp-action="Register">CREATE NEW ACCOUNT →</a>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script src="~/lib/jquery/dist/jquery.min.js"></script>
+    <script src="~/lib/jquery-validation/dist/jquery.validate.min.js"></script>
+    <script src="~/lib/jquery-validation-unobtrusive/jquery.validate.unobtrusive.min.js"></script>
+    <script>
+        function togglePassword() {
+            const passwordInput = document.getElementById('passwordInput');
+            const toggleIcon = document.querySelector('.password-toggle');
+            
+            if (passwordInput.type === 'password') {
+                passwordInput.type = 'text';
+                toggleIcon.classList.remove('fa-eye-slash');
+                toggleIcon.classList.add('fa-eye');
+            } else {
+                passwordInput.type = 'password';
+                toggleIcon.classList.remove('fa-eye');
+                toggleIcon.classList.add('fa-eye-slash');
+            }
+        }
+    </script>
+</body>
+</html>

@@ -1,0 +1,122 @@
+@model Travel_Agency.Models.BookingTimeFrame
+
+@{
+    ViewData["Title"] = "Create Booking Time Frame";
+    var packages = ViewBag.Packages as List<Travel_Agency.Models.TravelPackage> ?? new List<Travel_Agency.Models.TravelPackage>();
+    var selectedPackageId = ViewBag.SelectedPackageId as int?;
+}
+
+<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+
+<style>
+    .form-container {
+        max-width: 800px;
+        margin: 40px auto;
+        padding: 30px;
+        background: white;
+        border-radius: 10px;
+        box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+    }
+
+    .form-group {
+        margin-bottom: 25px;
+    }
+
+    label {
+        display: block;
+        font-weight: 600;
+        margin-bottom: 8px;
+        color: #333;
+    }
+
+    select, input[type="date"], input[type="number"] {
+        width: 100%;
+        padding: 12px;
+        border: 1px solid #ddd;
+        border-radius: 5px;
+        font-size: 1rem;
+    }
+
+    .form-actions {
+        display: flex;
+        gap: 15px;
+        margin-top: 30px;
+    }
+
+    .btn {
+        padding: 12px 25px;
+        border-radius: 5px;
+        border: none;
+        cursor: pointer;
+        text-decoration: none;
+        display: inline-block;
+        font-weight: 600;
+    }
+
+    .btn-primary {
+        background: #2d8a4e;
+        color: white;
+    }
+
+    .btn-secondary {
+        background: #6c757d;
+        color: white;
+    }
+</style>
+
+<div class="form-container">
+    <h2 style="margin-bottom: 30px;">Create Booking Time Frame</h2>
+
+    <form asp-action="CreateTimeFrame" method="post">
+        @Html.AntiForgeryToken()
+
+        <div class="form-group">
+            <label asp-for="TravelPackageId">Travel Package *</label>
+            <select asp-for="TravelPackageId" required>
+                <option value="">-- Select Package --</option>
+                @foreach (var pkg in packages)
+                {
+                    <option value="@pkg.Id" selected="@(selectedPackageId == pkg.Id)">@pkg.Destination, @pkg.Country (@pkg.StartDate.ToString("dd MMM yyyy"))</option>
+                }
+            </select>
+            <span asp-validation-for="TravelPackageId" class="text-danger"></span>
+        </div>
+
+        <div class="form-group">
+            <label asp-for="LatestBookingDate">Latest Booking Date</label>
+            <input asp-for="LatestBookingDate" type="date" />
+            <small style="color: #666;">Leave empty if bookings are allowed until trip start</small>
+            <span asp-validation-for="LatestBookingDate" class="text-danger"></span>
+        </div>
+
+        <div class="form-group">
+            <label asp-for="CancellationAllowedUntil">Cancellation Allowed Until (Absolute Date)</label>
+            <input asp-for="CancellationAllowedUntil" type="date" />
+            <small style="color: #666;">Absolute deadline date for cancellations (optional)</small>
+            <span asp-validation-for="CancellationAllowedUntil" class="text-danger"></span>
+        </div>
+
+        <div class="form-group">
+            <label asp-for="CancellationPeriodDays">Cancellation Period (Days Before Trip)</label>
+            <input asp-for="CancellationPeriodDays" type="number" min="0" max="365" />
+            <small style="color: #666;">Number of days before trip start that cancellation is allowed (e.g., 7 = can cancel up to 7 days before)</small>
+            <span asp-validation-for="CancellationPeriodDays" class="text-danger"></span>
+        </div>
+
+        <div class="form-group">
+            <label asp-for="ReminderDaysBeforeDeparture">Reminder Days Before Departure</label>
+            <input asp-for="ReminderDaysBeforeDeparture" type="number" min="0" max="30" />
+            <small style="color: #666;">Send reminder email X days before trip departure (e.g., 5 = reminder 5 days before)</small>
+            <span asp-validation-for="ReminderDaysBeforeDeparture" class="text-danger"></span>
+        </div>
+
+        <div class="form-actions">
+            <button type="submit" class="btn btn-primary">Create Time Frame</button>
+            <a href="@Url.Action("BookingTimeFrames", "Admin")" class="btn btn-secondary">Cancel</a>
+        </div>
+    </form>
+</div>
+
+@section Scripts {
+    @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+}

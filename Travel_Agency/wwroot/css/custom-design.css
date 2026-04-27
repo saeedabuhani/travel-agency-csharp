@@ -1,0 +1,450 @@
+﻿/* ===================================================
+   BEAUTIFUL MODERN DESIGN CSS
+   Location: wwwroot/css/custom-design.css
+   ===================================================
+   Add this to your _Layout.cshtml:
+   <link rel="stylesheet" href="~/css/custom-design.css" />
+   =================================================== */
+
+/* ✅ GLOBAL STYLES */
+:root {
+    --primary-gradient: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    --success-gradient: linear-gradient(135deg, #11998e 0%, #38ef7d 100%);
+    --danger-gradient: linear-gradient(135deg, #f093fb 0%, #f5576c 100%);
+    --warning-gradient: linear-gradient(135deg, #f7971e 0%, #ffd200 100%);
+    --shadow-sm: 0 2px 8px rgba(0,0,0,0.1);
+    --shadow-md: 0 8px 20px rgba(0,0,0,0.15);
+    --shadow-lg: 0 15px 35px rgba(0,0,0,0.2);
+    --transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body {
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    background: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%);
+    min-height: 100vh;
+}
+
+/* ✅ ANIMATED GRADIENT BACKGROUND */
+.hero-section {
+    background: var(--primary-gradient);
+    color: white;
+    padding: 60px 0;
+    text-align: center;
+    position: relative;
+    overflow: hidden;
+}
+
+    .hero-section::before {
+        content: '';
+        position: absolute;
+        top: -50%;
+        left: -50%;
+        width: 200%;
+        height: 200%;
+        background: radial-gradient(circle, rgba(255,255,255,0.1) 0%, transparent 70%);
+        animation: rotate 20s linear infinite;
+    }
+
+@keyframes rotate {
+    from {
+        transform: rotate(0deg);
+    }
+
+    to {
+        transform: rotate(360deg);
+    }
+}
+
+/* ✅ CARD STYLES */
+.card-modern {
+    border: none;
+    border-radius: 20px;
+    overflow: hidden;
+    box-shadow: var(--shadow-md);
+    transition: var(--transition);
+    background: white;
+}
+
+    .card-modern:hover {
+        transform: translateY(-10px) scale(1.02);
+        box-shadow: var(--shadow-lg);
+    }
+
+    .card-modern img {
+        transition: var(--transition);
+    }
+
+    .card-modern:hover img {
+        transform: scale(1.1);
+    }
+
+/* ✅ BUTTONS */
+.btn-gradient-primary {
+    background: var(--primary-gradient);
+    border: none;
+    color: white;
+    padding: 12px 30px;
+    border-radius: 25px;
+    font-weight: 600;
+    transition: var(--transition);
+    box-shadow: 0 4px 15px rgba(102, 126, 234, 0.4);
+}
+
+    .btn-gradient-primary:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 8px 25px rgba(102, 126, 234, 0.6);
+        color: white;
+    }
+
+.btn-gradient-success {
+    background: var(--success-gradient);
+    border: none;
+    color: white;
+    padding: 10px 25px;
+    border-radius: 25px;
+    font-weight: 600;
+    transition: var(--transition);
+}
+
+    .btn-gradient-success:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 8px 20px rgba(17, 153, 142, 0.5);
+        color: white;
+    }
+
+.btn-gradient-danger {
+    background: var(--danger-gradient);
+    border: none;
+    color: white;
+    padding: 10px 25px;
+    border-radius: 25px;
+    font-weight: 600;
+}
+
+/* ✅ BADGES */
+.badge-modern {
+    padding: 8px 16px;
+    border-radius: 20px;
+    font-weight: 600;
+    font-size: 0.9rem;
+}
+
+.badge-gradient-primary {
+    background: var(--primary-gradient);
+    color: white;
+}
+
+.badge-gradient-success {
+    background: var(--success-gradient);
+    color: white;
+}
+
+.badge-gradient-danger {
+    background: var(--danger-gradient);
+    color: white;
+}
+
+/* ✅ PRICE TAG */
+.price-tag-modern {
+    position: absolute;
+    top: 20px;
+    right: 20px;
+    background: var(--primary-gradient);
+    color: white;
+    padding: 15px 25px;
+    border-radius: 30px;
+    font-weight: 700;
+    font-size: 1.3rem;
+    box-shadow: 0 8px 20px rgba(0,0,0,0.3);
+    z-index: 10;
+    animation: pulse 2s ease-in-out infinite;
+}
+
+@keyframes pulse {
+    0%, 100% {
+        transform: scale(1);
+    }
+
+    50% {
+        transform: scale(1.05);
+    }
+}
+
+/* ✅ DISCOUNT BADGE */
+.discount-badge-modern {
+    background: var(--danger-gradient);
+    color: white;
+    padding: 6px 14px;
+    border-radius: 20px;
+    font-weight: 700;
+    font-size: 0.9rem;
+    display: inline-block;
+    animation: shake 0.5s ease-in-out infinite;
+}
+
+@keyframes shake {
+    0%, 100% {
+        transform: translateX(0);
+    }
+
+    25% {
+        transform: translateX(-5px);
+    }
+
+    75% {
+        transform: translateX(5px);
+    }
+}
+
+/* ✅ GLASS MORPHISM EFFECT */
+.glass-card {
+    background: rgba(255, 255, 255, 0.25);
+    backdrop-filter: blur(10px);
+    border-radius: 20px;
+    border: 1px solid rgba(255, 255, 255, 0.18);
+    box-shadow: 0 8px 32px rgba(0, 0, 0, 0.1);
+    padding: 30px;
+}
+
+/* ✅ NAVBAR */
+.navbar-modern {
+    background: white;
+    box-shadow: var(--shadow-sm);
+    padding: 15px 0;
+}
+
+    .navbar-modern .navbar-brand {
+        font-weight: 700;
+        font-size: 1.5rem;
+        background: var(--primary-gradient);
+        -webkit-background-clip: text;
+        -webkit-text-fill-color: transparent;
+    }
+
+/* ✅ FLOATING ANIMATION */
+.float-animation {
+    animation: float 3s ease-in-out infinite;
+}
+
+@keyframes float {
+    0%, 100% {
+        transform: translateY(0);
+    }
+
+    50% {
+        transform: translateY(-10px);
+    }
+}
+
+/* ✅ LOADING SPINNER */
+.spinner-modern {
+    width: 50px;
+    height: 50px;
+    border: 5px solid #f3f3f3;
+    border-top: 5px solid;
+    border-image: var(--primary-gradient) 1;
+    border-radius: 50%;
+    animation: spin 1s linear infinite;
+}
+
+@keyframes spin {
+    0% {
+        transform: rotate(0deg);
+    }
+
+    100% {
+        transform: rotate(360deg);
+    }
+}
+
+/* ✅ FORM INPUTS */
+.form-control-modern {
+    border: 2px solid #e0e0e0;
+    border-radius: 15px;
+    padding: 12px 20px;
+    transition: var(--transition);
+}
+
+    .form-control-modern:focus {
+        border-color: #667eea;
+        box-shadow: 0 0 0 0.2rem rgba(102, 126, 234, 0.25);
+    }
+
+/* ✅ ALERT BOXES */
+.alert-modern {
+    border-radius: 15px;
+    border: none;
+    padding: 20px;
+    font-weight: 500;
+}
+
+.alert-success-modern {
+    background: linear-gradient(135deg, #d4edda 0%, #c3e6cb 100%);
+    color: #155724;
+}
+
+.alert-danger-modern {
+    background: linear-gradient(135deg, #f8d7da 0%, #f5c6cb 100%);
+    color: #721c24;
+}
+
+.alert-info-modern {
+    background: linear-gradient(135deg, #d1ecf1 0%, #bee5eb 100%);
+    color: #0c5460;
+}
+
+/* ✅ FOOTER */
+.footer-modern {
+    background: var(--primary-gradient);
+    color: white;
+    padding: 40px 0;
+    margin-top: 80px;
+}
+
+/* ✅ TOOLTIP */
+.tooltip-modern {
+    position: relative;
+    display: inline-block;
+}
+
+    .tooltip-modern .tooltiptext {
+        visibility: hidden;
+        background-color: #333;
+        color: #fff;
+        text-align: center;
+        border-radius: 10px;
+        padding: 8px 12px;
+        position: absolute;
+        z-index: 1;
+        bottom: 125%;
+        left: 50%;
+        margin-left: -60px;
+        opacity: 0;
+        transition: opacity 0.3s;
+    }
+
+    .tooltip-modern:hover .tooltiptext {
+        visibility: visible;
+        opacity: 1;
+    }
+
+/* ✅ RESPONSIVE */
+@media (max-width: 768px) {
+    .card-modern {
+        margin-bottom: 20px;
+    }
+
+    .price-tag-modern {
+        font-size: 1rem;
+        padding: 10px 15px;
+    }
+
+    .hero-section {
+        padding: 40px 0;
+    }
+}
+
+/* ✅ SMOOTH SCROLL */
+html {
+    scroll-behavior: smooth;
+}
+
+/* ✅ SELECTION COLOR */
+::selection {
+    background: #667eea;
+    color: white;
+}
+
+/* ✅ STAR RATING */
+.star-rating {
+    color: #ffc107;
+    font-size: 1.2rem;
+}
+
+    .star-rating .filled {
+        color: #ffc107;
+    }
+
+    .star-rating .empty {
+        color: #ddd;
+    }
+
+/* ✅ PROGRESS BAR */
+.progress-modern {
+    height: 10px;
+    border-radius: 10px;
+    background: #e0e0e0;
+    overflow: hidden;
+}
+
+.progress-bar-modern {
+    background: var(--primary-gradient);
+    height: 100%;
+    transition: width 0.6s ease;
+}
+
+/* ✅ IMAGE OVERLAY */
+.image-overlay {
+    position: relative;
+    overflow: hidden;
+}
+
+    .image-overlay::after {
+        content: '';
+        position: absolute;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        background: linear-gradient(180deg, transparent 0%, rgba(0,0,0,0.7) 100%);
+        opacity: 0;
+        transition: var(--transition);
+    }
+
+    .image-overlay:hover::after {
+        opacity: 1;
+    }
+
+/* ✅ END OF STYLES */
+/* ✅ NAVBAR - FIXED VERSION */
+.navbar-modern {
+    background: white;
+    box-shadow: var(--shadow-sm);
+    padding: 15px 0;
+}
+
+    .navbar-modern .navbar-brand {
+        font-weight: 700;
+        font-size: 1.5rem;
+        background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+        /* Remove these two lines if they cause errors: */
+        /* -webkit-background-clip: text; */
+        /* -webkit-text-fill-color: transparent; */
+        color: #667eea; /* Use this instead */
+    }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

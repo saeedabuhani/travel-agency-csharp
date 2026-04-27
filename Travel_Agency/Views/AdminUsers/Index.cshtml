@@ -1,0 +1,79 @@
+﻿@model IEnumerable<Travel_Agency.Models.AppUser>
+@using Microsoft.AspNetCore.Identity
+@inject UserManager<Travel_Agency.Models.AppUser> UserManager
+
+@{
+    ViewData["Title"] = "User Management";
+}
+
+<h2 class="mb-4">👥 User Management</h2>
+
+<table class="table table-bordered table-striped align-middle">
+    <thead class="table-dark">
+        <tr>
+            <th>Username</th>
+            <th>Email</th>
+            <th>Age</th>
+            <th>Role</th>
+            <th style="width: 220px;">Actions</th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var user in Model)
+        {
+            <tr>
+                <td>@user.UserName</td>
+                <td>@user.Email</td>
+                <td>
+                    @if (user.DateOfBirth.HasValue)
+                    {
+                        var today = DateTime.Today;
+                        var age = today.Year - user.DateOfBirth.Value.Year;
+                        if (user.DateOfBirth.Value.Date > today.AddYears(-age))
+                        {
+                            age--;
+                        }
+                        @age
+                    }
+                    else
+                    {
+                        <span class="text-muted">N/A</span>
+                    }
+                </td>
+                <td>
+                    @if (await UserManager.IsInRoleAsync(user, "Admin"))
+                    {
+                        <span class="badge bg-danger">Admin</span>
+                    }
+                    else
+                    {
+                        <span class="badge bg-secondary">User</span>
+                    }
+                </td>
+                <td>
+                    @if (!User.Identity!.Name!.Equals(user.UserName))
+                    {
+                        @if (await UserManager.IsInRoleAsync(user, "Admin"))
+                        {
+                            <form asp-action="RemoveAdmin" method="post" class="d-inline">
+                                <input type="hidden" name="userId" value="@user.Id" />
+                                <button class="btn btn-warning btn-sm">
+                                    Remove Admin
+                                </button>
+                            </form>
+                        }
+                        else
+                        {
+                            <form asp-action="MakeAdmin" method="post" class="d-inline">
+                                <input type="hidden" name="userId" value="@user.Id" />
+                                <button class="btn btn-success btn-sm">
+                                    Make Admin
+                                </button>
+                            </form>
+                        }
+                    }
+                </td>
+            </tr>
+        }
+    </tbody>
+</table>

@@ -1,0 +1,739 @@
+﻿@model Travel_Agency.Models.TravelPackage
+@using Travel_Agency.Models
+
+@{
+    var userBooking = ViewBag.UserBooking as Booking;
+    var userWaitingEntry = ViewBag.UserWaitingEntry as WaitingList;
+    var isUserFirstInQueue = (bool)(ViewBag.IsUserFirstInQueue ?? false);
+    var waitingCount = (int)(ViewBag.WaitingCount ?? 0);
+    var reviews = (List<Review>)ViewBag.Reviews;
+    var avgRating = (double)ViewBag.AvgRating;
+    var estimatedAvailability = ViewBag.EstimatedAvailability as TimeSpan?;
+    string estimatedAvailabilityText = "N/A";
+    if (estimatedAvailability.HasValue)
+    {
+        if (estimatedAvailability.Value.TotalDays >= 1)
+        {
+            estimatedAvailabilityText = $"~{Math.Ceiling(estimatedAvailability.Value.TotalDays)} day(s)";
+        }
+        else if (estimatedAvailability.Value.TotalHours >= 1)
+        {
+            estimatedAvailabilityText = $"~{Math.Ceiling(estimatedAvailability.Value.TotalHours)} hour(s)";
+        }
+        else
+        {
+            estimatedAvailabilityText = "~less than 1 hour";
+        }
+    }
+}
+
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;500;600;700;800&family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+
+<style>
+    /* ============================================
+       🏝️ DETAILS HERO
+       ============================================ */
+    .details-hero {
+        position: relative;
+        min-height: 450px;
+        background: url('@(!string.IsNullOrEmpty(Model.ImageUrl) ? Model.ImageUrl : "https://images.unsplash.com/photo-1488646953014-85cb44e25828?ixlib=rb-4.0.3&auto=format&fit=crop&w=1920&q=80")') center/cover no-repeat;
+        display: flex;
+        align-items: flex-end;
+    }
+
+    .details-hero::before {
+        content: '';
+        position: absolute;
+        top: 0;
+        left: 0;
+        right: 0;
+        bottom: 0;
+        background: linear-gradient(to top, rgba(15, 23, 42, 0.95) 0%, rgba(15, 23, 42, 0.3) 50%, transparent 100%);
+        z-index: 1;
+    }
+
+    .details-hero-content {
+        position: relative;
+        z-index: 2;
+        padding: 60px 40px;
+        width: 100%;
+        max-width: 1400px;
+        margin: 0 auto;
+    }
+
+    .destination-title {
+        font-family: 'Playfair Display', serif;
+        font-size: 3.5rem;
+        font-weight: 700;
+        color: #fff;
+        margin-bottom: 15px;
+        text-shadow: 2px 2px 20px rgba(0, 0, 0, 0.5);
+    }
+
+    .badges-row {
+        display: flex;
+        gap: 12px;
+        flex-wrap: wrap;
+        margin-bottom: 15px;
+    }
+
+    .detail-badge {
+        padding: 8px 18px;
+        border-radius: 25px;
+        font-family: 'Poppins', sans-serif;
+        font-size: 0.85rem;
+        font-weight: 600;
+    }
+
+    .badge-country { background: rgba(59, 130, 246, 0.8); color: #fff; }
+    .badge-type { background: rgba(139, 92, 246, 0.8); color: #fff; }
+    .badge-nights { background: rgba(16, 185, 129, 0.8); color: #fff; }
+
+    .rating-display {
+        display: flex;
+        align-items: center;
+        gap: 10px;
+    }
+
+    .rating-stars {
+        color: #fbbf24;
+        font-size: 1.4rem;
+    }
+
+    .rating-text {
+        font-family: 'Poppins', sans-serif;
+        color: rgba(255, 255, 255, 0.7);
+        font-size: 0.95rem;
+    }
+
+    /* ============================================
+       📋 MAIN CONTENT
+       ============================================ */
+    .details-content {
+        background: linear-gradient(180deg, #0f172a 0%, #0f172a 100%);
+        padding: 60px 20px 100px;
+    }
+
+    .details-container {
+        max-width: 1400px;
+        margin: 0 auto;
+        display: grid;
+        grid-template-columns: 1fr 400px;
+        gap: 50px;
+    }
+
+    /* ============================================
+       📝 LEFT COLUMN
+       ============================================ */
+    .details-main {
+        color: #fff;
+    }
+
+    .section-title {
+        font-family: 'Playfair Display', serif;
+        font-size: 1.8rem;
+        font-weight: 700;
+        color: #fff;
+        margin-bottom: 20px;
+        display: flex;
+        align-items: center;
+        gap: 12px;
+    }
+
+    .description-text {
+        font-family: 'Poppins', sans-serif;
+        font-size: 1.05rem;
+        line-height: 1.8;
+        color: rgba(255, 255, 255, 0.8);
+        margin-bottom: 40px;
+    }
+
+    .info-grid {
+        display: grid;
+        grid-template-columns: repeat(2, 1fr);
+        gap: 20px;
+        margin-bottom: 40px;
+    }
+
+    .info-card {
+        background: rgba(255, 255, 255, 0.03);
+        border: 1px solid rgba(255, 255, 255, 0.08);
+        border-radius: 15px;
+        padding: 20px;
+    }
+
+    .info-label {
+        font-family: 'Poppins', sans-serif;
+        font-size: 0.85rem;
+        color: rgba(255, 255, 255, 0.5);
+        margin-bottom: 8px;
+    }
+
+    .info-value {
+        font-family: 'Poppins', sans-serif;
+        font-size: 1.1rem;
+        font-weight: 600;
+        color: #fff;
+    }
+
+    /* ============================================
+       ⭐ REVIEWS SECTION
+       ============================================ */
+    .reviews-section {
+        margin-top: 50px;
+        padding-top: 40px;
+        border-top: 1px solid rgba(255, 255, 255, 0.1);
+    }
+
+    .review-card {
+        background: rgba(255, 255, 255, 0.03);
+        border: 1px solid rgba(255, 255, 255, 0.08);
+        border-radius: 18px;
+        padding: 25px;
+        margin-bottom: 20px;
+        transition: all 0.3s ease;
+    }
+
+    .review-card:hover {
+        border-color: rgba(251, 191, 36, 0.3);
+    }
+
+    .review-header {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        margin-bottom: 15px;
+    }
+
+    .reviewer-name {
+        font-family: 'Poppins', sans-serif;
+        font-weight: 600;
+        color: #fff;
+    }
+
+    .review-date {
+        font-family: 'Poppins', sans-serif;
+        font-size: 0.85rem;
+        color: rgba(255, 255, 255, 0.5);
+    }
+
+    .review-stars {
+        color: #fbbf24;
+        font-size: 1.1rem;
+        margin-bottom: 12px;
+    }
+
+    .review-comment {
+        font-family: 'Poppins', sans-serif;
+        color: rgba(255, 255, 255, 0.8);
+        line-height: 1.6;
+    }
+
+    .no-reviews {
+        background: rgba(59, 130, 246, 0.1);
+        border: 1px solid rgba(59, 130, 246, 0.3);
+        border-radius: 15px;
+        padding: 30px;
+        text-align: center;
+        color: #93c5fd;
+        font-family: 'Poppins', sans-serif;
+    }
+
+    /* ============================================
+       💰 BOOKING SIDEBAR
+       ============================================ */
+    .booking-sidebar {
+        position: sticky;
+        top: 20px;
+    }
+
+    .booking-card {
+        background: rgba(255, 255, 255, 0.03);
+        backdrop-filter: blur(10px);
+        border: 1px solid rgba(255, 255, 255, 0.1);
+        border-radius: 25px;
+        padding: 35px;
+        box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
+    }
+
+    .price-display {
+        text-align: center;
+        margin-bottom: 25px;
+        padding-bottom: 25px;
+        border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+    }
+
+    .price-original {
+        font-family: 'Poppins', sans-serif;
+        font-size: 1.3rem;
+        text-decoration: line-through;
+        color: #f87171;
+        display: block;
+    }
+
+    .price-final {
+        font-family: 'Playfair Display', serif;
+        font-size: 3rem;
+        font-weight: 700;
+        color: #6ee7b7;
+    }
+
+    .price-save {
+        display: inline-block;
+        margin-top: 10px;
+        padding: 6px 16px;
+        background: rgba(239, 68, 68, 0.2);
+        color: #fca5a5;
+        border-radius: 20px;
+        font-family: 'Poppins', sans-serif;
+        font-size: 0.85rem;
+        font-weight: 600;
+    }
+
+    .rooms-status {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        margin-bottom: 25px;
+    }
+
+    .rooms-label {
+        font-family: 'Poppins', sans-serif;
+        color: rgba(255, 255, 255, 0.7);
+    }
+
+    .rooms-badge {
+        padding: 6px 16px;
+        border-radius: 15px;
+        font-family: 'Poppins', sans-serif;
+        font-weight: 600;
+    }
+
+    .rooms-available { background: rgba(16, 185, 129, 0.2); color: #6ee7b7; }
+    .rooms-low { background: rgba(245, 158, 11, 0.2); color: #fbbf24; }
+    .rooms-none { background: rgba(239, 68, 68, 0.2); color: #fca5a5; }
+
+    .btn-booking {
+        width: 100%;
+        padding: 16px;
+        font-family: 'Poppins', sans-serif;
+        font-size: 15px;
+        font-weight: 700;
+        text-transform: uppercase;
+        letter-spacing: 1px;
+        border: none;
+        border-radius: 15px;
+        cursor: pointer;
+        transition: all 0.3s ease;
+        margin-bottom: 12px;
+        text-decoration: none;
+        display: block;
+        text-align: center;
+    }
+
+    .btn-book-now {
+        background: linear-gradient(135deg, #3b82f6 0%, #2563eb 100%);
+        color: #fff;
+        box-shadow: 0 10px 30px rgba(59, 130, 246, 0.4);
+    }
+
+    .btn-book-now:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 15px 40px rgba(59, 130, 246, 0.5);
+        color: #fff;
+    }
+
+    .btn-add-cart {
+        background: transparent;
+        border: 2px solid rgba(16, 185, 129, 0.5);
+        color: #6ee7b7;
+    }
+
+    .btn-add-cart:hover {
+        background: rgba(16, 185, 129, 0.1);
+        border-color: #6ee7b7;
+        color: #6ee7b7;
+    }
+
+    .btn-pay {
+        background: linear-gradient(135deg, #10b981 0%, #059669 100%);
+        color: #fff;
+    }
+
+    .btn-waiting {
+        background: linear-gradient(135deg, #f59e0b 0%, #d97706 100%);
+        color: #fff;
+    }
+
+    .btn-login {
+        background: linear-gradient(135deg, #3b82f6 0%, #2563eb 100%);
+        color: #fff;
+    }
+
+    .status-box {
+        padding: 20px;
+        border-radius: 15px;
+        margin-bottom: 20px;
+        font-family: 'Poppins', sans-serif;
+    }
+
+    .status-pending {
+        background: rgba(245, 158, 11, 0.15);
+        border: 1px solid rgba(245, 158, 11, 0.3);
+        color: #fbbf24;
+    }
+
+    .status-success {
+        background: rgba(16, 185, 129, 0.15);
+        border: 1px solid rgba(16, 185, 129, 0.3);
+        color: #6ee7b7;
+    }
+
+    .status-waiting {
+        background: rgba(59, 130, 246, 0.15);
+        border: 1px solid rgba(59, 130, 246, 0.3);
+        color: #93c5fd;
+    }
+
+    .status-sold-out {
+        background: rgba(239, 68, 68, 0.15);
+        border: 1px solid rgba(239, 68, 68, 0.3);
+        color: #fca5a5;
+    }
+
+    .included-section {
+        margin-top: 25px;
+        padding-top: 25px;
+        border-top: 1px solid rgba(255, 255, 255, 0.1);
+    }
+
+    .included-title {
+        font-family: 'Poppins', sans-serif;
+        font-size: 0.95rem;
+        font-weight: 600;
+        color: #fff;
+        margin-bottom: 15px;
+    }
+
+    .included-list {
+        list-style: none;
+        padding: 0;
+        margin: 0;
+    }
+
+    .included-list li {
+        font-family: 'Poppins', sans-serif;
+        font-size: 0.9rem;
+        color: rgba(255, 255, 255, 0.7);
+        padding: 8px 0;
+        padding-left: 25px;
+        position: relative;
+    }
+
+    .included-list li::before {
+        content: '✓';
+        position: absolute;
+        left: 0;
+        color: #6ee7b7;
+    }
+
+    .btn-leave-waiting {
+        padding: 10px;
+        background: transparent;
+        border: 1px solid rgba(239, 68, 68, 0.3);
+        color: #fca5a5;
+        font-family: 'Poppins', sans-serif;
+        font-size: 0.85rem;
+        border-radius: 10px;
+        cursor: pointer;
+        transition: all 0.3s ease;
+        width: 100%;
+        margin-top: 10px;
+    }
+
+    .btn-leave-waiting:hover {
+        background: rgba(239, 68, 68, 0.1);
+        border-color: #fca5a5;
+    }
+
+    /* ============================================
+       📱 RESPONSIVE
+       ============================================ */
+    @@media (max-width: 992px) {
+        .details-container {
+            grid-template-columns: 1fr;
+        }
+
+        .booking-sidebar {
+            position: static;
+        }
+
+        .destination-title {
+            font-size: 2.5rem;
+        }
+
+        .info-grid {
+            grid-template-columns: 1fr;
+        }
+    }
+</style>
+
+<!-- 🏝️ HERO SECTION -->
+<div class="details-hero">
+    <div class="details-hero-content">
+        <h1 class="destination-title">@Model.Destination</h1>
+        
+        <div class="badges-row">
+            <span class="detail-badge badge-country">📍 @Model.Country</span>
+            <span class="detail-badge badge-type">🎯 @Model.PackageType</span>
+            <span class="detail-badge badge-nights">🌙 @Model.Nights nights</span>
+        </div>
+
+        @if (reviews.Any())
+        {
+            <div class="rating-display">
+                <span class="rating-stars">
+                    @for (int i = 0; i < 5; i++)
+                    {
+                        if (i < Math.Floor(avgRating))
+                        {
+                            <span>★</span>
+                        }
+                        else if (i < avgRating)
+                        {
+                            <span>★</span>
+                        }
+                        else
+                        {
+                            <span>☆</span>
+                        }
+                    }
+                </span>
+                <span class="rating-text">@avgRating.ToString("N1") / 5.0 • @reviews.Count review@(reviews.Count > 1 ? "s" : "")</span>
+            </div>
+        }
+    </div>
+</div>
+
+<!-- 📋 MAIN CONTENT -->
+<div class="details-content">
+    <div class="details-container">
+
+        <!-- LEFT COLUMN -->
+        <div class="details-main">
+            <h2 class="section-title">📝 Description</h2>
+            <p class="description-text">@Model.Description</p>
+
+            <div class="info-grid">
+                <div class="info-card">
+                    <div class="info-label">📅 Travel Dates</div>
+                    <div class="info-value">@Model.StartDate.ToString("dd MMM yyyy") - @Model.EndDate.ToString("dd MMM yyyy")</div>
+                </div>
+                <div class="info-card">
+                    <div class="info-label">🌙 Duration</div>
+                    <div class="info-value">@Model.Nights nights</div>
+                </div>
+                <div class="info-card">
+                    <div class="info-label">🎯 Package Type</div>
+                    <div class="info-value">@Model.PackageType</div>
+                </div>
+                <div class="info-card">
+                    <div class="info-label">👥 Age Limit</div>
+                    <div class="info-value">@(Model.AgeLimit > 0 ? Model.AgeLimit + "+" : "All ages")</div>
+                </div>
+            </div>
+
+            <!-- REVIEWS SECTION -->
+            <div class="reviews-section">
+                <h2 class="section-title">⭐ Reviews (@reviews.Count)</h2>
+
+                @if (reviews.Any())
+                {
+                    @foreach (var review in reviews.Take(5))
+                    {
+                        <div class="review-card">
+                            <div class="review-header">
+                                <span class="reviewer-name">@review.User.FullName</span>
+                                <span class="review-date">@review.CreatedAt.ToString("dd MMM yyyy")</span>
+                            </div>
+                            <div class="review-stars">
+                                @for (int i = 0; i < review.Rating; i++)
+                                {
+                                    <span>★</span>
+                                }
+                                @for (int i = review.Rating; i < 5; i++)
+                                {
+                                    <span>☆</span>
+                                }
+                            </div>
+                            @if (!string.IsNullOrEmpty(review.Comment))
+                            {
+                                <p class="review-comment">@review.Comment</p>
+                            }
+                        </div>
+                    }
+
+                    @if (reviews.Count > 5)
+                    {
+                        <p style="color: rgba(255,255,255,0.5); font-family: 'Poppins', sans-serif;">+ @(reviews.Count - 5) more reviews</p>
+                    }
+                }
+                else
+                {
+                    <div class="no-reviews">
+                        No reviews yet. Be the first to review this package after your trip!
+                    </div>
+                }
+            </div>
+        </div>
+
+        <!-- RIGHT COLUMN: BOOKING SIDEBAR -->
+        <div class="booking-sidebar">
+            <div class="booking-card">
+                <div class="price-display">
+                    @if (Model.IsDiscountActive && Model.Discount.HasValue)
+                    {
+                        <span class="price-original">$@Model.Price.ToString("N0")</span>
+                        <span class="price-final">$@Model.Discount?.ToString("N0")</span>
+                        <span class="price-save">💥 Save $@((Model.Price - Model.Discount.Value).ToString("N0"))</span>
+                    }
+                    else
+                    {
+                        <span class="price-final">$@Model.Price.ToString("N0")</span>
+                    }
+                </div>
+
+                <div class="rooms-status">
+                    <span class="rooms-label">Available Rooms</span>
+                    <span class="rooms-badge @(Model.AvailableRooms > 5 ? "rooms-available" : Model.AvailableRooms > 0 ? "rooms-low" : "rooms-none")">
+                        @Model.AvailableRooms
+                    </span>
+                </div>
+
+                @if (User.Identity!.IsAuthenticated)
+                {
+                    @* Show pending payment if user has Reserved booking *@
+                    @if (userBooking != null && userBooking.Status == BookingStatus.Reserved)
+                    {
+                        <div class="status-box status-pending">
+                            ⏳ <strong>Pending Payment</strong>
+                        </div>
+                        <a asp-controller="Bookings" asp-action="Payment" asp-route-bookingId="@userBooking.Id" class="btn-booking btn-pay">
+                            💳 Pay Now
+                        </a>
+                    }
+
+                    @* Show status info if user already booked (but still allow rebooking) *@
+                    @if (userBooking != null && userBooking.Status == BookingStatus.Paid)
+                    {
+                        <div class="status-box status-success" style="margin-bottom: 10px;">
+                            ✅ <strong>You have this package!</strong>
+                            <p style="margin: 5px 0 0 0; font-size: 0.85rem;">Want another? Book again below!</p>
+                        </div>
+                    }
+
+                    @* Handle based on room availability *@
+                    @if (Model.AvailableRooms > 0)
+                    {
+                        @* Check if user has PRIORITY (Notified status) from waiting list *@
+                        @if (userWaitingEntry != null && userWaitingEntry.Status == WaitingListStatus.Notified)
+                        {
+                            <div class="status-box status-success">
+                                🎉 <strong>It's Your Turn!</strong>
+                                <p style="margin: 5px 0 0 0; font-size: 0.85rem;">You have 10 minutes to book!</p>
+                                @if (userWaitingEntry.ExpiresAt.HasValue)
+                                {
+                                    <p style="margin: 3px 0 0 0; font-size: 0.8rem; opacity: 0.8;">
+                                        ⏰ Expires: @userWaitingEntry.ExpiresAt.Value.ToString("HH:mm")
+                                    </p>
+                                }
+                            </div>
+                        }
+                        else if (userWaitingEntry != null && userWaitingEntry.Status == WaitingListStatus.Waiting)
+                        {
+                            <div class="status-box status-waiting">
+                                ⏳ <strong>You're in queue (Position #@userWaitingEntry.Position)</strong>
+                                <p style="margin: 5px 0 0 0; font-size: 0.85rem;">Wait for your notification!</p>
+                            </div>
+                        }
+
+                        <form asp-controller="ShoppingCart" asp-action="AddToCart" method="post" style="margin: 0;">
+                            <input type="hidden" name="packageId" value="@Model.Id" />
+                            <button type="submit" class="btn-booking btn-add-cart">
+                                🛒 Add to Cart
+                            </button>
+                        </form>
+                        <form asp-controller="Bookings" asp-action="Create" method="post" style="margin: 0;">
+                            <input type="hidden" name="packageId" value="@Model.Id" />
+                            <button type="submit" class="btn-booking btn-book-now">
+                                ⚡ Buy Now
+                            </button>
+                        </form>
+                    }
+                    else
+                    {
+                        @* No rooms - check waiting list status *@
+                        @if (userWaitingEntry == null)
+                        {
+                            <div class="status-box status-sold-out">
+                                ❌ <strong>No Rooms Available</strong>
+                                <p style="margin: 8px 0 0 0; font-size: 0.9rem;">@waitingCount people waiting</p>
+                                <p style="margin: 5px 0 0 0; font-size: 0.85rem;">Estimated availability: @estimatedAvailabilityText</p>
+                            </div>
+                            <form asp-controller="Bookings" asp-action="JoinWaitingList" method="get" style="margin: 0;">
+                                <input type="hidden" name="packageId" value="@Model.Id" />
+                                <button type="submit" class="btn-booking btn-waiting">
+                                    ⏰ Join Waiting List
+                                </button>
+                            </form>
+                        }
+                        else
+                        {
+                            @if (isUserFirstInQueue)
+                            {
+                                <div class="status-box status-success">
+                                    🎉 <strong>It's Your Turn!</strong>
+                                    <p style="margin: 8px 0 0 0; font-size: 0.9rem;">You are first in line - rooms coming soon!</p>
+                                    <p style="margin: 5px 0 0 0; font-size: 0.85rem;">Estimated availability: @estimatedAvailabilityText</p>
+                                </div>
+                            }
+                            else
+                            {
+                                <div class="status-box status-waiting">
+                                    ⏳ <strong>You're in the waiting list</strong>
+                                    <p style="margin: 8px 0 0 0; font-size: 0.9rem;">Position: #@userWaitingEntry.Position</p>
+                                    <p style="margin: 5px 0 0 0; font-size: 0.85rem;">We'll notify you when it's your turn.</p>
+                                    <p style="margin: 5px 0 0 0; font-size: 0.85rem;">Estimated availability: @estimatedAvailabilityText</p>
+                                </div>
+                            }
+
+                            <form asp-controller="Bookings" asp-action="LeaveWaitingList" method="post" style="margin: 0;">
+                                <input type="hidden" name="packageId" value="@Model.Id" />
+                                <button type="submit" class="btn-leave-waiting">
+                                    Leave Waiting List
+                                </button>
+                            </form>
+                        }
+                    }
+                }
+                else
+                {
+                    <a asp-controller="Account" asp-action="Login" class="btn-booking btn-login">
+                        🔐 Login to Book
+                    </a>
+                }
+
+                <div class="included-section">
+                    <h4 class="included-title">📋 What's Included</h4>
+                    <ul class="included-list">
+                        <li>@Model.Nights nights accommodation</li>
+                        <li>Daily breakfast</li>
+                        <li>Airport transfers</li>
+                        <li>24/7 customer support</li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+
+    </div>
+</div>
