@@ -5,26 +5,21 @@ namespace Travel_Agency.Services
 {
     public static class NotificationService
     {
-        // ============================================================
-        // 🔧 SMTP CONFIGURATION - CHANGE THESE TO YOUR VALUES!
-        // ============================================================
-        // For Gmail:
-        // 1. Go to https://myaccount.google.com/apppasswords
-        // 2. Create an App Password (requires 2FA enabled)
-        // 3. Use that password here
-        // ============================================================
-        
-        // ✅ CONFIGURED WITH REAL GMAIL CREDENTIALS
-        private static readonly string FromEmail = "saied442001@gmail.com";
+        // SMTP settings are read from environment variables (never commit credentials):
+        //   SMTP_USER  - sender address (e.g. your Gmail address)
+        //   SMTP_PASS  - an app password for that account
+        //   SMTP_HOST  - optional, defaults to smtp.gmail.com
+        //   SMTP_PORT  - optional, defaults to 587
+        // If SMTP_USER or SMTP_PASS is missing, email sending falls back to demo mode.
+        private static readonly string SmtpUser = Environment.GetEnvironmentVariable("SMTP_USER") ?? "";
+        private static readonly string SmtpPass = Environment.GetEnvironmentVariable("SMTP_PASS") ?? "";
+        private static readonly string SmtpHost = Environment.GetEnvironmentVariable("SMTP_HOST") ?? "smtp.gmail.com";
+        private static readonly int SmtpPort = int.TryParse(Environment.GetEnvironmentVariable("SMTP_PORT"), out var port) ? port : 587;
+        private static readonly string FromEmail = SmtpUser;
         private static readonly string FromName = "Travel Agency";
-        private static readonly string SmtpHost = "smtp.gmail.com";
-        private static readonly int SmtpPort = 587;
-        private static readonly string SmtpUser = "saied442001@gmail.com";
-        private static readonly string SmtpPass = "REDACTED";  // App Password (no spaces)
-        
-        // Check if SMTP is configured (true if not using placeholder values)
-        private static bool IsSmtpConfigured => 
-            !SmtpUser.Contains("your-email") && !SmtpPass.Contains("your-app-password") && SmtpPass.Length >= 16;
+
+        private static bool IsSmtpConfigured =>
+            !string.IsNullOrWhiteSpace(SmtpUser) && !string.IsNullOrWhiteSpace(SmtpPass);
 
         // Simple notification (console)
         public static void Send(string message)
@@ -35,6 +30,12 @@ namespace Travel_Agency.Services
         // Send email (async)
         public static async Task SendAsync(string toEmail, string subject, string body)
         {
+            if (!IsSmtpConfigured)
+            {
+                Console.WriteLine($"[SMTP NOT CONFIGURED] Email to {toEmail} skipped: {subject}");
+                return;
+            }
+
             try
             {
                 using var client = new SmtpClient(SmtpHost, SmtpPort)
@@ -75,7 +76,7 @@ namespace Travel_Agency.Services
             if (!IsSmtpConfigured)
             {
                 Console.WriteLine("⚠️ [SMTP NOT CONFIGURED] Using demo mode instead.");
-                Console.WriteLine("   To enable real email, configure credentials in NotificationService.cs");
+                Console.WriteLine("   To enable real email, set the SMTP_USER and SMTP_PASS environment variables");
                 return await SendItineraryDemoAsync(toEmail, "User", "Travel Package", pdfBytes, fileName);
             }
 

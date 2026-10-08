@@ -102,6 +102,13 @@ dotnet ef database update      # creates the TravelAgencyDB LocalDB database
 dotnet run
 ```
 
+Optional, to enable real emails (PowerShell):
+
+```powershell
+$env:SMTP_USER = "you@gmail.com"
+$env:SMTP_PASS = "your-app-password"
+```
+
 Then open the HTTPS URL printed in the console. The connection string is in `appsettings.json`:
 
 ```
@@ -113,7 +120,7 @@ With Visual Studio, open `Travel_Agency.sln` and press **F5**.
 ## Notes
 
 - Payment is simulated for demonstration purposes.
-- Email notifications use SMTP. Configure your own credentials before relying on email features.
+- Email notifications use SMTP. Credentials are never stored in the code; set the environment variables `SMTP_USER` and `SMTP_PASS` (a Gmail app password) before running. Without them the app runs normally and email sending falls back to demo mode.
 - Built as an academic project at Sami Shamoon College of Engineering.
 
 ## Author
