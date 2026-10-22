@@ -1,6 +1,4 @@
-﻿
-
-//using Microsoft.AspNetCore.Identity;
+﻿using Microsoft.AspNetCore.Identity;
 //using Microsoft.EntityFrameworkCore;
 //using Travel_Agency.Data;
 //using Travel_Agency.Models;
@@ -149,11 +147,15 @@ QuestPDF.Settings.License = LicenseType.Community;
 var builder = WebApplication.CreateBuilder(args);
 
 // Database Configuration
+// Database:Provider = "SqlServer" (default, uses migrations) or "Sqlite" (zero-setup, no LocalDB needed)
+var dbProvider = builder.Configuration["Database:Provider"] ?? "SqlServer";
 builder.Services.AddDbContext<TravelAgencyDbContext>(options =>
-    options.UseSqlServer(
-        builder.Configuration.GetConnectionString("DefaultConnection")
-    )
-);
+{
+    if (dbProvider.Equals("Sqlite", StringComparison.OrdinalIgnoreCase))
+        options.UseSqlite(builder.Configuration.GetConnectionString("SqliteConnection") ?? "Data Source=travel_agency.db");
+    else
+        options.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection"));
+});
 
 // Identity Configuration
 builder.Services.AddIdentity<AppUser, IdentityRole>(options =>

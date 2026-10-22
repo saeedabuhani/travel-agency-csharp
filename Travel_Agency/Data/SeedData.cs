@@ -13,7 +13,11 @@ namespace Travel_Agency.Data
             var roleManager = serviceProvider.GetRequiredService<RoleManager<IdentityRole>>();
 
             // Ensure database is up to date (works with migrations)
-            await context.Database.MigrateAsync();
+            // SQL Server uses the migrations; SQLite (zero-setup mode) builds the schema from the model.
+            if (context.Database.IsSqlite())
+                await context.Database.EnsureCreatedAsync();
+            else
+                await context.Database.MigrateAsync();
 
             // ✅ Backfill visibility for existing packages (created before IsVisible)
             var hiddenPackages = await context.TravelPackages

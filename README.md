@@ -3,6 +3,19 @@
 A full-stack travel agency web application built with **C#, ASP.NET Core MVC (.NET 8)** and **SQL Server (LocalDB)**.
 Customers browse and book travel packages; administrators manage packages, users, bookings, reviews and reports.
 
+![.NET](https://img.shields.io/badge/.NET-8-512bd4)
+![C#](https://img.shields.io/badge/C%23-12-239120)
+![Build](https://img.shields.io/badge/build-passing-brightgreen)
+
+### [▶ Live Demo](https://travel-agency-demo-685.netlify.app)
+
+The live demo is a static, clickable version (browse, filter, cart, payment form, waiting list) using the seeded sample packages; three trips are shown as sold out to demonstrate the waiting list. The real application is the ASP.NET Core project in this repository.
+
+| | |
+|---|---|
+| ![Packages](docs/screenshots/01-packages.png) | ![Filters](docs/screenshots/02-filtered.png) |
+| ![Cart](docs/screenshots/03-cart.png) | ![Waiting list](docs/screenshots/04-waiting-list.png) |
+
 ## Table of contents
 
 1. [Features](#features)
@@ -92,11 +105,22 @@ On first run, `SeedData` creates the Admin role, an admin account, a few demo us
 
 ## Getting started
 
-**Prerequisites:** [.NET 8 SDK](https://dotnet.microsoft.com/download/dotnet/8.0), Visual Studio 2022 (or the `dotnet` CLI) and SQL Server LocalDB (installed with Visual Studio).
+**Prerequisites:** [.NET 8 SDK](https://dotnet.microsoft.com/download/dotnet/8.0) (or newer). Nothing else.
+
+**Quickest start (SQLite, works on Windows, macOS and Linux):**
 
 ```bash
 git clone https://github.com/saeedabuhani/travel-agency-csharp.git
 cd travel-agency-csharp/Travel_Agency
+dotnet run --launch-profile http -- --Database:Provider=Sqlite
+```
+
+The schema and demo data (an admin, three customers and 25+ packages) are created on first run in `travel_agency.db`.
+Sign in with `admin@gmail.com` (see `Data/SeedData.cs` for the seeded demo passwords) or `user01@gmail.com` / `User@123`.
+
+**SQL Server LocalDB (Windows, uses EF Core migrations):**
+
+```bash
 dotnet restore
 dotnet ef database update      # creates the TravelAgencyDB LocalDB database
 dotnet run
@@ -122,6 +146,23 @@ With Visual Studio, open `Travel_Agency.sln` and press **F5**.
 - Payment is simulated for demonstration purposes.
 - Email notifications use SMTP. Credentials are never stored in the code; set the environment variables `SMTP_USER` and `SMTP_PASS` (a Gmail app password) before running. Without them the app runs normally and email sending falls back to demo mode.
 - Built as an academic project at Sami Shamoon College of Engineering.
+
+## Tests
+
+There is no automated test project yet. The build (`dotnet build`, 0 errors) and a Playwright smoke run against the SQLite mode (login, package list, sorting and filters, details, cart, my bookings) were checked manually.
+
+## Security notes
+
+- ASP.NET Core Identity with role-based authorization (`[Authorize(Roles = "Admin")]`) and a strong password policy.
+- SMTP credentials come from the `SMTP_USER` and `SMTP_PASS` environment variables, never from source code.
+- Payment is simulated; no card data is processed or stored.
+- Seeded demo accounts are for local use only.
+
+## Roadmap
+
+- Add an xUnit test project for the booking, cart and waiting-list services.
+- Run SQL Server in Docker Compose as an alternative to LocalDB.
+- Replace the remote package images with locally stored ones.
 
 ## Author
 
