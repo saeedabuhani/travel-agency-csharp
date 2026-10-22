@@ -10,3 +10,8 @@
 x64/
 x86/
 *.log
+
+# Local SQLite database
+*.db
+*.db-shm
+*.db-wal

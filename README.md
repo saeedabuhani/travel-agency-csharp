@@ -92,11 +92,22 @@ On first run, `SeedData` creates the Admin role, an admin account, a few demo us
 
 ## Getting started
 
-**Prerequisites:** [.NET 8 SDK](https://dotnet.microsoft.com/download/dotnet/8.0), Visual Studio 2022 (or the `dotnet` CLI) and SQL Server LocalDB (installed with Visual Studio).
+**Prerequisites:** [.NET 8 SDK](https://dotnet.microsoft.com/download/dotnet/8.0) (or newer). Nothing else.
+
+**Quickest start (SQLite, works on Windows, macOS and Linux):**
 
 ```bash
 git clone https://github.com/saeedabuhani/travel-agency-csharp.git
 cd travel-agency-csharp/Travel_Agency
+dotnet run --launch-profile http -- --Database:Provider=Sqlite
+```
+
+The schema and demo data (an admin, three customers and 25+ packages) are created on first run in `travel_agency.db`.
+Sign in with `admin@gmail.com` (see `Data/SeedData.cs` for the seeded demo passwords) or `user01@gmail.com` / `User@123`.
+
+**SQL Server LocalDB (Windows, uses EF Core migrations):**
+
+```bash
 dotnet restore
 dotnet ef database update      # creates the TravelAgencyDB LocalDB database
 dotnet run
