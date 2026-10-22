@@ -1,0 +1,152 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Travel Agency – clickable demo</title>
+<meta name="description" content="Clickable demo of the ASP.NET Core travel agency app: browse, filter, cart, booking and waiting list with sample data.">
+<style>
+:root{--bg:#f4f7fb;--card:#fff;--ink:#0f172a;--mut:#53627a;--line:#dde4ee;--acc:#0b6bcb;--acc2:#e0f0ff;--ok:#15803d;--bad:#b91c1c;--warn:#b45309}
+@media (prefers-color-scheme:dark){:root{--bg:#0b1220;--card:#121c31;--ink:#e8eef8;--mut:#9fb0c8;--line:#24334f;--acc:#4da3ff;--acc2:#12304f;--ok:#4ade80;--bad:#f87171;--warn:#fbbf24}}
+*{box-sizing:border-box}body{margin:0;background:var(--bg);color:var(--ink);font:16px/1.5 system-ui,-apple-system,Segoe UI,Roboto,sans-serif;padding-bottom:50px}
+a{color:var(--acc)}button{font:inherit;cursor:pointer}
+.banner{position:fixed;bottom:0;left:0;right:0;z-index:50;background:#0f172a;color:#fff;font-size:13px;padding:8px 14px;text-align:center}.banner a{color:#7dd3fc}
+header.top{background:var(--card);border-bottom:1px solid var(--line);position:sticky;top:0;z-index:20}
+.bar{max-width:1150px;margin:0 auto;padding:10px 16px;display:flex;align-items:center;gap:10px;flex-wrap:wrap}
+.logo{font-weight:800;font-size:19px;margin-right:auto}
+nav{display:flex;gap:6px;flex-wrap:wrap}nav button{border:1px solid var(--line);background:var(--bg);color:var(--ink);border-radius:9px;padding:7px 12px;font-weight:600;font-size:14px}
+nav button[aria-current=page]{background:var(--acc);color:#fff;border-color:var(--acc)}
+.badge{background:var(--bad);color:#fff;border-radius:99px;font-size:11px;padding:1px 7px;margin-left:4px}
+main{max-width:1150px;margin:0 auto;padding:18px 16px}
+h1{font-size:26px;margin:0 0 4px}.sub{color:var(--mut);margin:0 0 14px}
+.filters{display:grid;grid-template-columns:2fr 1fr 1fr 1fr 1fr;gap:8px;margin-bottom:12px}
+@media(max-width:820px){.filters{grid-template-columns:1fr 1fr}}
+input,select{width:100%;padding:9px 10px;border:1px solid var(--line);border-radius:9px;background:var(--card);color:var(--ink);font:inherit}
+label.chk{display:flex;align-items:center;gap:6px;font-size:14px;color:var(--mut)}label.chk input{width:auto}
+.grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(250px,1fr));gap:14px}
+.card{background:var(--card);border:1px solid var(--line);border-radius:14px;overflow:hidden;display:flex;flex-direction:column}
+.hero{height:110px;display:flex;align-items:flex-end;padding:10px 12px;color:#fff;font-weight:800;font-size:20px;text-shadow:0 1px 6px rgba(0,0,0,.4)}
+.body{padding:12px;display:flex;flex-direction:column;gap:6px;flex:1}.meta{color:var(--mut);font-size:13px}
+.price{font-size:20px;font-weight:800}.price s{font-size:14px;color:var(--mut);font-weight:400;margin-right:6px}
+.tag{display:inline-block;border-radius:99px;padding:2px 9px;font-size:12px;font-weight:600;background:var(--acc2);color:var(--acc)}.tag.sold{background:#fee2e2;color:var(--bad)}.tag.sale{background:#dcfce7;color:var(--ok)}
+.row{display:flex;gap:8px;margin-top:auto}.btn{border:1px solid var(--line);background:var(--card);color:var(--ink);border-radius:9px;padding:8px 12px;font-weight:600;font-size:14px}.btn.p{background:var(--acc);border-color:var(--acc);color:#fff}.btn.w{background:#fef3c7;border-color:#fcd34d;color:#78350f}.btn.x{color:var(--bad)}
+table{width:100%;border-collapse:collapse;background:var(--card);border:1px solid var(--line);border-radius:12px;overflow:hidden}th,td{padding:10px;border-bottom:1px solid var(--line);text-align:left;font-size:14px}th{background:var(--bg);color:var(--mut)}
+.scroll{overflow-x:auto}
+dialog{border:1px solid var(--line);border-radius:14px;background:var(--card);color:var(--ink);max-width:460px;width:calc(100% - 24px);padding:0}dialog::backdrop{background:rgba(0,0,0,.5)}
+dialog .in{padding:18px}dialog h2{margin:0 0 6px}
+.toast{position:fixed;top:70px;right:12px;background:var(--ink);color:var(--bg);padding:10px 14px;border-radius:10px;z-index:60;max-width:320px;font-size:14px}
+.empty{padding:30px;text-align:center;color:var(--mut);background:var(--card);border:1px dashed var(--line);border-radius:12px}
+.field{display:grid;gap:4px;margin-bottom:10px;font-size:14px}.err{color:var(--bad);font-size:13px}
+.st{font-weight:700}.st.Paid{color:var(--ok)}.st.Reserved{color:var(--warn)}.st.Cancelled{color:var(--bad)}
+</style>
+</head>
+<body>
+<header class="top"><div class="bar">
+<div class="logo">✈ Travel Agency</div>
+<nav aria-label="Main">
+<button data-v="packages" aria-current="page">Packages</button>
+<button data-v="cart">Cart<span class="badge" id="cartN" hidden>0</span></button>
+<button data-v="bookings">My bookings</button>
+<button data-v="waiting">Waiting list<span class="badge" id="waitN" hidden>0</span></button>
+</nav></div></header>
+<main id="main"></main>
+<dialog id="dlg"><div class="in" id="dlgBody"></div></dialog>
+<div class="banner">Demo mode – sample data, nothing is saved or charged. The real app is ASP.NET Core MVC + SQL Server. <a href="https://github.com/saeedabuhani/travel-agency-csharp">Source on GitHub</a></div>
+<script src="packages.js"></script>
+<script>
+(function(){
+var P=window.PACKAGES.map(function(p){var s=new Date();s.setHours(0,0,0,0);s.setDate(s.getDate()+p.startDays);var e=new Date(s);e.setDate(e.getDate()+p.nights);p.start=s;p.end=e;return p});
+var state={view:"packages",cart:[],bookings:[],waiting:[],f:{q:"",country:"",type:"",sort:"date",sale:false,max:""}};
+var GR={Luxury:["#7c3aed","#db2777"],Cultural:["#b45309","#dc2626"],Romantic:["#be185d","#7c3aed"],Beach:["#0891b2","#16a34a"],Culinary:["#ea580c","#ca8a04"],Party:["#9333ea","#2563eb"],Adventure:["#059669","#0e7490"],Nature:["#0f766e","#1d4ed8"]};
+var $=function(s){return document.querySelector(s)};
+function money(n){return "$"+n.toLocaleString("en-US")}
+function fmt(d){return d.toLocaleDateString("en-GB",{day:"2-digit",month:"short",year:"numeric"})}
+function price(p){return p.discount||p.price}
+function byId(id){return P.filter(function(p){return p.id===id})[0]}
+function esc(s){return String(s).replace(/[&<>"]/g,function(c){return {"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;"}[c]})}
+function toast(t){var d=document.createElement("div");d.className="toast";d.setAttribute("role","status");d.textContent=t;document.body.appendChild(d);setTimeout(function(){d.remove()},2600)}
+function counts(){var c=$("#cartN"),w=$("#waitN");c.hidden=!state.cart.length;c.textContent=state.cart.length;w.hidden=!state.waiting.length;w.textContent=state.waiting.length}
+function go(v){state.view=v;document.querySelectorAll("nav button").forEach(function(b){if(b.dataset.v===v)b.setAttribute("aria-current","page");else b.removeAttribute("aria-current")});render()}
+document.querySelectorAll("nav button").forEach(function(b){b.onclick=function(){go(b.dataset.v)}});
+
+function filtered(){var f=state.f;var l=P.filter(function(p){
+ if(f.q&&(p.destination+" "+p.country+" "+p.description).toLowerCase().indexOf(f.q.toLowerCase())<0)return false;
+ if(f.country&&p.country!==f.country)return false;if(f.type&&p.type!==f.type)return false;
+ if(f.sale&&!p.discount)return false;if(f.max&&price(p)>+f.max)return false;return true});
+ var s={date:function(a,b){return a.start-b.start},pasc:function(a,b){return price(a)-price(b)},pdesc:function(a,b){return price(b)-price(a)},name:function(a,b){return a.destination.localeCompare(b.destination)}}[f.sort];
+ return l.sort(s)}
+function uniq(k){var o={};P.forEach(function(p){o[p[k]]=1});return Object.keys(o).sort()}
+
+function renderPackages(){
+ var f=state.f,opt=function(a,v,all){return '<option value="">'+all+'</option>'+a.map(function(x){return '<option'+(x===v?" selected":"")+'>'+esc(x)+'</option>'}).join("")};
+ var h='<h1>Travel packages</h1><p class="sub">Search, filter and sort the catalogue, add trips to your cart, or join the waiting list when a trip is full.</p>'+
+ '<div class="filters"><input id="q" type="search" placeholder="Search destination or country" aria-label="Search" value="'+esc(f.q)+'">'+
+ '<select id="country" aria-label="Country">'+opt(uniq("country"),f.country,"All countries")+'</select>'+
+ '<select id="type" aria-label="Package type">'+opt(uniq("type"),f.type,"All types")+'</select>'+
+ '<select id="sort" aria-label="Sort"><option value="date"'+(f.sort==="date"?" selected":"")+'>Soonest departure</option><option value="pasc"'+(f.sort==="pasc"?" selected":"")+'>Price: low to high</option><option value="pdesc"'+(f.sort==="pdesc"?" selected":"")+'>Price: high to low</option><option value="name"'+(f.sort==="name"?" selected":"")+'>Destination A–Z</option></select>'+
+ '<div style="display:flex;gap:10px;align-items:center"><input id="max" type="number" min="0" step="100" placeholder="Max price" aria-label="Maximum price" value="'+esc(f.max)+'"><label class="chk"><input id="sale" type="checkbox"'+(f.sale?" checked":"")+'>Sale</label></div></div>';
+ var l=filtered();
+ h+='<p class="sub" id="count">'+l.length+' package'+(l.length===1?"":"s")+'</p>';
+ h+=l.length?'<div class="grid">'+l.map(function(p){var g=GR[p.type]||["#475569","#0f172a"];var full=p.rooms<1;
+  return '<article class="card" data-id="'+p.id+'"><div class="hero" style="background:linear-gradient(135deg,'+g[0]+','+g[1]+')">'+esc(p.destination)+'</div><div class="body">'+
+  '<div class="meta">'+esc(p.country)+' · '+p.nights+' nights · '+fmt(p.start)+'</div>'+
+  '<div><span class="tag">'+esc(p.type)+'</span> '+(p.discount?'<span class="tag sale">Sale</span> ':'')+(full?'<span class="tag sold">Fully booked</span>':'<span class="meta">'+p.rooms+' rooms left</span>')+'</div>'+
+  '<div class="price">'+(p.discount?'<s>'+money(p.price)+'</s>':'')+money(price(p))+'</div>'+
+  '<div class="row"><button class="btn" data-a="details">Details</button>'+(full?'<button class="btn w" data-a="wait">Join waiting list</button>':'<button class="btn p" data-a="add">Add to cart</button>')+'</div></div></article>'}).join("")+'</div>'
+  :'<div class="empty">No packages match your filters.</div>';
+ $("#main").innerHTML=h;
+ var re=function(id,k,t){var e=$(id);e.oninput=e.onchange=function(){state.f[k]=t==="b"?e.checked:e.value;var pos=e.selectionStart;renderPackages();var n=$(id);if(n&&t!=="b"&&n.type!=="number"&&n.tagName==="INPUT"){n.focus();try{n.setSelectionRange(pos,pos)}catch(x){}}else if(n&&n.type==="number"){n.focus()}}};
+ re("#q","q");re("#country","country");re("#type","type");re("#sort","sort");re("#max","max");re("#sale","sale","b");
+ document.querySelectorAll(".card button").forEach(function(b){b.onclick=function(){var id=+b.closest(".card").dataset.id;({details:function(){details(id)},add:function(){addCart(id)},wait:function(){joinWait(id)}})[b.dataset.a]()}});
+}
+function details(id){var p=byId(id),full=p.rooms<1;
+ $("#dlgBody").innerHTML='<h2>'+esc(p.destination)+', '+esc(p.country)+'</h2><p class="meta">'+esc(p.type)+' · '+p.nights+' nights</p><p>'+esc(p.description)+'</p>'+
+ '<table><tbody><tr><th>Departure</th><td>'+fmt(p.start)+'</td></tr><tr><th>Return</th><td>'+fmt(p.end)+'</td></tr><tr><th>Price</th><td>'+(p.discount?'<s>'+money(p.price)+'</s> ':'')+'<b>'+money(price(p))+'</b></td></tr><tr><th>Availability</th><td>'+(full?"Fully booked":p.rooms+" rooms")+'</td></tr></tbody></table>'+
+ '<div class="row" style="margin-top:14px"><button class="btn" id="cl">Close</button>'+(full?'<button class="btn w" id="ac">Join waiting list</button>':'<button class="btn p" id="ac">Add to cart</button>')+'</div>';
+ $("#cl").onclick=function(){$("#dlg").close()};$("#ac").onclick=function(){$("#dlg").close();full?joinWait(id):addCart(id)};$("#dlg").showModal()}
+function addCart(id){if(state.cart.indexOf(id)>=0){toast("Already in your cart");return}state.cart.push(id);counts();toast(byId(id).destination+" added to cart")}
+function joinWait(id){if(state.waiting.some(function(w){return w.id===id})){toast("You are already on this waiting list");return}
+ var pos=2+(id%4);state.waiting.push({id:id,pos:pos});counts();toast("You are #"+pos+" on the waiting list for "+byId(id).destination)}
+
+function renderCart(){var h='<h1>Shopping cart</h1>';
+ if(!state.cart.length){$("#main").innerHTML=h+'<div class="empty">Your cart is empty. <br><br><button class="btn p" id="gp">Browse packages</button></div>';$("#gp").onclick=function(){go("packages")};return}
+ var tot=0;h+='<div class="scroll"><table><thead><tr><th>Trip</th><th>Dates</th><th>Price</th><th></th></tr></thead><tbody>'+state.cart.map(function(id){var p=byId(id);tot+=price(p);return '<tr><td><b>'+esc(p.destination)+'</b>, '+esc(p.country)+'</td><td>'+fmt(p.start)+' – '+fmt(p.end)+'</td><td>'+money(price(p))+'</td><td><button class="btn x" data-rm="'+id+'">Remove</button></td></tr>'}).join("")+'</tbody></table></div>'+
+ '<p style="font-size:20px"><b>Total: '+money(tot)+'</b></p><div class="row" style="justify-content:flex-start"><button class="btn" id="clr">Clear cart</button><button class="btn p" id="co">Checkout</button></div>';
+ $("#main").innerHTML=h;
+ document.querySelectorAll("[data-rm]").forEach(function(b){b.onclick=function(){state.cart=state.cart.filter(function(i){return i!==+b.dataset.rm});counts();renderCart()}});
+ $("#clr").onclick=function(){state.cart=[];counts();renderCart()};$("#co").onclick=function(){pay(tot)}}
+function pay(tot){
+ $("#dlgBody").innerHTML='<h2>Payment</h2><p class="meta">Simulated payment – no card is charged and nothing is stored.</p><form id="pf" novalidate>'+
+ '<div class="field"><label for="nm">Name on card</label><input id="nm" autocomplete="off"><span class="err" id="e1"></span></div>'+
+ '<div class="field"><label for="cn">Card number</label><input id="cn" inputmode="numeric" placeholder="4242 4242 4242 4242" autocomplete="off"><span class="err" id="e2"></span></div>'+
+ '<div class="field"><label for="ex">Expiry (MM/YY)</label><input id="ex" placeholder="12/30" autocomplete="off"><span class="err" id="e3"></span></div>'+
+ '<div class="row"><button type="button" class="btn" id="cx">Cancel</button><button class="btn p">Pay '+money(tot)+'</button></div></form>';
+ $("#cx").onclick=function(){$("#dlg").close()};
+ $("#pf").onsubmit=function(e){e.preventDefault();var ok=true;
+  var nm=$("#nm").value.trim(),cn=$("#cn").value.replace(/\s/g,""),ex=$("#ex").value.trim();
+  $("#e1").textContent=nm.length<2?(ok=false,"Enter the name on the card"):"";
+  $("#e2").textContent=!/^\d{16}$/.test(cn)?(ok=false,"Card number must be 16 digits"):"";
+  $("#e3").textContent=!/^(0[1-9]|1[0-2])\/\d{2}$/.test(ex)?(ok=false,"Use MM/YY"):"";
+  if(!ok)return;
+  state.cart.forEach(function(id){state.bookings.push({id:id,status:"Paid",date:new Date()});byId(id).rooms=Math.max(0,byId(id).rooms-1)});
+  state.cart=[];counts();$("#dlg").close();toast("Payment successful – bookings confirmed");go("bookings")};
+ $("#dlg").showModal()}
+function renderBookings(){var h='<h1>My bookings</h1>';
+ if(!state.bookings.length){$("#main").innerHTML=h+'<div class="empty">No bookings yet. Add a trip to your cart and check out.</div>';return}
+ h+='<div class="scroll"><table><thead><tr><th>Trip</th><th>Dates</th><th>Price</th><th>Status</th><th></th></tr></thead><tbody>'+state.bookings.map(function(b,i){var p=byId(b.id);return '<tr><td><b>'+esc(p.destination)+'</b>, '+esc(p.country)+'</td><td>'+fmt(p.start)+' – '+fmt(p.end)+'</td><td>'+money(price(p))+'</td><td class="st '+b.status+'">'+b.status+'</td><td>'+(b.status==="Cancelled"?"":'<button class="btn x" data-c="'+i+'">Cancel</button>')+'</td></tr>'}).join("")+'</tbody></table></div>';
+ $("#main").innerHTML=h;document.querySelectorAll("[data-c]").forEach(function(b){b.onclick=function(){var bk=state.bookings[+b.dataset.c];bk.status="Cancelled";byId(bk.id).rooms++;toast("Booking cancelled – a room was freed");renderBookings()}})}
+function renderWaiting(){var h='<h1>Waiting list</h1><p class="sub">When a room frees up, the next person in line is notified and has limited time to confirm.</p>';
+ if(!state.waiting.length){$("#main").innerHTML=h+'<div class="empty">You are not on any waiting list. Fully booked trips offer a “Join waiting list” button.</div>';return}
+ h+='<div class="scroll"><table><thead><tr><th>Trip</th><th>Position</th><th></th></tr></thead><tbody>'+state.waiting.map(function(w,i){var p=byId(w.id);return '<tr><td><b>'+esc(p.destination)+'</b>, '+esc(p.country)+'</td><td>#'+w.pos+'</td><td><button class="btn x" data-l="'+i+'">Leave</button> <button class="btn" data-s="'+i+'">Simulate: a room frees up</button></td></tr>'}).join("")+'</tbody></table></div>';
+ $("#main").innerHTML=h;
+ document.querySelectorAll("[data-l]").forEach(function(b){b.onclick=function(){state.waiting.splice(+b.dataset.l,1);counts();renderWaiting()}});
+ document.querySelectorAll("[data-s]").forEach(function(b){b.onclick=function(){var w=state.waiting[+b.dataset.s];w.pos=1;var p=byId(w.id);
+  $("#dlgBody").innerHTML='<h2>A room is available!</h2><p>You are next in line for <b>'+esc(p.destination)+'</b>. Confirm within the offer window (demo: 24 hours) or the offer moves to the next person.</p><div class="row"><button class="btn" id="dc">Decline</button><button class="btn p" id="cf">Confirm and add to cart</button></div>';
+  $("#dc").onclick=function(){state.waiting=state.waiting.filter(function(x){return x!==w});counts();$("#dlg").close();renderWaiting()};
+  $("#cf").onclick=function(){state.waiting=state.waiting.filter(function(x){return x!==w});p.rooms=1;counts();$("#dlg").close();addCart(p.id);go("cart")};$("#dlg").showModal()}})}
+function render(){counts();({packages:renderPackages,cart:renderCart,bookings:renderBookings,waiting:renderWaiting})[state.view]()}
+render();
+})();
+</script>
+</body>
+</html>

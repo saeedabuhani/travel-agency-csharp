@@ -15,3 +15,6 @@ x86/
 *.db
 *.db-shm
 *.db-wal
+
+# Local Netlify folder
+.netlify
