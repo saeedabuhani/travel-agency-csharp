@@ -3,6 +3,19 @@
 A full-stack travel agency web application built with **C#, ASP.NET Core MVC (.NET 8)** and **SQL Server (LocalDB)**.
 Customers browse and book travel packages; administrators manage packages, users, bookings, reviews and reports.
 
+![.NET](https://img.shields.io/badge/.NET-8-512bd4)
+![C#](https://img.shields.io/badge/C%23-12-239120)
+![Build](https://img.shields.io/badge/build-passing-brightgreen)
+
+### [▶ Live Demo](https://travel-agency-demo-685.netlify.app)
+
+The live demo is a static, clickable version (browse, filter, cart, payment form, waiting list) using the seeded sample packages; three trips are shown as sold out to demonstrate the waiting list. The real application is the ASP.NET Core project in this repository.
+
+| | |
+|---|---|
+| ![Packages](docs/screenshots/01-packages.png) | ![Filters](docs/screenshots/02-filtered.png) |
+| ![Cart](docs/screenshots/03-cart.png) | ![Waiting list](docs/screenshots/04-waiting-list.png) |
+
 ## Table of contents
 
 1. [Features](#features)
@@ -133,6 +146,23 @@ With Visual Studio, open `Travel_Agency.sln` and press **F5**.
 - Payment is simulated for demonstration purposes.
 - Email notifications use SMTP. Credentials are never stored in the code; set the environment variables `SMTP_USER` and `SMTP_PASS` (a Gmail app password) before running. Without them the app runs normally and email sending falls back to demo mode.
 - Built as an academic project at Sami Shamoon College of Engineering.
+
+## Tests
+
+There is no automated test project yet. The build (`dotnet build`, 0 errors) and a Playwright smoke run against the SQLite mode (login, package list, sorting and filters, details, cart, my bookings) were checked manually.
+
+## Security notes
+
+- ASP.NET Core Identity with role-based authorization (`[Authorize(Roles = "Admin")]`) and a strong password policy.
+- SMTP credentials come from the `SMTP_USER` and `SMTP_PASS` environment variables, never from source code.
+- Payment is simulated; no card data is processed or stored.
+- Seeded demo accounts are for local use only.
+
+## Roadmap
+
+- Add an xUnit test project for the booking, cart and waiting-list services.
+- Run SQL Server in Docker Compose as an alternative to LocalDB.
+- Replace the remote package images with locally stored ones.
 
 ## Author
 
