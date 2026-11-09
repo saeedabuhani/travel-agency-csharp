@@ -167,3 +167,5 @@ There is no automated test project yet. The build (`dotnet build`, 0 errors) and
 ## Author
 
 **Saeed Abuhani**: [github.com/saeedabuhani](https://github.com/saeedabuhani)
+
+© 2026 Saeed Abuhani – All rights reserved
